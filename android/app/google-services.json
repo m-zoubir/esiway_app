@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "437163516763",
+    "project_id": "esi-way-34f28",
+    "storage_bucket": "esi-way-34f28.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:437163516763:android:4020495b9f4725f182b07e",
+        "android_client_info": {
+          "package_name": "com.example.esiway"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "437163516763-ikl3i6lkkt0tb5us4j6h5m13i6nalb2j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB-JK224aNHAU5EB4vSipeBU7VTyjTqCO4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "437163516763-ikl3i6lkkt0tb5us4j6h5m13i6nalb2j.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

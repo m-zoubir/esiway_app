@@ -7,6 +7,7 @@ import 'package:esiway/shared/text_validation.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import '../Screens/Profile/forgot_password_mailadress.dart';
 import 'Services/Auth.dart';
 import 'widgets/login_text.dart';
 import 'widgets/login_text_field.dart';
@@ -88,6 +89,7 @@ class _LogInPageState extends State<LogInPage> with UserValidation {
                                 color: const Color(0xff20236C)),
                             SizedBox(height: hauteur * 0.05),
                             Text_Field(
+                              type: TextInputType.emailAddress,
                               hinttext: "Email",
                               validate: emailvalidate,
                               title: "Email",
@@ -104,17 +106,22 @@ class _LogInPageState extends State<LogInPage> with UserValidation {
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
                                 TextButton(
-                                  onPressed: () {},
-                                  child: TextButton(
-                                    onPressed: () {},
-                                    child: const Text(
-                                      'Forgot your Password?',
-                                      style: TextStyle(
-                                        fontSize: 12,
-                                        fontFamily: 'Montserrat',
-                                        color: Color(0xff20236C),
-                                        decoration: TextDecoration.underline,
+                                  onPressed: () {
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (context) {
+                                          return MailAdress();
+                                        },
                                       ),
+                                    );
+                                  },
+                                  child: const Text(
+                                    'Forgot your Password?',
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      fontFamily: 'Montserrat',
+                                      color: Color(0xff20236C),
+                                      decoration: TextDecoration.underline,
                                     ),
                                   ),
                                 ),
@@ -162,32 +169,36 @@ class _LogInPageState extends State<LogInPage> with UserValidation {
                                 }
                                 if (emailvalidate &&
                                     passwordcontroller.text.isNotEmpty) {
-                                  final User? usersignin = (await FirebaseAuth
-                                          .instance
-                                          .signInWithEmailAndPassword(
-                                              email: emailcontroller.text,
-                                              password:
-                                                  passwordcontroller.text))
-                                      .user;
-
+                                  User? usersignin ;
                                   try {
-                                    if (usersignin != null) {
-                                      setState(() {
-                                        incorrect = true;
-                                      });
-                                      Navigator.of(context).push(
-                                        MaterialPageRoute(builder: (context) {
-                                          return Profile();
-                                        }),
-                                      );
-                                    } else {
-                                      setState(() {
-                                        incorrect = false;
-                                      });
-                                      print("Error");
-                                    }
+                                    usersignin = (await FirebaseAuth
+                                        .instance
+                                        .signInWithEmailAndPassword(
+                                        email: emailcontroller.text,
+                                        password:
+                                        passwordcontroller.text))
+                                        .user;
+
+
                                   } on FirebaseAuthException catch (e) {
-                                    print("Error  ${e}");
+                                    print("-----------------> Error  ${e}");
+                                  }
+
+
+                                  if (usersignin != null) {
+                                    setState(() {
+                                      incorrect = false;
+                                    });
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(builder: (context) {
+                                        return Profile();
+                                      }),
+                                    );
+                                  } else {
+                                    setState(() {
+                                      incorrect = true;
+                                    });
+                                    print("Error");
                                   }
                                 }
                               },

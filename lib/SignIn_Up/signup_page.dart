@@ -124,6 +124,7 @@ class _SignUpPageState extends State<SignUpPage> with UserValidation {
                                 color: const Color(0xff20236C)),
                             SizedBox(height: hauteur * 0.03),
                             Text_Field(
+                              type: TextInputType.emailAddress,
                               hinttext: "Enter your email",
                               validate: emailvalidate,
                               bottomheigh: 14,
@@ -150,6 +151,7 @@ class _SignUpPageState extends State<SignUpPage> with UserValidation {
                               error:  "Reconfirm your password ",
                             ),
                             Text_Field(
+                              type:   TextInputType.phone,
                               hinttext: "+213 |",
                               validate: phonevalidate,
                               bottomheigh: 30,

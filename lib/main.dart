@@ -267,6 +267,7 @@ class _HomeState extends State<Home> {
 
 //----------------------------------------------------------------------------------------------------------------------------------
 
+import 'package:esiway/Screens/Profile/user_profile.dart';
 import 'package:esiway/SignIn_Up/login_page.dart';
 import 'package:flutter/material.dart';
 import 'Screens/Profile/profile_screen.dart';
@@ -286,12 +287,11 @@ void main() async {
 class MyApp extends StatelessWidget {
   MyApp({super.key});
 
-  String path = "Assets/Images/vehicle.jpeg";
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: LogInPage(),
+      home: UserProfile(),
     );
   }
 }

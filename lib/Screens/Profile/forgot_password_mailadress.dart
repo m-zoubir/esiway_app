@@ -1,7 +1,9 @@
+import 'package:esiway/Screens/Profile/settings_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 
+import '../../SignIn_Up/widgets/prefixe_icon_button.dart';
 import '../../shared/button.dart';
 import '../../shared/constant.dart';
 import '../../shared/text_field.dart';
@@ -18,144 +20,134 @@ class _MailAdressState extends State<MailAdress> with UserValidation {
   @override
   bool emailvalidate = true;
   TextEditingController email = TextEditingController();
+
+  void back() {
+    Navigator.of(context).pop();
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Stack(
+          child:
+              Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+            Container(
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height * 0.3,
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  fit: BoxFit.cover,
+                  image: AssetImage("Assets/Images/background3.png"),
+                ),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(
-                    width: double.infinity,
-                    child: FittedBox(
-                      fit: BoxFit.cover,
-                      child: Image.asset(
-                        "Assets/Images/background3.png",
+                  Container(
+                    margin: EdgeInsets.only(top: 20, left: 20),
+                    width: 80,
+                    height: 30,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        PrefixeIconButton(
+                            size: const Size(73, 34),
+                            color: Colors.white,
+                            radius: 8,
+                            text: "Back",
+                            textcolor: Color(0xFF20236C),
+                            weight: FontWeight.w600,
+                            fontsize: 14,
+                            icon: const Icon(
+                              Icons.arrow_back_ios_new_rounded,
+                              color: Color(0xFF72D2C2),
+                              size: 18,
+                            ),
+                            espaceicontext: 5.0,
+                            fct: back),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 20),
+                    width: MediaQuery.of(context).size.width * 0.6,
+                    child: Text(
+                      "Find your \naccount",
+                      style: TextStyle(
+                        color: bleu_bg,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 50,
+                        fontFamily: "Montesserat",
                       ),
                     ),
                   ),
+                  SizedBox(
+                    height: 40,
+                  ),
                   Padding(
-                    padding: const EdgeInsets.all(15.0),
-                    child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.white,
-                        padding: EdgeInsets.zero,
-                        elevation: 0.0,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(3),
-                        ),
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Text_Field(
+                      hinttext: "hinttext",
+                      validate: emailvalidate,
+                      title: "Enter  your email",
+                      error: "Not esi mail",
+                      textfieldcontroller: email,
+                      prefixicon: Icon(
+                        Icons.email,
+                        color: vert,
                       ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.arrow_back,
-                            color: vert,
-                          ),
-                          SizedBox(
-                            width: 5,
-                          ),
-                          Text(
-                            "Back",
-                            style: TextStyle(
-                              fontFamily: 'Montserrat',
-                              fontWeight: FontWeight.bold,
-                              color: bleu_bg,
-                              fontSize: 12,
-                            ),
-                          ),
-                        ],
+                    ),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Container(
+                      height: 47,
+                      width: double.infinity,
+                      child: Button(
+                        color: orange,
+                        title: "Find",
+                        onPressed: () async {
+                          if (isEmail(email.text) == true) {
+                            setState(() {
+                              emailvalidate = true;
+                            });
+                            print(email.text);
+                          } else {
+                            setState(() {
+                              emailvalidate = false;
+                            });
+                          }
+                          if (emailvalidate) {
+                            try {
+                              await FirebaseAuth.instance
+                                  .sendPasswordResetEmail(email: email.text)
+                                  .then((value) => Navigator.of(context).pop());
+                            } on FirebaseAuthException catch (e) {
+                              print("the error : ${e.message.toString()}");
+                              showDialog(
+                                  context: context,
+                                  builder: (context) => AlertDialog(
+                                      title: Text(
+                                        'Error',
+                                        style: TextStyle(
+                                            fontSize: 13,
+                                            color: bleu_bg,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      content: Text(e.message.toString())));
+                            }
+                          }
+                        },
                       ),
                     ),
                   ),
                 ],
               ),
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 20),
-                width: MediaQuery.of(context).size.width * 0.6,
-                child: Text(
-                  "Find your \naccount",
-                  style: TextStyle(
-                    color: bleu_bg,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 50,
-                    fontFamily: "Montesserat",
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: 40,
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Text_Field(
-                  hinttext: "hinttext",
-                  validate: emailvalidate,
-                  title: "Enter  your email",
-                  error: "Not esi mail",
-                  textfieldcontroller: email,
-                  prefixicon: Icon(
-                    Icons.email,
-                    color: vert,
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Container(
-                  height: 47,
-                  width: double.infinity,
-                  child: Button(
-                    color: orange,
-                    title: "Find",
-                    onPressed: () async {
-                      if (isEmail(email.text) == true) {
-                        setState(() {
-                          emailvalidate = true;
-                        });
-                        print(email.text);
-                      } else {
-                        setState(() {
-                          emailvalidate = false;
-                        });
-                      }
-                      if (emailvalidate) {
-                        try {
-                          await FirebaseAuth.instance
-                              .sendPasswordResetEmail(email: email.text);
-                          showDialog(
-                              context: context,
-                              builder: (context) =>
-                                  SnackBar(content: Text("Email sent !")));
-                        } on FirebaseAuthException catch (e) {
-                          print("the error : ${e.message.toString()}");
-                          showDialog(
-                              context: context,
-                              builder: (context) => AlertDialog(
-                                  title: Text(
-                                    'Error',
-                                    style: TextStyle(
-                                        fontSize: 13,
-                                        color: bleu_bg,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  content: Text(e.message.toString())));
-                        }
-                      }
-                    },
-                  ),
-                ),
-              ),
-            ],
-          ),
+            ),
+          ]),
         ),
       ),
     );

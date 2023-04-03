@@ -1,9 +1,13 @@
+import 'package:esiway/SignIn_Up/login_page.dart';
+import 'package:esiway/shared/button.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:iconsax/iconsax.dart';
 import '../../shared/constant.dart';
 import '../../shared/text_validation.dart';
 import '../../shared/tile_list.dart';
+import '../home/rating.dart';
 import 'car_information_screen.dart';
 import 'edit_profile_screen.dart';
 import 'settings_screen.dart';
@@ -234,17 +238,17 @@ class _ProfileState extends State<Profile> with UserValidation {
               const SizedBox(
                 height: 10.0,
               ),
-              Material_Button(
-                color: orange,
-                text: Text(
-                  "Log out",
-                  style: const TextStyle(
-                    color: bleu_bg,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
+              Container(
+                margin:   EdgeInsets.symmetric(horizontal: 40),
+                child: Button(color: orange , title:  "Log out" , onPressed: (){
+                  FirebaseAuth.instance.signOut().then((value) => Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) {
+                      return LogInPage();
+                    }),
+                  ));
+                },
+
                 ),
-                onPressed: () {},
               ),
             ],
           ),
@@ -254,31 +258,4 @@ class _ProfileState extends State<Profile> with UserValidation {
   }
 }
 
-//***********************************************************************************//
 
-class Material_Button extends StatelessWidget {
-  Material_Button({
-    required this.color,
-    required this.onPressed,
-    required this.text,
-  });
-
-  final Color color;
-  final VoidCallback onPressed;
-  final Text text;
-
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      elevation: 5,
-      color: color,
-      borderRadius: BorderRadius.circular(10),
-      child: MaterialButton(
-        onPressed: onPressed,
-        minWidth: 291,
-        height: 48,
-        child: text,
-      ),
-    );
-  }
-}

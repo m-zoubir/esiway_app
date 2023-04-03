@@ -122,7 +122,7 @@ packages:
     source: hosted
     version: "5.3.0"
   firebase_core:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: firebase_core
       sha256: ed611fb8e67e43ecc7956f242cecca383d87cf71aace27287aa5dd4bdba4ac07
@@ -145,6 +145,30 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.3.0"
+  firebase_database:
+    dependency: "direct main"
+    description:
+      name: firebase_database
+      sha256: d437ccb3537485cbcf92df60c493b1601e93bce579518a9874c8d7be5408231e
+      url: "https://pub.dev"
+    source: hosted
+    version: "10.1.0"
+  firebase_database_platform_interface:
+    dependency: transitive
+    description:
+      name: firebase_database_platform_interface
+      sha256: "509351811777e8bcd643f295ae096d8e7741d9bf845467d3626e086d1ac89848"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.2.3"
+  firebase_database_web:
+    dependency: transitive
+    description:
+      name: firebase_database_web
+      sha256: d4a319e7923380f6adc7a46de331ce372aeafe101ae0ec684fef0540d41821bb
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.2.2"
   firebase_storage:
     dependency: "direct main"
     description:
@@ -328,6 +352,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.8.2"
+  pin_code_fields:
+    dependency: "direct main"
+    description:
+      name: pin_code_fields
+      sha256: c8652519d14688f3fe2a8288d86910a46aa0b9046d728f292d3bf6067c31b4c7
+      url: "https://pub.dev"
+    source: hosted
+    version: "7.4.0"
   plugin_platform_interface:
     dependency: transitive
     description:

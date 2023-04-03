@@ -267,6 +267,7 @@ class _HomeState extends State<Home> {
 
 //----------------------------------------------------------------------------------------------------------------------------------
 
+import 'package:esiway/SignIn_Up/login_page.dart';
 import 'package:flutter/material.dart';
 import 'Screens/Profile/profile_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -276,9 +277,9 @@ import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  /* await Firebase.initializeApp(
+   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
-  );*/
+  );
   runApp(MyApp());
 }
 
@@ -290,7 +291,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Profile(),
+      home: LogInPage(),
     );
   }
 }

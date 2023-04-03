@@ -11,7 +11,7 @@ class Text_Field extends StatefulWidget {
       this.error,
       this.length,
       this.type,
-        this.bottomheigh ,
+      this.bottomheigh,
       this.subtitle,
       required this.validate,
       required this.title,
@@ -28,7 +28,7 @@ class Text_Field extends StatefulWidget {
   String? error;
   bool validate;
   int? length;
-  double? bottomheigh ;
+  double? bottomheigh;
   TextInputType? type;
   @override
   State<Text_Field> createState() => _Text_FieldState();
@@ -53,7 +53,7 @@ class _Text_FieldState extends State<Text_Field> {
                 height: 10.0,
               )
             : Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   SizedBox(
                     height: 5.0,
@@ -78,10 +78,10 @@ class _Text_FieldState extends State<Text_Field> {
             boxShadow: [
               BoxShadow(
                 color: widget.validate
-                    ? Colors.grey.withOpacity(0.3)
+                    ? Color.fromRGBO(32, 35, 108, 0.15)
                     : Colors.red.withOpacity(0.3),
                 spreadRadius: 2,
-                blurRadius: 5,
+                blurRadius: 18,
                 offset: const Offset(0, 3), // changes position of shadow
               ),
             ],
@@ -105,16 +105,30 @@ class _Text_FieldState extends State<Text_Field> {
               suffix: widget.suffix != null ? widget.suffix : null,
               suffixIcon: widget.suffixicon != null ? widget.suffixicon : null,
               prefixIcon: widget.prefixicon != null ? widget.prefixicon : null,
+              filled: true,
+              fillColor: Colors.white,
               enabledBorder: widget.validate
-                  ? InputBorder.none
+                  ? OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(5),
+                      borderSide: BorderSide(
+                        color: Colors.white,
+                      ),
+                    )
                   : OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(5),
                       borderSide: BorderSide(
                         color: Colors.red,
                       ),
                     ),
               focusedBorder: widget.validate
-                  ? InputBorder.none
+                  ? OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(5),
+                      borderSide: BorderSide(
+                        color: vert,
+                      ),
+                    )
                   : OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(5),
                       borderSide: BorderSide(
                         color: Colors.red,
                       ),
@@ -124,7 +138,7 @@ class _Text_FieldState extends State<Text_Field> {
         ),
         widget.validate
             ? SizedBox(
-                height: widget.bottomheigh != null ? widget.bottomheigh :  14.0,
+                height: widget.bottomheigh != null ? widget.bottomheigh : 14.0,
               )
             : Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -137,7 +151,8 @@ class _Text_FieldState extends State<Text_Field> {
                     style: TextStyle(color: Colors.red, fontSize: 12.0),
                   ),
                   SizedBox(
-                    height:  widget.bottomheigh != null ? widget.bottomheigh :  14.0,
+                    height:
+                        widget.bottomheigh != null ? widget.bottomheigh : 14.0,
                   )
                 ],
               )

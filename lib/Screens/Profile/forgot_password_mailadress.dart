@@ -38,25 +38,38 @@ class _MailAdressState extends State<MailAdress> with UserValidation {
                   ),
                   Padding(
                     padding: const EdgeInsets.all(15.0),
-                    child: ElevatedButton.icon(
+                    child: ElevatedButton(
                       onPressed: () {
                         Navigator.of(context).pop();
                       },
-                      style: ButtonStyle(
-                        backgroundColor: MaterialStateColor.resolveWith(
-                            (states) => Colors.white),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.white,
+                        padding: EdgeInsets.zero,
+                        elevation: 0.0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(3),
+                        ),
                       ),
-                      icon: Icon(
-                        Iconsax.back_square,
-                        color: vert,
-                        size: 20,
-                      ),
-                      label: Text(
-                        "Back",
-                        style: TextStyle(
-                            color: bleu_bg,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 15),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.arrow_back,
+                            color: vert,
+                          ),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          Text(
+                            "Back",
+                            style: TextStyle(
+                              fontFamily: 'Montserrat',
+                              fontWeight: FontWeight.bold,
+                              color: bleu_bg,
+                              fontSize: 12,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ),

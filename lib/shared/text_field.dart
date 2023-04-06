@@ -1,3 +1,4 @@
+import 'package:esiway/shared/icons_ESIWay.dart';
 import 'package:flutter/material.dart';
 import 'constant.dart';
 
@@ -12,6 +13,7 @@ class Text_Field extends StatefulWidget {
       this.length,
       this.type,
       this.bottomheigh,
+      this.prefix,
       this.subtitle,
       required this.validate,
       required this.title,
@@ -25,6 +27,7 @@ class Text_Field extends StatefulWidget {
   TextEditingController textfieldcontroller;
   Icon? suffixicon;
   Widget? suffix;
+  Icons_ESIWay? prefix;
   String? error;
   bool validate;
   int? length;
@@ -103,6 +106,7 @@ class _Text_FieldState extends State<Text_Field> {
               contentPadding:
                   EdgeInsets.symmetric(horizontal: 15, vertical: 20),
               suffix: widget.suffix != null ? widget.suffix : null,
+              prefix: widget.prefix != null ? widget.prefix : null,
               suffixIcon: widget.suffixicon != null ? widget.suffixicon : null,
               prefixIcon: widget.prefixicon != null ? widget.prefixicon : null,
               filled: true,

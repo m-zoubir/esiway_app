@@ -1,23 +1,24 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-
 class UserInfo {
-  String _uid = "";
-  String _email = "";
-  String _phone = "";
-  String _password = "";
-  String _name = "";
-  String _lastname = "";
-  String _birth = "";
-  String _gender = "";
-  String _work = "";
-  Image _image = Image.asset("Assets/Images/photo_profile.png");
-  String _imageURL = "";
+  /* String uid  ;
+  String email ;
+  String phone ;
+  String password ;
+  String name ;
+  String lastname ;
+  String birth  ;
+  String gender ;
+  String work ;
+  Image  image ;
+  String imageURL ;*/
+  /*
+   UserInfo({
+         required this.uid , 
+         required this.email , 
+         required this.
 
-  UserInfo(){}
-
+   }) {
+   }*/
+/*
   void setImage() {
     if (_imageURL.isNotEmpty) {
       _image = Image.network("${_imageURL}");
@@ -87,5 +88,5 @@ class UserInfo {
       "birth": _birth,
       "profileimage": _imageURL
     });
-  }
+  }*/
 }

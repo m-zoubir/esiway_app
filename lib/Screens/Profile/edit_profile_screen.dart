@@ -91,20 +91,20 @@ class _EditProfileState extends State<EditProfile> with UserValidation {
       return "Female";
   }
 
-  storeUser() {
-    //String uid = FirebaseAuth.instance.currentUser!.uid;
-    FirebaseFirestore.instance
-        .collection("Users")
-        .doc("gwlzZAyTXSIH0WZtNEWP")
-        .set({
-      "name": namecontroller,
-      "lastname": lastNamecontroller,
-      "gender": genderget(),
-      "work": workget(),
-      "birth":
+  storeUser() async {
+    String uid = FirebaseAuth.instance.currentUser!.uid;
+    await FirebaseFirestore.instance.collection("Users").doc(uid).update({
+      "Name": namecontroller.text,
+      "FamilyName": lastNamecontroller.text,
+      "Gender": genderget(),
+      "Status": workget(),
+      "Birth":
           "${selectedDate.day} - ${selectedDate.month} - ${selectedDate.year}",
-      "profileimage": imageUrl
-    });
+    }).then((value) => Navigator.of(context).push(
+          MaterialPageRoute(builder: (context) {
+            return Profile();
+          }),
+        ));
   }
 
   Widget build(BuildContext context) {
@@ -221,16 +221,21 @@ class _EditProfileState extends State<EditProfile> with UserValidation {
                           height: 119,
                           width: 119,
                           decoration: BoxDecoration(
-                            border: Border.all(
-                              width: 1,
-                              color: Theme.of(context).scaffoldBackgroundColor,
-                            ),
-                            shape: BoxShape.circle,
-                            image: DecorationImage(
-                              image: AssetImage(path),
-                              fit: BoxFit.cover,
-                            ),
-                          ),
+                              border: Border.all(
+                                width: 1,
+                                color:
+                                    Theme.of(context).scaffoldBackgroundColor,
+                              ),
+                              shape: BoxShape.circle,
+                              image: imageUrl == ""
+                                  ? DecorationImage(
+                                      image: AssetImage(path),
+                                      fit: BoxFit.cover,
+                                    )
+                                  : DecorationImage(
+                                      image: NetworkImage(imageUrl),
+                                      fit: BoxFit.cover,
+                                    )),
                         ),
                   Positioned(
                     bottom: 0,
@@ -376,7 +381,7 @@ class _EditProfileState extends State<EditProfile> with UserValidation {
                 height: 14.0,
               ),
 //*****************************************************************************/
-              TitleTextFeild(title: "You are "),
+              TitleTextFeild(title: "Status "),
               SizedBox(
                 height: 10.0,
               ),
@@ -512,29 +517,36 @@ class _EditProfileState extends State<EditProfile> with UserValidation {
                           "${selectedDate.day} - ${selectedDate.month} - ${selectedDate.year}");
 
                       if (lastNamevalidate && namevalidate) {
-                        String uniquename = DateTime.now().toString();
-                        Reference referenceRoot =
-                            FirebaseStorage.instance.ref();
-                        Reference referenceDirImages =
-                            referenceRoot.child('images');
+                        User? currentuser = FirebaseAuth.instance.currentUser;
 
-                        //Create a reference for the image to be stored
-                        Reference referenceImageToUpload =
-                            referenceDirImages.child(uniquename);
+                        if (_image != null) {
+                          Reference referenceRoot =
+                              FirebaseStorage.instance.ref();
+                          Reference referenceDirImages =
+                              referenceRoot.child('images');
+                          //Create a reference for the image to be stored
+                          Reference referenceImageToUpload =
+                              referenceDirImages.child(currentuser!.uid);
 
-                        //Handle errors/success
-                        try {
-                          //Store the file
-                          await referenceImageToUpload
-                              .putFile(File(_image!.path));
-                          //Success: get the download URL
-                          imageUrl =
-                              await referenceImageToUpload.getDownloadURL();
-                          print(imageUrl);
-                        } catch (error) {
-                          print(error);
+                          try {
+                            //Store the file
+                            await referenceImageToUpload
+                                .putFile(File(_image!.path));
+                            //Success: get the download URL
+                            imageUrl =
+                                await referenceImageToUpload.getDownloadURL();
+                            await FirebaseFirestore.instance
+                                .collection("Users")
+                                .doc(currentuser.uid)
+                                .update({
+                              "ProfilePicture": imageUrl,
+                            });
+
+                            print(imageUrl);
+                          } catch (error) {
+                            print(error);
+                          }
                         }
-
                         storeUser();
                       }
                     }),

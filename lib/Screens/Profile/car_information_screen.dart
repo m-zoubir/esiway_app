@@ -1,4 +1,8 @@
 import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:image_picker/image_picker.dart';
@@ -17,7 +21,6 @@ class CarInformation extends StatefulWidget {
 }
 
 class _CarInformationState extends State<CarInformation> with UserValidation {
-  @override
   int _currentindex = 3;
   int _selectedindex = 3;
 
@@ -28,27 +31,14 @@ class _CarInformationState extends State<CarInformation> with UserValidation {
   File? policy;
   File? carpicture;
 
-  File? _image;
+  String policyURL = "";
+  String carpictureURL = "";
+
   // This is the image picker
   final _picker = ImagePicker();
   // Implementing the image picker
-  Future<void> _openImagePickerGallery(String type) async {
-    final XFile? pickedImage =
-        await _picker.pickImage(source: ImageSource.gallery);
-    if (pickedImage != null) {
-      setState(() {
-        if (type == "policy")
-          policy = File(pickedImage.path);
-        else
-          carpicture = File(pickedImage.path);
-      });
-    }
-  }
-
-  // Implementing the image picker
-  Future<void> _openImagePickerCamera(String type) async {
-    final XFile? pickedImage =
-        await _picker.pickImage(source: ImageSource.camera);
+  Future<void> _openImagePicker(String type, source) async {
+    final XFile? pickedImage = await _picker.pickImage(source: source);
     if (pickedImage != null) {
       setState(() {
         if (type == "policy")
@@ -70,6 +60,15 @@ class _CarInformationState extends State<CarInformation> with UserValidation {
   TextEditingController modelcontroller = TextEditingController();
   TextEditingController brandcontroller = TextEditingController();
   TextEditingController registrationNumbercontroller = TextEditingController();
+
+  updateCar() async {
+    String uid = FirebaseAuth.instance.currentUser!.uid;
+    await FirebaseFirestore.instance.collection("Cars").doc(uid).set({
+      "brand": brandcontroller.text,
+      "model": modelcontroller.text,
+      "registrationNumber": registrationNumbercontroller.text,
+    });
+  }
 
   Widget build(BuildContext context) {
     return Scaffold(
@@ -203,7 +202,8 @@ class _CarInformationState extends State<CarInformation> with UserValidation {
                                 fontWeight: FontWeight.normal,
                                 fontFamily: "Montserrat"),
                           ),
-                          onTap: () => _openImagePickerGallery("carpicture"),
+                          onTap: () => _openImagePicker(
+                              "carpicture", ImageSource.gallery),
                           leading: Icon(
                             Icons.upload,
                             color: vert,
@@ -217,7 +217,8 @@ class _CarInformationState extends State<CarInformation> with UserValidation {
                                 fontWeight: FontWeight.normal,
                                 fontFamily: "Montserrat"),
                           ),
-                          onTap: () => _openImagePickerCamera("carpicture"),
+                          onTap: () => _openImagePicker(
+                              "carpicture", ImageSource.camera),
                           leading: Icon(
                             Icons.camera,
                             color: vert,
@@ -303,15 +304,20 @@ class _CarInformationState extends State<CarInformation> with UserValidation {
                   ? Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20),
                       child: ClipRRect(
-                        borderRadius: BorderRadius.circular(8),
-                        child: Image.file(
-                          //to show image, you type like this.
-                          File(policy!.path),
-                          fit: BoxFit.cover,
-                          width: MediaQuery.of(context).size.width,
-                          height: 300,
-                        ),
-                      ),
+                          borderRadius: BorderRadius.circular(8),
+                          child: policyURL == ""
+                              ? Image.file(
+                                  //to show image, you type like this.
+                                  File(policy!.path),
+                                  fit: BoxFit.cover,
+                                  width: MediaQuery.of(context).size.width,
+                                  height: 300,
+                                )
+                              : Image.network(
+                                  policyURL,
+                                  width: MediaQuery.of(context).size.width,
+                                  height: 300,
+                                )),
                     )
                   : SizedBox(
                       height: 2,
@@ -327,7 +333,8 @@ class _CarInformationState extends State<CarInformation> with UserValidation {
                       style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all(color6),
                       ),
-                      onPressed: () => _openImagePickerGallery("policy"),
+                      onPressed: () =>
+                          _openImagePicker("policy", ImageSource.gallery),
                       icon: Icon(
                         Iconsax.document_upload,
                         color: bleu_bg,
@@ -354,7 +361,7 @@ class _CarInformationState extends State<CarInformation> with UserValidation {
                 child: Button(
                     color: orange,
                     title: "Save",
-                    onPressed: () {
+                    onPressed: () async {
                       if (isCar(brandcontroller.text) == false)
                         setState(() {
                           brandvalidate = false;
@@ -387,6 +394,67 @@ class _CarInformationState extends State<CarInformation> with UserValidation {
                           registrationnumbervalidate = true;
                         });
                         print(registrationNumbercontroller.text);
+                        User? currentuser = FirebaseAuth.instance.currentUser;
+
+                        if (registrationnumbervalidate &&
+                            modelvalidate &&
+                            brandvalidate) {
+                          updateCar();
+                          if (carpicture != null) {
+                            Reference referenceRoot =
+                                FirebaseStorage.instance.ref();
+                            Reference referenceDirImages =
+                                referenceRoot.child('Cars');
+                            //Create a reference for the image to be stored
+                            Reference referenceImageToUpload =
+                                referenceDirImages.child(currentuser!.uid);
+
+                            try {
+                              //Store the file
+                              await referenceImageToUpload
+                                  .putFile(File(carpicture!.path));
+                              //Success: get the download URL
+
+                              carpictureURL =
+                                  await referenceImageToUpload.getDownloadURL();
+                              await FirebaseFirestore.instance
+                                  .collection("Cars")
+                                  .doc(currentuser.uid)
+                                  .update({
+                                "CarPicture": carpictureURL,
+                              });
+                            } catch (error) {
+                              print(error);
+                            }
+                          }
+                          if (policy != null) {
+                            Reference referenceRoot =
+                                FirebaseStorage.instance.ref();
+                            Reference referenceDirImages =
+                                referenceRoot.child('Policy');
+                            //Create a reference for the image to be stored
+                            Reference referenceImageToUpload =
+                                referenceDirImages.child(currentuser!.uid);
+
+                            try {
+                              //Store the file
+                              await referenceImageToUpload
+                                  .putFile(File(policy!.path));
+                              //Success: get the download URL
+
+                              policyURL =
+                                  await referenceImageToUpload.getDownloadURL();
+                              await FirebaseFirestore.instance
+                                  .collection("Cars")
+                                  .doc(currentuser.uid)
+                                  .update({
+                                "Policy": policyURL,
+                              });
+                            } catch (error) {
+                              print(error);
+                            }
+                          }
+                        }
                       }
                     }),
               ),

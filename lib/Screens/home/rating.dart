@@ -13,7 +13,6 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  @override
   int _currentindex = 0;
   int _selectedindex = 0;
 
@@ -27,6 +26,7 @@ class _HomeState extends State<Home> {
 
   TextEditingController feedbackcontroller = TextEditingController();
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: color3,
@@ -34,9 +34,9 @@ class _HomeState extends State<Home> {
         fixedColor: Theme.of(context).scaffoldBackgroundColor,
         type: BottomNavigationBarType.fixed,
         currentIndex: _currentindex,
-        unselectedIconTheme: IconThemeData(color: bleu_bg),
-        selectedIconTheme: IconThemeData(color: vert),
-        items: [
+        unselectedIconTheme: const IconThemeData(color: bleu_bg),
+        selectedIconTheme: const IconThemeData(color: vert),
+        items: const [
           BottomNavigationBarItem(
             label: "",
             icon: Icon(
@@ -78,7 +78,7 @@ class _HomeState extends State<Home> {
         backgroundColor: Colors.white,
         onPressed: () {
           showModalBottomSheet(
-              shape: RoundedRectangleBorder(
+              shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.vertical(top: Radius.circular(35)),
               ),
               context: context,
@@ -91,31 +91,31 @@ class _HomeState extends State<Home> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text(
+                          const Text(
                             "Rate tour trip",
                             style: TextStyle(
                                 color: bleu_bg,
                                 fontSize: 24,
                                 fontWeight: FontWeight.bold),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 20,
                           ),
                           CircleAvatar(
                             child: Image.asset(user_picture),
                             radius: 59,
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 15,
                           ),
-                          Text(
+                          const Text(
                             "User Name",
                             style: TextStyle(
                                 color: bleu_bg,
                                 fontSize: 24,
                                 fontWeight: FontWeight.bold),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 15,
                           ),
                           RatingBar.builder(
@@ -124,8 +124,9 @@ class _HomeState extends State<Home> {
                             direction: Axis.horizontal,
                             allowHalfRating: true,
                             itemCount: 5,
-                            itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
-                            itemBuilder: (context, _) => Icon(
+                            itemPadding:
+                                const EdgeInsets.symmetric(horizontal: 4.0),
+                            itemBuilder: (context, _) => const Icon(
                               Iconsax.star,
                               color: Colors.amber,
                             ),
@@ -134,7 +135,7 @@ class _HomeState extends State<Home> {
                               print(rating);
                             },
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 25,
                           ),
                           Text_Field(
@@ -142,7 +143,7 @@ class _HomeState extends State<Home> {
                             hinttext: "Write your comment here  ",
                             validate: true,
                             textfieldcontroller: feedbackcontroller,
-                            suffixicon: Icon(
+                            suffixicon: const Icon(
                               Icons.send,
                               color: vert,
                             ),
@@ -152,7 +153,7 @@ class _HomeState extends State<Home> {
                     ),
                   ));
         },
-        child: Icon(
+        child: const Icon(
           Icons.add,
           color: Colors.lightBlueAccent,
         ),
@@ -168,7 +169,7 @@ class _HomeState extends State<Home> {
                   top: 60.0, left: 30.0, bottom: 30.0, right: 30.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
+                children: const <Widget>[
                   SizedBox(
                     height: 60.0,
                   ),

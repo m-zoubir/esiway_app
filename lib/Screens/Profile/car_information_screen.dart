@@ -540,6 +540,27 @@ class _CarInformationState extends State<CarInformation> with UserValidation {
                           }
 
                           updateCar();
+                        } else if (!carPicrtureExist() || !policyExist()) {
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              backgroundColor: Colors.white,
+                              duration: Duration(
+                                seconds: 3,
+                              ),
+                              margin: EdgeInsets.symmetric(
+                                  vertical: 30, horizontal: 20),
+                              padding: EdgeInsets.all(12),
+                              behavior: SnackBarBehavior.floating,
+                              elevation: 2,
+                              content: Center(
+                                child: Text(
+                                  "Car picture and Insurance policy picture are obligatory",
+                                  style: TextStyle(
+                                    color: Colors.red,
+                                    fontSize: 12,
+                                    fontFamily: "Montserrat",
+                                  ),
+                                ),
+                              )));
                         }
                       }
                     }),

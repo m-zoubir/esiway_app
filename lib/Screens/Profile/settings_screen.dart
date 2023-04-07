@@ -5,6 +5,8 @@ import 'package:url_launcher/url_launcher_string.dart';
 
 import '../../shared/constant.dart';
 import '../../shared/tile_list.dart';
+import 'change_password.dart';
+import 'delete_account.dart';
 import 'forgot_password_mailadress.dart';
 import 'profile_screen.dart';
 
@@ -158,8 +160,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   color: vert,
                 ),
                 onPressed: () {
-                  Navigator.of(context).push(
-                      MaterialPageRoute(builder: (context) => MailAdress()));
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => ChangePassword()));
                 }),
             Listbox(
                 title: "Delete my account",
@@ -167,7 +169,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   Iconsax.trush_square,
                   color: vert,
                 ),
-                onPressed: () {}),
+                onPressed: () {
+                  Navigator.of(context).push(
+                      MaterialPageRoute(builder: (context) => DeleteAccount()));
+                }),
           ],
         ),
       ),

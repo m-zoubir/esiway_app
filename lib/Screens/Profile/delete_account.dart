@@ -170,18 +170,22 @@ class _DeleteAccountState extends State<DeleteAccount> {
                           .ref()
                           .child("Policy/${user.uid}");
                       try {
-                        await Profile.delete();
                         await Car.delete();
                         await Policy.delete();
+                        await FirebaseFirestore.instance
+                            .collection("Users")
+                            .doc("${user.uid}")
+                            .delete();
+                      } catch (e) {
+                        print("The fle doesn't exists");
+                      }
+                      try {
+                        await Profile.delete();
                       } catch (e) {
                         print("The fle doesn't exists");
                       }
 
                       try {
-                        await FirebaseFirestore.instance
-                            .collection("Users")
-                            .doc("${user.uid}")
-                            .delete();
                         await FirebaseFirestore.instance
                             .collection("Cars")
                             .doc("${user.uid}")

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:esiway/SignIn_Up/login_page.dart';
 import 'package:esiway/shared/button.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -21,18 +22,28 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> with UserValidation {
-  @override
   int _currentindex = 3;
   int _selectedindex = 3;
 
-  String user_name = "ZAIDI Yasmine";
   String user_picture = "Assets/Images/vehicle.jpeg";
   double rating = 3.0;
 
   @override
   void initState() {
     super.initState();
+
+    _reference = FirebaseFirestore.instance
+        .collection('Users')
+        .doc(FirebaseAuth.instance.currentUser!.uid);
+    _futureData = _reference.get();
   }
+
+  late DocumentReference _reference;
+
+  //_reference.get()  --> returns Future<DocumentSnapshot>
+  //_reference.snapshots() --> Stream<DocumentSnapshot>
+  late Future<DocumentSnapshot> _futureData;
+  late Map data;
 
   Widget build(BuildContext context) {
     return Scaffold(
@@ -109,154 +120,184 @@ class _ProfileState extends State<Profile> with UserValidation {
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 18.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              SizedBox(
-                height: 77,
-                width: 77,
-                child: CircleAvatar(
-                  backgroundImage: AssetImage(user_picture),
-                ),
-              ),
-              const SizedBox(
-                height: 12.0,
-              ),
-              Container(
-                child: Text(
-                  user_name,
-                  style: TextStyle(
-                    color: bleu_bg,
-                    fontFamily: "Montserrat",
-                    fontSize: 15.0,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              const SizedBox(
-                height: 8.0,
-              ),
-              RatingBarIndicator(
-                rating: rating,
-                itemBuilder: (context, index) => Icon(
-                  Iconsax.star1,
-                  color: Colors.amber,
-                ),
-                itemCount: 5,
-                itemSize: 25.0,
-                direction: Axis.horizontal,
-              ),
-              const SizedBox(
-                height: 21.0,
-              ),
-              Listbox(
-                onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) {
-                        return EditProfileInfo();
-                      },
+      body: FutureBuilder<DocumentSnapshot>(
+        future: _futureData,
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          if (snapshot.hasError) {
+            return Center(child: CircularProgressIndicator());
+          }
+
+          if (snapshot.hasData) {
+            //Get the data
+            DocumentSnapshot documentSnapshot = snapshot.data;
+            data = documentSnapshot.data() as Map;
+
+            //display the data
+            return SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 18.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Container(
+                      height: 90,
+                      width: 90,
+                      decoration: BoxDecoration(
+                          border: Border.all(
+                            width: 1,
+                            color: Theme.of(context).scaffoldBackgroundColor,
+                          ),
+                          shape: BoxShape.circle,
+                          image: data.containsKey("ProfilePicture") == null
+                              ? DecorationImage(
+                                  image: AssetImage(user_picture),
+                                  fit: BoxFit.cover,
+                                )
+                              : DecorationImage(
+                                  image: NetworkImage(data["ProfilePicture"]),
+                                  fit: BoxFit.cover,
+                                )),
                     ),
-                  );
-                },
-                title: "My informations",
-                iconleading: const Icon(
-                  Iconsax.user,
-                  color: vert,
-                ),
-              ),
-              Listbox(
-                onPressed: () {},
-                subtitle: "{Home , work , ...}",
-                title: "My adresses",
-                iconleading: const Icon(
-                  Iconsax.home_2,
-                  color: vert,
-                ),
-              ),
-              Listbox(
-                onPressed: () {},
-                title: "History",
-                iconleading: const Icon(
-                  Icons.history,
-                  color: vert,
-                ),
-              ),
-              Listbox(
-                onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) {
-                        return CarInformation();
-                      },
+                    const SizedBox(
+                      height: 12.0,
                     ),
-                  );
-                },
-                title: "My car",
-                iconleading: const Icon(
-                  Iconsax.car,
-                  color: vert,
-                ),
-              ),
-              Listbox(
-                onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) {
-                        return Verification();
-                      },
+                    Container(
+                      child: Text(
+                        "${data["FamilyName"]} ${data["Name"]} ",
+                        style: TextStyle(
+                          color: bleu_bg,
+                          fontFamily: "Montserrat",
+                          fontSize: 15.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ),
-                  );
-                },
-                subtitle: "(Email,phone number)",
-                title: "Verify my account",
-                iconleading: const Icon(
-                  Iconsax.verify5,
-                  color: vert,
-                ),
-              ),
-              Listbox(
-                onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) {
-                        return Settings();
-                      },
+                    const SizedBox(
+                      height: 8.0,
                     ),
-                  );
-                },
-                title: "Settings",
-                iconleading: const Icon(
-                  Icons.settings,
-                  color: vert,
+                    RatingBarIndicator(
+                      rating: rating,
+                      itemBuilder: (context, index) => Icon(
+                        Iconsax.star1,
+                        color: Colors.amber,
+                      ),
+                      itemCount: 5,
+                      itemSize: 25.0,
+                      direction: Axis.horizontal,
+                    ),
+                    const SizedBox(
+                      height: 21.0,
+                    ),
+                    Listbox(
+                      onPressed: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) {
+                              return EditProfileInfo();
+                            },
+                          ),
+                        );
+                      },
+                      title: "My informations",
+                      iconleading: const Icon(
+                        Iconsax.user,
+                        color: vert,
+                      ),
+                    ),
+                    Listbox(
+                      onPressed: () {},
+                      subtitle: "{Home , work , ...}",
+                      title: "My adresses",
+                      iconleading: const Icon(
+                        Iconsax.home_2,
+                        color: vert,
+                      ),
+                    ),
+                    Listbox(
+                      onPressed: () {},
+                      title: "History",
+                      iconleading: const Icon(
+                        Icons.history,
+                        color: vert,
+                      ),
+                    ),
+                    Listbox(
+                      onPressed: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) {
+                              return CarInfo();
+                            },
+                          ),
+                        );
+                      },
+                      title: "My car",
+                      iconleading: const Icon(
+                        Iconsax.car,
+                        color: vert,
+                      ),
+                    ),
+                    Listbox(
+                      onPressed: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) {
+                              return Verification();
+                            },
+                          ),
+                        );
+                      },
+                      subtitle: "(Email,phone number)",
+                      title: "Verify my account",
+                      iconleading: const Icon(
+                        Iconsax.verify5,
+                        color: vert,
+                      ),
+                    ),
+                    Listbox(
+                      onPressed: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) {
+                              return SettingsScreen();
+                            },
+                          ),
+                        );
+                      },
+                      title: "Settings",
+                      iconleading: const Icon(
+                        Icons.settings,
+                        color: vert,
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 10.0,
+                    ),
+                    Container(
+                      margin: EdgeInsets.symmetric(horizontal: 40),
+                      child: Button(
+                        color: orange,
+                        title: "Log out",
+                        onPressed: () {
+                          FirebaseAuth.instance
+                              .signOut()
+                              .then((value) => Navigator.of(context).push(
+                                    MaterialPageRoute(builder: (context) {
+                                      return LogInPage();
+                                    }),
+                                  ));
+                        },
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              const SizedBox(
-                height: 10.0,
-              ),
-              Container(
-                margin: EdgeInsets.symmetric(horizontal: 40),
-                child: Button(
-                  color: orange,
-                  title: "Log out",
-                  onPressed: () {
-                    FirebaseAuth.instance
-                        .signOut()
-                        .then((value) => Navigator.of(context).push(
-                              MaterialPageRoute(builder: (context) {
-                                return LogInPage();
-                              }),
-                            ));
-                  },
-                ),
-              ),
-            ],
-          ),
-        ),
+            );
+          }
+
+          return Container();
+        },
       ),
     );
   }

@@ -8,14 +8,14 @@ import '../../shared/tile_list.dart';
 import 'forgot_password_mailadress.dart';
 import 'profile_screen.dart';
 
-class Settings extends StatefulWidget {
-  Settings({Key? key}) : super(key: key);
+class SettingsScreen extends StatefulWidget {
+  SettingsScreen({Key? key}) : super(key: key);
 
   @override
-  State<Settings> createState() => _SettingsState();
+  State<SettingsScreen> createState() => _SettingsScreenState();
 }
 
-class _SettingsState extends State<Settings> {
+class _SettingsScreenState extends State<SettingsScreen> {
   int _currentindex = 3;
   int _selectedindex = 3;
 

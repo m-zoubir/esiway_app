@@ -13,8 +13,67 @@ import '../../shared/text_validation.dart';
 import '../../shared/title_text_field.dart';
 import 'profile_screen.dart';
 
+class CarInfo extends StatelessWidget {
+  CarInfo({super.key}) {
+    _reference = FirebaseFirestore.instance
+        .collection('Cars')
+        .doc(FirebaseAuth.instance.currentUser!.uid);
+    _futureData = _reference.get();
+  }
+
+  late DocumentReference _reference;
+
+  //_reference.get()  --> returns Future<DocumentSnapshot>
+  //_reference.snapshots() --> Stream<DocumentSnapshot>
+  late Future<DocumentSnapshot> _futureData;
+  late Map data;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: FutureBuilder<DocumentSnapshot>(
+        future: _futureData,
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          if (snapshot.hasError) {
+            return Center(child: CircularProgressIndicator());
+          }
+
+          if (snapshot.hasData) {
+            //Get the data
+            DocumentSnapshot documentSnapshot = snapshot.data;
+            data = documentSnapshot.data() as Map;
+
+            //display the data
+            return CarInformation(
+              Brand: data["brand"],
+              Model: data["model"],
+              Registrationnumber: data["registrationNumber"],
+              CarURL: data["CarPicture"],
+              PolicyURL: data["Policy"],
+            );
+          }
+
+          return Container();
+        },
+      ),
+    );
+  }
+}
+
 class CarInformation extends StatefulWidget {
-  const CarInformation({super.key});
+  CarInformation(
+      {super.key,
+      this.Brand,
+      this.CarURL,
+      this.Model,
+      this.PolicyURL,
+      this.Registrationnumber});
+
+  String? Brand;
+  String? Model;
+  String? Registrationnumber;
+  String? CarURL;
+  String? PolicyURL;
 
   @override
   State<CarInformation> createState() => _CarInformationState();
@@ -31,8 +90,8 @@ class _CarInformationState extends State<CarInformation> with UserValidation {
   File? policy;
   File? carpicture;
 
-  String policyURL = "";
-  String carpictureURL = "";
+  String? policyURL;
+  String? carpictureURL;
 
   // This is the image picker
   final _picker = ImagePicker();
@@ -52,9 +111,18 @@ class _CarInformationState extends State<CarInformation> with UserValidation {
   @override
   void initState() {
     super.initState();
-    modelcontroller.text = "206";
-    brandcontroller.text = "Peugeot";
-    registrationNumbercontroller.text = "12014-112-31";
+    widget.Model == null
+        ? modelcontroller.text = "206"
+        : modelcontroller.text = widget.Model!;
+    widget.Brand == null
+        ? brandcontroller.text = "Peugeot"
+        : brandcontroller.text = widget.Brand!;
+    widget.Registrationnumber == null
+        ? registrationNumbercontroller.text = "12014-112-31"
+        : registrationNumbercontroller.text = widget.Registrationnumber!;
+
+    carpictureURL = widget.CarURL;
+    policyURL = widget.PolicyURL;
   }
 
   TextEditingController modelcontroller = TextEditingController();
@@ -63,11 +131,22 @@ class _CarInformationState extends State<CarInformation> with UserValidation {
 
   updateCar() async {
     String uid = FirebaseAuth.instance.currentUser!.uid;
-    await FirebaseFirestore.instance.collection("Cars").doc(uid).set({
+    await FirebaseFirestore.instance.collection("Cars").doc(uid).update({
       "brand": brandcontroller.text,
       "model": modelcontroller.text,
       "registrationNumber": registrationNumbercontroller.text,
-    });
+    }).then((value) =>
+        Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+          return Profile();
+        })));
+  }
+
+  bool carPicrtureExist() {
+    return (carpicture != null || carpictureURL != null);
+  }
+
+  bool policyExist() {
+    return (policy != null || policyURL != null);
   }
 
   Widget build(BuildContext context) {
@@ -169,7 +248,7 @@ class _CarInformationState extends State<CarInformation> with UserValidation {
               SizedBox(
                 height: 10.0,
               ),
-              carpicture == null
+              carpicture == null && carpictureURL == null
                   ? SizedBox(
                       height: 2,
                     )
@@ -182,9 +261,11 @@ class _CarInformationState extends State<CarInformation> with UserValidation {
                           color: Theme.of(context).scaffoldBackgroundColor,
                         ),
                       ),
-                      child: Image.file(
-                        carpicture!,
-                      ),
+                      child: carpicture != null
+                          ? Image.file(
+                              carpicture!,
+                            )
+                          : Image.network(carpictureURL!),
                     ),
 
               TextButton(
@@ -300,12 +381,12 @@ class _CarInformationState extends State<CarInformation> with UserValidation {
                 height: 10.0,
               ),
 
-              policy != null
+              policy != null || policyURL != null
                   ? Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20),
                       child: ClipRRect(
                           borderRadius: BorderRadius.circular(8),
-                          child: policyURL == ""
+                          child: policyURL == null
                               ? Image.file(
                                   //to show image, you type like this.
                                   File(policy!.path),
@@ -314,7 +395,7 @@ class _CarInformationState extends State<CarInformation> with UserValidation {
                                   height: 300,
                                 )
                               : Image.network(
-                                  policyURL,
+                                  policyURL!,
                                   width: MediaQuery.of(context).size.width,
                                   height: 300,
                                 )),
@@ -398,8 +479,9 @@ class _CarInformationState extends State<CarInformation> with UserValidation {
 
                         if (registrationnumbervalidate &&
                             modelvalidate &&
-                            brandvalidate) {
-                          updateCar();
+                            brandvalidate &&
+                            carPicrtureExist() &&
+                            policyExist()) {
                           if (carpicture != null) {
                             Reference referenceRoot =
                                 FirebaseStorage.instance.ref();
@@ -417,6 +499,8 @@ class _CarInformationState extends State<CarInformation> with UserValidation {
 
                               carpictureURL =
                                   await referenceImageToUpload.getDownloadURL();
+
+                              print(carpictureURL);
                               await FirebaseFirestore.instance
                                   .collection("Cars")
                                   .doc(currentuser.uid)
@@ -454,6 +538,8 @@ class _CarInformationState extends State<CarInformation> with UserValidation {
                               print(error);
                             }
                           }
+
+                          updateCar();
                         }
                       }
                     }),

@@ -1,12 +1,59 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:esiway/SignIn_Up/login_page.dart';
 import 'package:esiway/shared/button.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import '../../SignIn_Up/widgets/password_field.dart';
 import '../../shared/constant.dart';
 import 'forgot_password_mailadress.dart';
 
-class DeleteAccount extends StatefulWidget {
-  const DeleteAccount({Key? key}) : super(key: key);
+class DeleteAccountPassword extends StatelessWidget {
+  DeleteAccountPassword({super.key}) {
+    _reference = FirebaseFirestore.instance
+        .collection('Users')
+        .doc(FirebaseAuth.instance.currentUser!.uid);
+    _futureData = _reference.get();
+  }
 
+  late DocumentReference _reference;
+
+  //_reference.get()  --> returns Future<DocumentSnapshot>
+  //_reference.snapshots() --> Stream<DocumentSnapshot>
+  late Future<DocumentSnapshot> _futureData;
+  late Map data;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: FutureBuilder<DocumentSnapshot>(
+        future: _futureData,
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          if (snapshot.hasError) {
+            return Center(child: CircularProgressIndicator());
+          }
+
+          if (snapshot.hasData) {
+            //Get the data
+            DocumentSnapshot documentSnapshot = snapshot.data;
+            data = documentSnapshot.data() as Map;
+
+            //display the data
+            return DeleteAccount(password: data["Password"]);
+          }
+
+          return Container();
+        },
+      ),
+    );
+  }
+}
+
+class DeleteAccount extends StatefulWidget {
+  DeleteAccount({Key? key, required this.password}) : super(key: key);
+
+  String password;
   @override
   State<DeleteAccount> createState() => _DeleteAccountState();
 }
@@ -97,7 +144,56 @@ class _DeleteAccountState extends State<DeleteAccount> {
                 height: 30,
               ),
               Button(
-                  color: orange, title: "Delete my account", onPressed: () {}),
+                  color: orange,
+                  title: "Delete my account",
+                  onPressed: () async {
+                    if (currentpassword.text == widget.password) {
+                      setState(() {
+                        currentpasswordvalidate = true;
+                      });
+                    } else {
+                      setState(() {
+                        currentpasswordvalidate = false;
+                      });
+                    }
+
+                    if (currentpasswordvalidate) {
+                      User? user = FirebaseAuth.instance.currentUser;
+
+                      final Profile = FirebaseStorage.instance
+                          .ref()
+                          .child("images/${user!.uid}");
+                      final Car = FirebaseStorage.instance
+                          .ref()
+                          .child("Cars/${user.uid}");
+                      final Policy = FirebaseStorage.instance
+                          .ref()
+                          .child("Policy/${user.uid}");
+                      try {
+                        await Profile.delete();
+                        await Car.delete();
+                        await Policy.delete();
+                      } catch (e) {
+                        print("The fle doesn't exists");
+                      }
+
+                      try {
+                        await FirebaseFirestore.instance
+                            .collection("Users")
+                            .doc("${user.uid}")
+                            .delete();
+                        await FirebaseFirestore.instance
+                            .collection("Cars")
+                            .doc("${user.uid}")
+                            .delete();
+                      } catch (e) {
+                        print("The fle doesn't exists");
+                      }
+                      await user.delete();
+                      Navigator.of(context).push(
+                          MaterialPageRoute(builder: (context) => LogInPage()));
+                    }
+                  }),
             ],
           ),
         ),

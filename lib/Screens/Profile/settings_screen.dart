@@ -161,7 +161,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ),
                 onPressed: () {
                   Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => ChangePassword()));
+                      builder: (context) => ChangePasswordInfo()));
                 }),
             Listbox(
                 title: "Delete my account",
@@ -170,8 +170,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   color: vert,
                 ),
                 onPressed: () {
-                  Navigator.of(context).push(
-                      MaterialPageRoute(builder: (context) => DeleteAccount()));
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => DeleteAccountPassword()));
                 }),
           ],
         ),

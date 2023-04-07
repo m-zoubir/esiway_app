@@ -1,19 +1,66 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:esiway/Screens/Profile/settings_screen.dart';
 import 'package:esiway/shared/button.dart';
 import 'package:esiway/shared/text_field.dart';
+import 'package:esiway/shared/text_validation.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 
 import '../../SignIn_Up/widgets/password_field.dart';
 import '../../shared/constant.dart';
 
+class ChangePasswordInfo extends StatelessWidget {
+  ChangePasswordInfo({super.key}) {
+    _reference = FirebaseFirestore.instance
+        .collection('Users')
+        .doc(FirebaseAuth.instance.currentUser!.uid);
+    _futureData = _reference.get();
+  }
+
+  late DocumentReference _reference;
+
+  //_reference.get()  --> returns Future<DocumentSnapshot>
+  //_reference.snapshots() --> Stream<DocumentSnapshot>
+  late Future<DocumentSnapshot> _futureData;
+  late Map data;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: FutureBuilder<DocumentSnapshot>(
+        future: _futureData,
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          if (snapshot.hasError) {
+            return Center(child: CircularProgressIndicator());
+          }
+
+          if (snapshot.hasData) {
+            //Get the data
+            DocumentSnapshot documentSnapshot = snapshot.data;
+            data = documentSnapshot.data() as Map;
+
+            //display the data
+            return ChangePassword(password: data["Password"]);
+          }
+
+          return Container();
+        },
+      ),
+    );
+  }
+}
+
 class ChangePassword extends StatefulWidget {
-  const ChangePassword({Key? key}) : super(key: key);
+  ChangePassword({Key? key, required this.password}) : super(key: key);
+
+  String password;
 
   @override
   State<ChangePassword> createState() => _ChangePasswordState();
 }
 
-class _ChangePasswordState extends State<ChangePassword> {
+class _ChangePasswordState extends State<ChangePassword> with UserValidation {
   TextEditingController currentpassword = TextEditingController();
   TextEditingController newpassword = TextEditingController();
   TextEditingController confirmpassword = TextEditingController();
@@ -93,7 +140,58 @@ class _ChangePasswordState extends State<ChangePassword> {
               SizedBox(
                 height: 30,
               ),
-              Button(color: orange, title: "Confirm", onPressed: () {}),
+              Button(
+                  color: orange,
+                  title: "Confirm",
+                  onPressed: () async {
+                    User? user = await FirebaseAuth.instance.currentUser;
+
+                    if (widget.password == currentpassword.text) {
+                      setState(() {
+                        currentpasswordvalidate = true;
+                      });
+                    } else {
+                      setState(() {
+                        currentpasswordvalidate = false;
+                      });
+                    }
+                    if (isPassword(newpassword.text)) {
+                      setState(() {
+                        newpassordvalidate = true;
+                      });
+                    } else {
+                      setState(() {
+                        confirmpasswordvalidate = false;
+                      });
+                    }
+
+                    if (confirmpassword.text == newpassword.text &&
+                        confirmpassword.text.isNotEmpty) {
+                      setState(() {
+                        confirmpasswordvalidate = true;
+                      });
+                    } else {
+                      setState(() {
+                        confirmpasswordvalidate = false;
+                      });
+                    }
+
+                    if (confirmpasswordvalidate &&
+                        newpassordvalidate &&
+                        currentpasswordvalidate) {
+                      user!.updatePassword(newpassword.text);
+                      await FirebaseFirestore.instance
+                          .collection("Users")
+                          .doc(user.uid)
+                          .update({
+                        "Password": newpassword.text,
+                      }).then((value) => Navigator.of(context).push(
+                                MaterialPageRoute(builder: (context) {
+                                  return SettingsScreen();
+                                }),
+                              ));
+                    }
+                  }),
             ],
           ),
         ),

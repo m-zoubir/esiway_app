@@ -13,8 +13,72 @@ import '../../shared/tile_list.dart';
 import '../../shared/title_text_field.dart';
 import 'profile_screen.dart';
 
+class EditProfileInfo extends StatelessWidget {
+  EditProfileInfo({super.key}) {
+    _reference = FirebaseFirestore.instance
+        .collection('Users')
+        .doc(FirebaseAuth.instance.currentUser!.uid);
+    _futureData = _reference.get();
+  }
+
+  late DocumentReference _reference;
+
+  //_reference.get()  --> returns Future<DocumentSnapshot>
+  //_reference.snapshots() --> Stream<DocumentSnapshot>
+  late Future<DocumentSnapshot> _futureData;
+  late Map data;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: FutureBuilder<DocumentSnapshot>(
+        future: _futureData,
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          if (snapshot.hasError) {
+            return Center(child: CircularProgressIndicator());
+          }
+
+          if (snapshot.hasData) {
+            //Get the data
+            DocumentSnapshot documentSnapshot = snapshot.data;
+            data = documentSnapshot.data() as Map;
+
+            //display the data
+            return EditProfile(
+              Name: data["Name"],
+              Lastname: data["FamilyName"],
+              Gender: data["Gender"],
+              Status: data["Status"],
+              ImageUrl: data.containsKey("ProfilePicture")
+                  ? data["ProfilePicture"]
+                  : null,
+              Birth: data.containsKey("Birth") ? data["Birth"] : null,
+            );
+          }
+
+          return Container();
+        },
+      ),
+    );
+  }
+}
+
 class EditProfile extends StatefulWidget {
-  const EditProfile({super.key});
+  EditProfile(
+      {super.key,
+      required this.Name,
+      this.Birth,
+      required this.Gender,
+      required this.Status,
+      required this.Lastname,
+      this.ImageUrl});
+
+  String Lastname;
+  String Name;
+  String? Birth;
+  String Gender;
+  String Status;
+  String? ImageUrl;
 
   @override
   State<EditProfile> createState() => _EditProfileState();
@@ -30,14 +94,34 @@ class _EditProfileState extends State<EditProfile> with UserValidation {
   bool emailvalidate = true;
   bool phonevalidate = true;
 
+  bool? gender = false;
+  bool? staff = false;
+  bool? student = false;
+  bool? teacher = false;
+  String? imageUrl;
+  String? birth;
+
   String path = "Assets/Images/photo_profile.png";
   @override
   DateTime selectedDate = DateTime.now();
 
   void initState() {
     super.initState();
-    namecontroller.text = 'Complete the story from here...';
-    lastNamecontroller.text = 'Complete the story from here...';
+    namecontroller.text = widget.Name;
+    lastNamecontroller.text = widget.Lastname;
+    imageUrl = widget.ImageUrl;
+    birth = widget.Birth;
+    if (widget.Gender == "Male") gender = true;
+    if (widget.Status == "Staff")
+      staff = true;
+    else if (widget.Status == "Teacher")
+      teacher = true;
+    else
+      student = true;
+
+    if (birth == null)
+      birth =
+          "${selectedDate.day} - ${selectedDate.month} - ${selectedDate.year}";
   }
 
   Future<void> _selectDate(BuildContext context) async {
@@ -49,6 +133,8 @@ class _EditProfileState extends State<EditProfile> with UserValidation {
     if (picked != null && picked != selectedDate) {
       setState(() {
         selectedDate = picked;
+        birth =
+            "${selectedDate.day} - ${selectedDate.month} - ${selectedDate.year}";
       });
     }
   }
@@ -57,7 +143,7 @@ class _EditProfileState extends State<EditProfile> with UserValidation {
   TextEditingController lastNamecontroller = TextEditingController();
 
   File? _image;
-  String imageUrl = "";
+
   // This is the image picker
   final _picker = ImagePicker();
   // Implementing the image picker
@@ -69,11 +155,6 @@ class _EditProfileState extends State<EditProfile> with UserValidation {
       });
     }
   }
-
-  bool? gender;
-  bool? staff;
-  bool? student;
-  bool? teacher;
 
   String workget() {
     if (staff!)
@@ -227,13 +308,13 @@ class _EditProfileState extends State<EditProfile> with UserValidation {
                                     Theme.of(context).scaffoldBackgroundColor,
                               ),
                               shape: BoxShape.circle,
-                              image: imageUrl == ""
+                              image: imageUrl == null
                                   ? DecorationImage(
                                       image: AssetImage(path),
                                       fit: BoxFit.cover,
                                     )
                                   : DecorationImage(
-                                      image: NetworkImage(imageUrl),
+                                      image: NetworkImage(imageUrl!),
                                       fit: BoxFit.cover,
                                     )),
                         ),
@@ -321,8 +402,8 @@ class _EditProfileState extends State<EditProfile> with UserValidation {
 //*****************************************************************************/
 
               Text_Field(
-                  title: "Last name",
-                  hinttext: "Last name",
+                  title: "Family name",
+                  hinttext: "Family name",
                   error: "Value can't be Empty / value contains space",
                   validate: lastNamevalidate,
                   suffixicon: Icon(Icons.edit, color: color6),
@@ -340,19 +421,22 @@ class _EditProfileState extends State<EditProfile> with UserValidation {
                 children: [
                   Expanded(
                     child: Listbox(
+                      iconleading: Icon(
+                        Icons.male_rounded,
+                        color: gender == false ? vert : Colors.white,
+                      ),
                       title: "Male",
                       color: gender == false || gender == null
                           ? null
-                          : Colors.green.withOpacity(0.4),
+                          : const Color(0xFF99CFD7),
                       shadow: gender == false || gender == null
                           ? null
-                          : Colors.green.withOpacity(0.4),
+                          : const Color(0xFF99CFD7),
                       onPressed: () {
                         setState(() {
                           gender = true;
                         });
                       },
-                      inCenter: true,
                     ),
                   ),
                   SizedBox(
@@ -360,19 +444,22 @@ class _EditProfileState extends State<EditProfile> with UserValidation {
                   ),
                   Expanded(
                     child: Listbox(
+                      iconleading: Icon(
+                        Icons.female_rounded,
+                        color: gender == true ? vert : Colors.white,
+                      ),
                       title: "Female",
                       color: gender == true || gender == null
                           ? null
-                          : Colors.green.withOpacity(0.4),
+                          : const Color(0xFF99CFD7),
                       shadow: gender == true || gender == null
                           ? null
-                          : Colors.green.withOpacity(0.4),
+                          : const Color(0xFF99CFD7),
                       onPressed: () {
                         setState(() {
                           gender = false;
                         });
                       },
-                      inCenter: true,
                     ),
                   ),
                 ],
@@ -393,10 +480,10 @@ class _EditProfileState extends State<EditProfile> with UserValidation {
                       title: "Teacher",
                       color: teacher == false || teacher == null
                           ? null
-                          : Colors.green.withOpacity(0.4),
+                          : const Color(0xFF99CFD7),
                       shadow: teacher == false || teacher == null
                           ? null
-                          : Colors.green.withOpacity(0.4),
+                          : const Color(0xFF99CFD7),
                       onPressed: () {
                         setState(() {
                           teacher = true;
@@ -415,10 +502,10 @@ class _EditProfileState extends State<EditProfile> with UserValidation {
                       title: "Student",
                       color: student == false || student == null
                           ? null
-                          : Colors.green.withOpacity(0.4),
+                          : const Color(0xFF99CFD7),
                       shadow: student == false || student == null
                           ? null
-                          : Colors.green.withOpacity(0.4),
+                          : const Color(0xFF99CFD7),
                       onPressed: () {
                         setState(() {
                           student = true;
@@ -437,10 +524,10 @@ class _EditProfileState extends State<EditProfile> with UserValidation {
                       title: "Staff",
                       color: staff == false || staff == null
                           ? null
-                          : Colors.green.withOpacity(0.4),
+                          : const Color(0xFF99CFD7),
                       shadow: staff == false || staff == null
                           ? null
-                          : Colors.green.withOpacity(0.4),
+                          : const Color(0xFF99CFD7),
                       onPressed: () {
                         setState(() {
                           teacher = false;
@@ -465,8 +552,7 @@ class _EditProfileState extends State<EditProfile> with UserValidation {
                   width: MediaQuery.of(context).size.width * 0.6,
                   child: Button(
                     color: color6,
-                    title:
-                        "${selectedDate.day} - ${selectedDate.month} - ${selectedDate.year}",
+                    title: birth!,
                     onPressed: () => _selectDate(context),
                     icon: Icon(Icons.edit_calendar),
                   )),

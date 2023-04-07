@@ -158,7 +158,7 @@ class _ProfileState extends State<Profile> with UserValidation {
                   Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (context) {
-                        return EditProfile();
+                        return EditProfileInfo();
                       },
                     ),
                   );
@@ -239,15 +239,19 @@ class _ProfileState extends State<Profile> with UserValidation {
                 height: 10.0,
               ),
               Container(
-                margin:   EdgeInsets.symmetric(horizontal: 40),
-                child: Button(color: orange , title:  "Log out" , onPressed: (){
-                  FirebaseAuth.instance.signOut().then((value) => Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) {
-                      return LogInPage();
-                    }),
-                  ));
-                },
-
+                margin: EdgeInsets.symmetric(horizontal: 40),
+                child: Button(
+                  color: orange,
+                  title: "Log out",
+                  onPressed: () {
+                    FirebaseAuth.instance
+                        .signOut()
+                        .then((value) => Navigator.of(context).push(
+                              MaterialPageRoute(builder: (context) {
+                                return LogInPage();
+                              }),
+                            ));
+                  },
                 ),
               ),
             ],
@@ -257,5 +261,3 @@ class _ProfileState extends State<Profile> with UserValidation {
     );
   }
 }
-
-

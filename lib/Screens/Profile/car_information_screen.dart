@@ -53,7 +53,7 @@ class CarInfo extends StatelessWidget {
             );
           }
 
-          return Container();
+          return CarInformation();
         },
       ),
     );

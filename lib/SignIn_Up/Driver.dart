@@ -1,16 +1,22 @@
 // ignore_for_file: file_names, unused_local_variable, non_constant_identifier_names, no_leading_underscores_for_local_identifiers, unused_element
-/*
+
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:esiway/SignIn_Up/widgets/MyAppBar.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:esiway/Screens/Profile/profile_screen.dart';
+import 'package:esiway/SignIn_Up/widgets/prefixe_icon_button.dart';
+import 'package:esiway/SignIn_Up/widgets/suffixe_icon_button.dart';
+import 'package:esiway/shared/text_validation.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:iconsax/iconsax.dart';
 
 import 'package:image_picker/image_picker.dart';
 
-
-
-
-import 'CreateProfile.dart';
+import '../shared/constant.dart';
+import '../shared/text_field.dart';
+import '../shared/title_text_field.dart';
 
 class Driver extends StatefulWidget {
   const Driver({super.key});
@@ -19,89 +25,120 @@ class Driver extends StatefulWidget {
   State<Driver> createState() => _DriverState();
 }
 
-class _DriverState extends State<Driver> {
+class _DriverState extends State<Driver> with UserValidation {
+  @override
+  bool modelvalidate = true;
+  bool brandvalidate = true;
+  bool registrationnumbervalidate = true;
+
+  File? policy;
+  File? carpicture;
+
+  String? policyURL;
+  String? carpictureURL;
+
+  // This is the image picker
+  final _picker = ImagePicker();
+  // Implementing the image picker
+  Future<void> _openImagePicker(String type, source) async {
+    final XFile? pickedImage = await _picker.pickImage(source: source);
+    if (pickedImage != null) {
+      setState(() {
+        if (type == "policy")
+          policy = File(pickedImage.path);
+        else
+          carpicture = File(pickedImage.path);
+      });
+    }
+  }
+
+  TextEditingController modelcontroller = TextEditingController();
+  TextEditingController brandcontroller = TextEditingController();
+  TextEditingController registrationNumbercontroller = TextEditingController();
+
+  void back() {
+    Navigator.of(context).pop();
+  }
+
+  updateCar() async {
+    String uid = FirebaseAuth.instance.currentUser!.uid;
+    await FirebaseFirestore.instance.collection("Cars").doc(uid).update({
+      "brand": brandcontroller.text,
+      "model": modelcontroller.text,
+      "registrationNumber": registrationNumbercontroller.text,
+    }).then((value) =>
+        Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+          return Profile();
+        })));
+  }
+
+  bool carPicrtureExist() {
+    return (carpicture != null);
+  }
+
+  bool policyExist() {
+    return (policy != null);
+  }
+
   @override
   Widget build(BuildContext context) {
-    final mediaQuery = MediaQuery.of(context);
-
-    final height = mediaQuery.size.height;
-    final width = mediaQuery.size.width;
-
-    final firestoreInstance = FirebaseFirestore.instance;
-    final _BrandController = TextEditingController();
-    final _formKey = GlobalKey<FormState>();
-    bool _isButtonEnabled = false;
-    final _ModeleController = TextEditingController();
-    final _RNController = TextEditingController();
-    final DocumentReference documentReference =
-        FirebaseFirestore.instance.collection('users').doc('user123');
-    @override
-    void dispose() {
-      _BrandController.dispose();
-      _ModeleController.dispose();
-      _RNController.dispose();
-      super.dispose();
-    }
-
-    //text controllers
-    String? _validator(String? value) {
-      if (value == null || value.isEmpty) {
-        return 'This field is required';
-      }
-      return null;
-    }
-
-    void _updateButtonState() {
-      setState(() {
-        _isButtonEnabled = _BrandController.text.isNotEmpty &&
-            _ModeleController.text.isNotEmpty &&
-            _RNController.text.isNotEmpty;
-      });
-    }
-
-    @override
-    void initState() {
-      super.initState();
-      _BrandController.addListener(_updateButtonState);
-      _ModeleController.addListener(_updateButtonState);
-      _RNController.addListener(_updateButtonState);
-    }
-
-    void _Save(String Brand, String Modele, String RN) async {
-      await FirebaseFirestore.instance.collection('douaa').add({
-        'Brand': Brand,
-        'Modele': Modele,
-        'REFISTRATION_NB': RN,
-        'timestamp': FieldValue.serverTimestamp(),
-      });
-      _BrandController.clear();
-      _ModeleController.clear();
-      _RNController.clear();
-    }
-
+    var largeur = MediaQuery.of(context).size.width;
+    var hauteur = MediaQuery.of(context).size.height;
     return Scaffold(
       backgroundColor: const Color(0xFFF9F8FF),
-      appBar: MyAppBar(
-        context: context,
-        backgroundImage: 'assets/background5.svg',
-        onBackButtonPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const CreateProfile(),
-            ),
-          );
-        },
-      ),
       body: SingleChildScrollView(
-        child: Form(
-          key: _formKey,
-          // child: Padding(
-          //  padding: const EdgeInsets.only(top: 9),
+        child: SafeArea(
           child: Column(
             children: [
+              Container(
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height * 0.35,
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    fit: BoxFit.cover,
+                    image: AssetImage("Assets/Images/background3.png"),
+                  ),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      margin: EdgeInsets.only(top: 20, left: 20),
+                      width: 80,
+                      height: 35,
+                      child: PrefixeIconButton(
+                          size: const Size(73, 34),
+                          color: Colors.white,
+                          radius: 8,
+                          text: "Back",
+                          textcolor: Color(0xFF20236C),
+                          weight: FontWeight.w600,
+                          fontsize: 14,
+                          icon: const Icon(
+                            Icons.arrow_back_ios_new_rounded,
+                            color: Color(0xFF72D2C2),
+                            size: 18,
+                          ),
+                          espaceicontext: 5.0,
+                          fct: back),
+                    ),
+                    SizedBox(
+                      height: hauteur * 0.22,
+                    ),
+                    const Text(
+                      '   Car',
+                      style: TextStyle(
+                        fontFamily: 'Montserrat',
+                        fontWeight: FontWeight.bold,
+                        fontSize: 40,
+                        color: Color(0xFF20236C),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
               const Text(
-                'Car \ninformation ',
+                'information           ',
                 style: TextStyle(
                   fontFamily: 'Montserrat',
                   fontWeight: FontWeight.bold,
@@ -109,287 +146,362 @@ class _DriverState extends State<Driver> {
                   color: Color(0xFF20236C),
                 ),
               ),
-              SizedBox(height: height * 0.024),
-              Row(
-                children: [
-                  const LabelText(
-                    text: 'Brand',
-                    color: Color(0xFF20236C),
-                    paddingValue: 0.08,
-                  ),
-                  SizedBox(width: width * 0.038),
-                  const LabelText(
-                    text: 'Modele',
-                    color: Color(0xFF20236C),
-                    paddingValue: 0.30,
-                  ),
-                ],
-              ),
-              SizedBox(height: height * 0.012),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  CustomTextField(
-                    hintText: 'TOYOTA', //optional
-                    labelText: "Enter your car'/s brand ",
-                    prefixIcon: const Icon(Icons.directions_car),
-                    hintTextColor: Colors.grey,
-                    labelTextColor: Colors.grey,
-                    iconColor: const Color(0xFF72D2C2),
-                    width: width * 0.402,
-                    validator: _validator,
-                    controller: _BrandController,
-                  ),
-                  SizedBox(width: width * 0.028),
-                  CustomTextField(
-                    hintText: 'Yaris', //optional
-                    labelText: "Enter your car'/s model ",
-                    prefixIcon: const Icon(Icons.directions_car),
-                    hintTextColor: Colors.grey,
-                    labelTextColor: Colors.grey,
-                    iconColor: const Color(0xFF72D2C2),
-                    width: width * 0.402,
-                    validator: _validator,
-                    controller: _ModeleController,
-                  ),
-                ],
-              ),
-              SizedBox(height: height * 0.028),
-              const LabelText(
-                text: 'Registration Number',
-                color: Color(0xFF20236C),
-                paddingValue: 0.088,
-              ),
-              SizedBox(height: height * 0.012),
-              CustomTextField(
-                // hintText: 'Esi', //optional
-                labelText: "Enter your  car's registration",
-                prefixIcon: const Icon(Icons.house_rounded),
-                hintTextColor: Colors.grey,
-                labelTextColor: Colors.grey,
-                iconColor: const Color(0xFF72D2C2),
-                width: width * 0.83,
-                keyboardType: TextInputType.number,
-                validator: _validator,
-                controller: _RNController,
-              ),
-              SizedBox(height: height * 0.028),
-              Row(
-                children: [
-                  const LabelText(
-                    text: 'Brand',
-                    color: Color(0xFF20236C),
-                    paddingValue: 0.08,
-                  ),
-                  SizedBox(width: width * 0.038),
-                  const LabelText(
-                    text: 'Modele',
-                    color: Color(0xFF20236C),
-                    paddingValue: 0.30,
-                  ),
-                ],
-              ),
-              SizedBox(height: height * 0.012),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  //the upload icon
-                  //Padding(
-                  //padding: EdgeInsets.only(left: width * 0.08),
-                  InkWell(
-                    onTap: _pickImage,
-                    child: Container(
-                      height: 35.0,
-                      width: width * 0.402,
-                      padding: const EdgeInsets.fromLTRB(7, 5, 7, 5),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF99CFD7),
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: const [
-                          Icons_ESIWay(
-                              icon: "upload", largeur: 20, hauteur: 20),
-                          SizedBox(width: 5),
-                          Text(
-                            "Upload",
-                            style: TextStyle(
-                              color: Color(0xFF20236C),
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  // positioned properties
-                  // use Positioned widget if you need absolute positioning
-                  // margin: EdgeInsets.only(left: 31, top: 503),
-                  //),
-                  SizedBox(width: width * 0.038),
-                  // the second button
-                  //Padding(
-                  //padding: EdgeInsets.only(right: width * 0.08),
-                  InkWell(
-                    onTap: () {
-                      _openCamera();
-                    },
-                    child: Container(
-                      height: 35.0,
-                      width: width * 0.402,
-                      padding: const EdgeInsets.fromLTRB(7, 5, 7, 5),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF99CFD7),
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: const [
-                          Icons_ESIWay(
-                              icon: "camera", largeur: 20, hauteur: 20),
-                          SizedBox(width: 5),
-                          Text(
-                            "Take",
-                            style: TextStyle(
-                              color: Color(0xFF20236C),
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  )
-                ],
-              ),
-              SizedBox(height: height * 0.021),
-              const LabelText(
-                text: 'Insurance policy ',
-                color: Color(0xFF20236C),
-                paddingValue: 0.08,
-              ),
-              SizedBox(height: height * 0.012),
-              InkWell(
-                onTap: _pickImage,
-                child: Container(
-                  height: 35.0,
-                  width: width * 0.84,
-                  padding: const EdgeInsets.fromLTRB(7, 5, 7, 5),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF99CFD7),
-                    borderRadius: BorderRadius.circular(4),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
-                      Icons_ESIWay(icon: "upload", largeur: 20, hauteur: 20),
-                      SizedBox(width: 5),
-                      Text(
-                        "Upload",
-                        style: TextStyle(
-                          color: Color(0xFF20236C),
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              //next buttom
-              SizedBox(height: height * 0.038),
               SizedBox(
-                width: width * 0.84,
-                height: 50.0,
-                child: GestureDetector(
-                  onTap: () {
-                    if (_formKey.currentState!.validate()) {
-                      _Save(_BrandController.text, _ModeleController.text,
-                          _RNController.text);
-                    }
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        // ignore: prefer_const_constructors
-                        builder: (context) => CreateProfile(),
-                      ),
-                    );
-                  },
-                  child: Container(
-                    width: width * 0.84,
-                    height: 50.0,
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFFFA18E),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        const Text(
-                          'Next',
-                          style: TextStyle(
-                            color: Color(0xff20236C),
-                            fontFamily: 'Montserrat',
-                            fontSize: 23,
-                            fontWeight: FontWeight.w700,
+                height: 15.0,
+              ),
+              //*****************************************************************************/
+
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: <Widget>[
+                        Expanded(
+                          // optional flex property if flex is 1 because the default flex is 1
+                          flex: 1,
+                          child: Text_Field(
+                            title: "Brand",
+                            validate: brandvalidate,
+                            error: "Value can't be Empty",
+                            hinttext: 'Peugeot',
+                            prefixicon: Icon(
+                              Iconsax.car,
+                              color: vert,
+                            ),
+                            textfieldcontroller: brandcontroller,
                           ),
                         ),
-                        SizedBox(
-                          width: width * 0.027,
-                        ),
-                        // ignore: prefer_const_constructors
-
-                        Icons_ESIWay(
-                            icon: "arrow_right", largeur: 20, hauteur: 20),
+                        SizedBox(width: 10.0),
+                        Expanded(
+                          // optional flex property if flex is 1 because the default flex is 1
+                          flex: 1,
+                          child: Text_Field(
+                            title: "Model",
+                            validate: modelvalidate,
+                            error: "Value can't be Empty",
+                            hinttext: '206',
+                            prefixicon: Icon(
+                              Iconsax.car,
+                              color: vert,
+                            ),
+                            textfieldcontroller: modelcontroller,
+                          ),
+                        )
                       ],
                     ),
-                  ),
-                ),
-              ),
-              SizedBox(height: height * 0.010),
-              Padding(
-                padding: EdgeInsets.only(
-                  left: width * 0.30,
-                ),
-                child: Row(
-                  children: [
-                    const Text(
-                      'Not ready Now?',
-                      style: TextStyle(
-                        decoration: TextDecoration.underline,
-                        fontFamily: 'Montserrat-Medium',
-                        fontWeight: FontWeight.normal,
-                        fontSize: 15,
-                        color: Color(0xFF20236C),
+
+                    //*****************************************************************************/
+
+                    Text_Field(
+                      title: "Registration Number",
+                      validate: registrationnumbervalidate,
+                      error: "Value can't be Empty",
+                      type: TextInputType.number,
+                      hinttext: '00984-118-16',
+                      prefixicon: Icon(
+                        Iconsax.car,
+                        color: vert,
                       ),
+                      textfieldcontroller: registrationNumbercontroller,
                     ),
-                    SizedBox(width: width * 0.012),
-                    InkWell(
-                      onTap: () {
-                        // Navigate to Profile page
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    const CreateProfile())); //just pour le test
-                      },
-                      child: const Text(
-                        'Skip',
-                        style: TextStyle(
-                          decoration: TextDecoration.underline,
-                          fontFamily: 'Montserrat-Bold',
-                          fontWeight: FontWeight.bold,
-                          fontSize: 15,
-                          color: Color(0xFF20236C),
+
+                    //*****************************************************************************/
+
+                    TitleTextFeild(title: "Car's picture"),
+
+                    carpicture != null
+                        ? Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                            child: ClipRRect(
+                                borderRadius: BorderRadius.circular(8),
+                                child: Image.file(
+                                  //to show image, you type like this.
+                                  File(carpicture!.path),
+                                  fit: BoxFit.cover,
+                                  width: MediaQuery.of(context).size.width,
+                                  height: 300,
+                                )),
+                          )
+                        : SizedBox(
+                            height: 2,
+                          ),
+                    SizedBox(
+                      height: 12,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: ElevatedButton.icon(
+                            style: ButtonStyle(
+                              backgroundColor:
+                                  MaterialStateProperty.all(color6),
+                            ),
+                            onPressed: () =>
+                                _openImagePicker("car", ImageSource.gallery),
+                            icon: Icon(
+                              Iconsax.document_upload,
+                              color: bleu_bg,
+                            ),
+                            label: Text(
+                              "Upload",
+                              style: TextStyle(
+                                color: bleu_bg,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
                         ),
-                      ),
+                        SizedBox(width: 10.0),
+                        Expanded(
+                          child: ElevatedButton.icon(
+                            style: ButtonStyle(
+                              backgroundColor:
+                                  MaterialStateProperty.all(color6),
+                            ),
+                            onPressed: () =>
+                                _openImagePicker("car", ImageSource.camera),
+                            icon: Icon(
+                              Iconsax.camera,
+                              color: bleu_bg,
+                            ),
+                            label: Text(
+                              "Take",
+                              style: TextStyle(
+                                color: bleu_bg,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 14,
+                    ),
+                    //*****************************************************************************/
+
+                    TitleTextFeild(title: "Insurance policy"),
+
+                    policy != null
+                        ? Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                            child: ClipRRect(
+                                borderRadius: BorderRadius.circular(8),
+                                child: Image.file(
+                                  //to show image, you type like this.
+                                  File(policy!.path),
+                                  fit: BoxFit.cover,
+                                  width: MediaQuery.of(context).size.width,
+                                  height: 300,
+                                )),
+                          )
+                        : SizedBox(
+                            height: 2,
+                          ),
+                    SizedBox(
+                      height: 12,
+                    ),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: ElevatedButton.icon(
+                            style: ButtonStyle(
+                              backgroundColor:
+                                  MaterialStateProperty.all(color6),
+                            ),
+                            onPressed: () =>
+                                _openImagePicker("policy", ImageSource.gallery),
+                            icon: Icon(
+                              Iconsax.document_upload,
+                              color: bleu_bg,
+                            ),
+                            label: Text(
+                              "Upload",
+                              style: TextStyle(
+                                color: bleu_bg,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 8,
+                    ),
+                    SuffixeIconButton(
+                        size: Size(largeur, hauteur * 0.06),
+                        color: const Color(0xFFFFA18E),
+                        radius: 10,
+                        text: "Next",
+                        textcolor: Color(0xFF20236C),
+                        weight: FontWeight.w700,
+                        fontsize: 20,
+                        icon: const Icon(
+                          Icons.arrow_right_rounded,
+                          color: Color(0xff20236C),
+                          size: 40,
+                        ),
+                        espaceicontext: 0.0,
+                        fct: () async {
+                          if (isCar(brandcontroller.text) == false)
+                            setState(() {
+                              brandvalidate = false;
+                            });
+                          else {
+                            setState(() {
+                              brandvalidate = true;
+                            });
+                            print(brandcontroller.text);
+                          }
+                          if (isCar(modelcontroller.text) == false)
+                            setState(() {
+                              modelvalidate = false;
+                            });
+                          else {
+                            setState(() {
+                              modelvalidate = true;
+                            });
+                            print(modelcontroller.text);
+                          }
+
+                          if (isRegistrationNumber(
+                                  registrationNumbercontroller.text) ==
+                              false)
+                            setState(() {
+                              registrationnumbervalidate = false;
+                            });
+                          else {
+                            setState(() {
+                              registrationnumbervalidate = true;
+                            });
+                            print(registrationNumbercontroller.text);
+                            User? currentuser =
+                                FirebaseAuth.instance.currentUser;
+
+                            if (registrationnumbervalidate &&
+                                modelvalidate &&
+                                brandvalidate &&
+                                carPicrtureExist() &&
+                                policyExist()) {
+                              if (carpicture != null) {
+                                Reference referenceRoot =
+                                    FirebaseStorage.instance.ref();
+                                Reference referenceDirImages =
+                                    referenceRoot.child('Cars');
+                                //Create a reference for the image to be stored
+                                Reference referenceImageToUpload =
+                                    referenceDirImages.child(currentuser!.uid);
+
+                                try {
+                                  //Store the file
+                                  await referenceImageToUpload
+                                      .putFile(File(carpicture!.path));
+                                  //Success: get the download URL
+
+                                  carpictureURL = await referenceImageToUpload
+                                      .getDownloadURL();
+
+                                  print(carpictureURL);
+                                  await FirebaseFirestore.instance
+                                      .collection("Cars")
+                                      .doc(currentuser.uid)
+                                      .set({
+                                    "CarPicture": carpictureURL,
+                                  });
+                                } catch (error) {
+                                  print(error);
+                                }
+                              }
+                              if (policy != null) {
+                                Reference referenceRoot =
+                                    FirebaseStorage.instance.ref();
+                                Reference referenceDirImages =
+                                    referenceRoot.child('Policy');
+                                //Create a reference for the image to be stored
+                                Reference referenceImageToUpload =
+                                    referenceDirImages.child(currentuser!.uid);
+
+                                try {
+                                  //Store the file
+                                  await referenceImageToUpload
+                                      .putFile(File(policy!.path));
+                                  //Success: get the download URL
+
+                                  policyURL = await referenceImageToUpload
+                                      .getDownloadURL();
+                                  await FirebaseFirestore.instance
+                                      .collection("Cars")
+                                      .doc(currentuser.uid)
+                                      .update({
+                                    "Policy": policyURL,
+                                  });
+                                } catch (error) {
+                                  print(error);
+                                }
+                              }
+
+                              updateCar();
+                            } else if (!carPicrtureExist() || !policyExist()) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                      backgroundColor: Colors.white,
+                                      duration: Duration(
+                                        seconds: 3,
+                                      ),
+                                      margin: EdgeInsets.symmetric(
+                                          vertical: 30, horizontal: 20),
+                                      padding: EdgeInsets.all(12),
+                                      behavior: SnackBarBehavior.floating,
+                                      elevation: 2,
+                                      content: Center(
+                                        child: Text(
+                                          "Car picture and Insurance policy picture are obligatory",
+                                          style: TextStyle(
+                                            color: Colors.red,
+                                            fontSize: 12,
+                                            fontFamily: "Montserrat",
+                                          ),
+                                        ),
+                                      )));
+                            }
+                          }
+                        }),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text(
+                          'Not ready now?',
+                          style: TextStyle(
+                            fontFamily: 'Montserrat-',
+                            color: Color(0xff20236C),
+                            fontSize: 12,
+                          ),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => Profile()));
+                          },
+                          child: const Text(
+                            'Skip',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w700,
+                              fontFamily: 'Montserrat',
+                              color: Color(0xff20236C),
+                              fontSize: 12,
+                              decoration: TextDecoration.underline,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
-              ),
+              )
             ],
           ),
         ),
@@ -397,19 +509,3 @@ class _DriverState extends State<Driver> {
     );
   }
 }
-
-//(WORK IN PROGRESS)
-// ignore: duplicate_ignore
-Future<void> _pickImage() async {
-  final picker = ImagePicker();
-  final pickedFile = await picker.pickImage(source: ImageSource.gallery);
-
-  // Do something with the picked image file
-}
-
-//(WORK IN PROGRESS)
-Future<void> _openCamera() async {
-  // ignore: deprecated_member_use
-  final pickedFile = await ImagePicker().getImage(source: ImageSource.camera);
-}
-*/

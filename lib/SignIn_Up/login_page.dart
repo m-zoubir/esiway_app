@@ -5,6 +5,7 @@ import 'package:esiway/shared/constant.dart';
 import 'package:esiway/shared/text_field.dart';
 import 'package:esiway/shared/text_validation.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../Screens/Profile/forgot_password_mailadress.dart';
@@ -101,7 +102,13 @@ class _LogInPageState extends State<LogInPage> with UserValidation {
                               ),
                             ),
                             SizedBox(height: hauteur * 0.02375),
-                            MyPasswordField(controller: passwordcontroller , validate: passwordvalidate, title: 'Password', error: 'Password empty',bottomheigh: 0,),
+                            MyPasswordField(
+                              controller: passwordcontroller,
+                              validate: passwordvalidate,
+                              title: 'Password',
+                              error: 'Password empty',
+                              bottomheigh: 0,
+                            ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
@@ -127,28 +134,9 @@ class _LogInPageState extends State<LogInPage> with UserValidation {
                                 ),
                               ],
                             ),
-                            incorrect
-                                ? Center(
-                                    child: Column(
-                                      children: [
-                                        SizedBox(
-                                          height: hauteur * 0.075,
-                                        ),
-                                        Text(
-                                          "Email or password incorrect",
-                                          style: TextStyle(
-                                              color: Colors.red,
-                                              fontSize: 12.0),
-                                        ),
-                                        SizedBox(
-                                          height: 3,
-                                        )
-                                      ],
-                                    ),
-                                  )
-                                : SizedBox(
-                                    height: hauteur * 0.075,
-                                  ),
+                            SizedBox(
+                              height: hauteur * 0.017,
+                            ),
                             SimpleButton(
                               backgroundcolor: const Color(0xFFFFA18E),
                               size: Size(largeur, hauteur * 0.06),
@@ -169,36 +157,122 @@ class _LogInPageState extends State<LogInPage> with UserValidation {
                                 }
                                 if (emailvalidate &&
                                     passwordcontroller.text.isNotEmpty) {
-                                  User? usersignin ;
+                                  User? usersignin;
                                   try {
-                                    usersignin = (await FirebaseAuth
-                                        .instance
-                                        .signInWithEmailAndPassword(
-                                        email: emailcontroller.text,
-                                        password:
-                                        passwordcontroller.text))
+                                    usersignin = (await FirebaseAuth.instance
+                                            .signInWithEmailAndPassword(
+                                                email: emailcontroller.text,
+                                                password:
+                                                    passwordcontroller.text))
                                         .user;
 
-
+                                    if (usersignin != null &&
+                                        usersignin.emailVerified == true) {
+                                      setState(() {
+                                        incorrect = false;
+                                      });
+                                      Navigator.of(context).push(
+                                        MaterialPageRoute(builder: (context) {
+                                          return Profile();
+                                        }),
+                                      );
+                                    } else if (usersignin!.emailVerified ==
+                                        false) {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(SnackBar(
+                                              backgroundColor: Colors.white,
+                                              duration: Duration(
+                                                seconds: 3,
+                                              ),
+                                              margin: EdgeInsets.symmetric(
+                                                  vertical: 30, horizontal: 20),
+                                              padding: EdgeInsets.all(12),
+                                              behavior:
+                                                  SnackBarBehavior.floating,
+                                              elevation: 2,
+                                              content: Center(
+                                                child: Text(
+                                                  "Email or password incorrect",
+                                                  style: TextStyle(
+                                                    color: Colors.red,
+                                                    fontSize: 12,
+                                                    fontFamily: "Montserrat",
+                                                  ),
+                                                ),
+                                              )));
+                                    }
                                   } on FirebaseAuthException catch (e) {
-                                    print("-----------------> Error  ${e}");
-                                  }
+                                    print(
+                                        "-----------------> Error  ${e.code}");
+                                    if (e.code == 'wrong-password') {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(SnackBar(
+                                              backgroundColor: Colors.white,
+                                              duration: Duration(
+                                                seconds: 3,
+                                              ),
+                                              margin: EdgeInsets.symmetric(
+                                                  vertical: 30, horizontal: 20),
+                                              padding: EdgeInsets.all(12),
+                                              behavior:
+                                                  SnackBarBehavior.floating,
+                                              elevation: 2,
+                                              content: Center(
+                                                child: Text(
+                                                  "'Wrong password provided for that user'",
+                                                  style: TextStyle(
+                                                    color: Colors.red,
+                                                    fontSize: 12,
+                                                    fontFamily: "Montserrat",
+                                                  ),
+                                                ),
+                                              )));
+                                    }
 
-
-                                  if (usersignin != null) {
-                                    setState(() {
-                                      incorrect = false;
-                                    });
-                                    Navigator.of(context).push(
-                                      MaterialPageRoute(builder: (context) {
-                                        return Profile();
-                                      }),
-                                    );
-                                  } else {
-                                    setState(() {
-                                      incorrect = true;
-                                    });
-                                    print("Error");
+                                    if (e.code == "user-not-found") {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(SnackBar(
+                                              backgroundColor: Colors.white,
+                                              duration: Duration(
+                                                seconds: 3,
+                                              ),
+                                              margin: EdgeInsets.symmetric(
+                                                  vertical: 30, horizontal: 20),
+                                              padding: EdgeInsets.all(12),
+                                              behavior:
+                                                  SnackBarBehavior.floating,
+                                              elevation: 2,
+                                              content: Center(
+                                                child: Text(
+                                                  "Email or password incorrect",
+                                                  style: TextStyle(
+                                                    color: Colors.red,
+                                                    fontSize: 12,
+                                                    fontFamily: "Montserrat",
+                                                  ),
+                                                ),
+                                              )));
+                                    }
+                                    if (e.code == "network-request-failed") {
+                                      showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) =>
+                                              SimpleDialog(children: [
+                                                Container(
+                                                  color: Colors.white,
+                                                  height: 40,
+                                                  width: 100,
+                                                  child: Center(
+                                                      child: Text(
+                                                    "Please check your network",
+                                                    style: TextStyle(
+                                                      color: bleu_bg,
+                                                      fontSize: 13,
+                                                    ),
+                                                  )),
+                                                ),
+                                              ]));
+                                    }
                                   }
                                 }
                               },

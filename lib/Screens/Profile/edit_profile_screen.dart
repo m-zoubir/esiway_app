@@ -41,19 +41,27 @@ class EditProfileInfo extends StatelessWidget {
           if (snapshot.hasData) {
             //Get the data
             DocumentSnapshot documentSnapshot = snapshot.data;
-            data = documentSnapshot.data() as Map;
-
-            //display the data
-            return EditProfile(
-              Name: data["Name"],
-              Lastname: data["FamilyName"],
-              Gender: data["Gender"],
-              Status: data["Status"],
-              ImageUrl: data.containsKey("ProfilePicture")
-                  ? data["ProfilePicture"]
-                  : null,
-              Birth: data.containsKey("Birth") ? data["Birth"] : null,
-            );
+            try {
+              data = documentSnapshot.data() as Map;
+              //display the data
+              return EditProfile(
+                Name: data["Name"],
+                Lastname: data["FamilyName"],
+                Gender: data["Gender"],
+                Status: data["Status"],
+                ImageUrl: data.containsKey("ProfilePicture")
+                    ? data["ProfilePicture"]
+                    : null,
+                Birth: data.containsKey("Birth") ? data["Birth"] : null,
+              );
+            } catch (e) {
+              return EditProfile(
+                Name: "Name",
+                Lastname: "Family Name",
+                Gender: "Male",
+                Status: "Student",
+              );
+            }
           }
 
           return Container();

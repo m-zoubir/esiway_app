@@ -41,25 +41,12 @@ class _SignUpPageState extends State<SignUpPage> with UserValidation {
         context, MaterialPageRoute(builder: (context) => LogInPage()));
   }
 
-  void verification() {
-    Navigator.push(
-        context, MaterialPageRoute(builder: (context) => VerificationPage()));
-  }
-
   User? currentuser = FirebaseAuth.instance.currentUser;
 
   @override
   Widget build(BuildContext context) {
     var largeur = MediaQuery.of(context).size.width;
     var hauteur = MediaQuery.of(context).size.height;
-
-    Future<void> signUp() async {
-      await AuthService().signUp(
-          email: emailcontroller.text.trim(),
-          password: passwordcontroller.text.trim(),
-          confirmpassword: confirmpasswordcontroller.text.trim(),
-          context: context);
-    }
 
     return Container(
       decoration: const BoxDecoration(
@@ -249,15 +236,62 @@ class _SignUpPageState extends State<SignUpPage> with UserValidation {
                                           "Password": passwordcontroller.text,
                                           "Phone": phonecontroller.text,
                                           "CreatedAt": DateTime.now(),
-                                        }).then((value) =>
-                                                Navigator.of(context).push(
-                                                  MaterialPageRoute(
-                                                      builder: (context) {
-                                                    return CreateProfile();
-                                                  }),
-                                                ));
-                                      } catch (e) {
-                                        print("Error ${e}");
+                                        });
+                                        currentuser!.sendEmailVerification();
+                                        Navigator.of(context).push(
+                                          MaterialPageRoute(builder: (context) {
+                                            return CreateProfile();
+                                          }),
+                                        );
+                                      } on FirebaseAuthException catch (e) {
+                                        print("Error ${e.code}");
+                                        if (e.code == "email-already-in-use") {
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(SnackBar(
+                                                  backgroundColor: Colors.white,
+                                                  duration: Duration(
+                                                    seconds: 3,
+                                                  ),
+                                                  margin: EdgeInsets.symmetric(
+                                                      vertical: 30,
+                                                      horizontal: 20),
+                                                  padding: EdgeInsets.all(12),
+                                                  behavior:
+                                                      SnackBarBehavior.floating,
+                                                  elevation: 2,
+                                                  content: Center(
+                                                    child: Text(
+                                                      "This email is already used",
+                                                      style: TextStyle(
+                                                        color: Colors.red,
+                                                        fontSize: 12,
+                                                        fontFamily:
+                                                            "Montserrat",
+                                                      ),
+                                                    ),
+                                                  )));
+                                        }
+                                        if (e.code ==
+                                            "network-request-failed") {
+                                          showDialog(
+                                              context: context,
+                                              builder: (BuildContext context) =>
+                                                  SimpleDialog(children: [
+                                                    Container(
+                                                      color: Colors.white,
+                                                      height: 40,
+                                                      width: 100,
+                                                      child: Center(
+                                                          child: Text(
+                                                        "Please check your network",
+                                                        style: TextStyle(
+                                                          color: bleu_bg,
+                                                          fontSize: 13,
+                                                        ),
+                                                      )),
+                                                    ),
+                                                  ]));
+                                        }
                                       }
                                     }
                                   }),

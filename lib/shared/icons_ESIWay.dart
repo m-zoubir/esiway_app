@@ -21,7 +21,7 @@ class Icons_ESIWay extends StatelessWidget {
       child: Transform.rotate(
         angle: rotation,
         child: SvgPicture.asset(
-          icon,
+          "${icon}",
           //  color: ,
           height: hauteur, width: largeur,
         ),

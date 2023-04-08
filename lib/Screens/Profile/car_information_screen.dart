@@ -27,7 +27,6 @@ class CarInfo extends StatelessWidget {
   //_reference.snapshots() --> Stream<DocumentSnapshot>
   late Future<DocumentSnapshot> _futureData;
   late Map data;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,16 +40,19 @@ class CarInfo extends StatelessWidget {
           if (snapshot.hasData) {
             //Get the data
             DocumentSnapshot documentSnapshot = snapshot.data;
-            data = documentSnapshot.data() as Map;
-
-            //display the data
-            return CarInformation(
-              Brand: data["brand"],
-              Model: data["model"],
-              Registrationnumber: data["registrationNumber"],
-              CarURL: data["CarPicture"],
-              PolicyURL: data["Policy"],
-            );
+            try {
+              data = documentSnapshot.data() as Map;
+              //display the data
+              return CarInformation(
+                Brand: data["brand"],
+                Model: data["model"],
+                Registrationnumber: data["registrationNumber"],
+                CarURL: data["CarPicture"],
+                PolicyURL: data["Policy"],
+              );
+            } catch (e) {
+              return CarInformation();
+            }
           }
 
           return CarInformation();

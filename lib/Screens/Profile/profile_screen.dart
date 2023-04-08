@@ -25,8 +25,7 @@ class _ProfileState extends State<Profile> with UserValidation {
   int _currentindex = 3;
   int _selectedindex = 3;
 
-  String user_picture = "Assets/Images/vehicle.jpeg";
-  double rating = 3.0;
+  String user_picture = "Assets/Images/photo_profile.png";
 
   @override
   void initState() {
@@ -130,7 +129,19 @@ class _ProfileState extends State<Profile> with UserValidation {
           if (snapshot.hasData) {
             //Get the data
             DocumentSnapshot documentSnapshot = snapshot.data;
-            data = documentSnapshot.data() as Map;
+            String name;
+            String familyName;
+            double rating;
+            try {
+              data = documentSnapshot.data() as Map;
+              name = data["Name"];
+              familyName = data["FamilyName"];
+              rating = data.containsKey('Rating') ? data["Rating"] : 2.5;
+            } catch (e) {
+              name = "Name";
+              familyName = "FamilyName";
+              rating = 2.5;
+            }
 
             //display the data
             return SingleChildScrollView(
@@ -149,7 +160,7 @@ class _ProfileState extends State<Profile> with UserValidation {
                             color: Theme.of(context).scaffoldBackgroundColor,
                           ),
                           shape: BoxShape.circle,
-                          image: data.containsKey("ProfilePicture") == null
+                          image: data.containsKey("ProfilePicture") == false
                               ? DecorationImage(
                                   image: AssetImage(user_picture),
                                   fit: BoxFit.cover,
@@ -164,7 +175,7 @@ class _ProfileState extends State<Profile> with UserValidation {
                     ),
                     Container(
                       child: Text(
-                        "${data["FamilyName"]} ${data["Name"]} ",
+                        "${name} ${familyName} ",
                         style: TextStyle(
                           color: bleu_bg,
                           fontFamily: "Montserrat",

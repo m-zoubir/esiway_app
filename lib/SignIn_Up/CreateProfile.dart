@@ -1,6 +1,7 @@
 // ignore_for_file: file_names, non_constant_identifier_names, avoid_print, unused_element
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:esiway/SignIn_Up/Driver.dart';
 import 'package:esiway/SignIn_Up/widgets/CustomTextField.dart';
 import 'package:esiway/SignIn_Up/widgets/MabelText.dart';
 import 'package:esiway/SignIn_Up/widgets/MyAppBar.dart';
@@ -31,6 +32,8 @@ class _CreateProfileState extends State<CreateProfile> with UserValidation {
 
   void back() {
     Navigator.of(context).pop();
+    User? user = FirebaseAuth.instance.currentUser;
+    user!.delete();
   }
 
   TextEditingController _familynameController = TextEditingController();
@@ -117,7 +120,7 @@ class _CreateProfileState extends State<CreateProfile> with UserValidation {
                         style: TextStyle(
                             color: bleu_bg,
                             fontFamily: "Montserrat",
-                            fontSize: 40,
+                            fontSize: 42,
                             fontWeight: FontWeight.bold),
                       ),
                     )
@@ -342,7 +345,7 @@ class _CreateProfileState extends State<CreateProfile> with UserValidation {
                                 "FamilyName": _familynameController.text
                               }).then((value) => Navigator.of(context).push(
                                         MaterialPageRoute(builder: (context) {
-                                          return Profile();
+                                          return Driver();
                                         }),
                                       ));
                             } catch (e) {

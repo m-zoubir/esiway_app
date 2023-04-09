@@ -32,8 +32,6 @@ class _CreateProfileState extends State<CreateProfile> with UserValidation {
 
   void back() {
     Navigator.of(context).pop();
-    User? user = FirebaseAuth.instance.currentUser;
-    user!.delete();
   }
 
   TextEditingController _familynameController = TextEditingController();
@@ -70,7 +68,6 @@ class _CreateProfileState extends State<CreateProfile> with UserValidation {
 
   @override
   Widget build(BuildContext context) {
-    final mediaQuery = MediaQuery.of(context);
     var largeur = MediaQuery.of(context).size.width;
     var hauteur = MediaQuery.of(context).size.height;
     return Scaffold(
@@ -349,6 +346,27 @@ class _CreateProfileState extends State<CreateProfile> with UserValidation {
                                         }),
                                       ));
                             } catch (e) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                      backgroundColor: Colors.white,
+                                      duration: Duration(
+                                        seconds: 3,
+                                      ),
+                                      margin: EdgeInsets.symmetric(
+                                          vertical: 30, horizontal: 20),
+                                      padding: EdgeInsets.all(12),
+                                      behavior: SnackBarBehavior.floating,
+                                      elevation: 2,
+                                      content: Center(
+                                        child: Text(
+                                          "${e.toString()}",
+                                          style: TextStyle(
+                                            color: Colors.red,
+                                            fontSize: 12,
+                                            fontFamily: "Montserrat",
+                                          ),
+                                        ),
+                                      )));
                               print("Error ${e}");
                             }
                           }

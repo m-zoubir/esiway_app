@@ -61,15 +61,37 @@ class _DriverState extends State<Driver> with UserValidation {
   }
 
   updateCar() async {
-    String uid = FirebaseAuth.instance.currentUser!.uid;
-    await FirebaseFirestore.instance.collection("Cars").doc(uid).update({
-      "brand": brandcontroller.text,
-      "model": modelcontroller.text,
-      "registrationNumber": registrationNumbercontroller.text,
-    }).then((value) =>
-        Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-          return Profile();
-        })));
+    try {
+      String uid = FirebaseAuth.instance.currentUser!.uid;
+      await FirebaseFirestore.instance.collection("Cars").doc(uid).update({
+        "brand": brandcontroller.text,
+        "model": modelcontroller.text,
+        "registrationNumber": registrationNumbercontroller.text,
+      }).then((value) =>
+          Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+            return Profile();
+          })));
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          backgroundColor: Colors.white,
+          duration: Duration(
+            seconds: 3,
+          ),
+          margin: EdgeInsets.symmetric(vertical: 30, horizontal: 20),
+          padding: EdgeInsets.all(12),
+          behavior: SnackBarBehavior.floating,
+          elevation: 2,
+          content: Center(
+            child: Text(
+              "${e.toString()}",
+              style: TextStyle(
+                color: Colors.red,
+                fontSize: 12,
+                fontFamily: "Montserrat",
+              ),
+            ),
+          )));
+    }
   }
 
   bool carPicrtureExist() {
@@ -413,7 +435,27 @@ class _DriverState extends State<Driver> with UserValidation {
                                     "CarPicture": carpictureURL,
                                   });
                                 } catch (error) {
-                                  print(error);
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                          backgroundColor: Colors.white,
+                                          duration: Duration(
+                                            seconds: 3,
+                                          ),
+                                          margin: EdgeInsets.symmetric(
+                                              vertical: 30, horizontal: 20),
+                                          padding: EdgeInsets.all(12),
+                                          behavior: SnackBarBehavior.floating,
+                                          elevation: 2,
+                                          content: Center(
+                                            child: Text(
+                                              "${error.toString()}",
+                                              style: TextStyle(
+                                                color: Colors.red,
+                                                fontSize: 12,
+                                                fontFamily: "Montserrat",
+                                              ),
+                                            ),
+                                          )));
                                 }
                               }
                               if (policy != null) {
@@ -440,7 +482,27 @@ class _DriverState extends State<Driver> with UserValidation {
                                     "Policy": policyURL,
                                   });
                                 } catch (error) {
-                                  print(error);
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                          backgroundColor: Colors.white,
+                                          duration: Duration(
+                                            seconds: 3,
+                                          ),
+                                          margin: EdgeInsets.symmetric(
+                                              vertical: 30, horizontal: 20),
+                                          padding: EdgeInsets.all(12),
+                                          behavior: SnackBarBehavior.floating,
+                                          elevation: 2,
+                                          content: Center(
+                                            child: Text(
+                                              "${error.toString()}",
+                                              style: TextStyle(
+                                                color: Colors.red,
+                                                fontSize: 12,
+                                                fontFamily: "Montserrat",
+                                              ),
+                                            ),
+                                          )));
                                 }
                               }
 

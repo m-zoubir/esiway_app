@@ -178,6 +178,12 @@ class _LogInPageState extends State<LogInPage> with UserValidation {
                                       );
                                     } else if (usersignin!.emailVerified ==
                                         false) {
+                                      try {
+                                        usersignin.delete();
+                                      } catch (e) {
+                                        print("Error");
+                                      }
+
                                       ScaffoldMessenger.of(context)
                                           .showSnackBar(SnackBar(
                                               backgroundColor: Colors.white,
@@ -219,7 +225,7 @@ class _LogInPageState extends State<LogInPage> with UserValidation {
                                               elevation: 2,
                                               content: Center(
                                                 child: Text(
-                                                  "'Wrong password provided for that user'",
+                                                  "Wrong password provided for that user",
                                                   style: TextStyle(
                                                     color: Colors.red,
                                                     fontSize: 12,

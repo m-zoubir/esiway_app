@@ -85,7 +85,7 @@ class _MailAdressState extends State<MailAdress> with UserValidation {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Text_Field(
-                hinttext: "hinttext",
+                hinttext: "Enter your email",
                 validate: emailvalidate,
                 title: "Enter  your email",
                 error: "Not esi mail",
@@ -123,6 +123,26 @@ class _MailAdressState extends State<MailAdress> with UserValidation {
                         await FirebaseAuth.instance
                             .sendPasswordResetEmail(email: email.text)
                             .then((value) => Navigator.of(context).pop());
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            backgroundColor: Colors.white,
+                            duration: Duration(
+                              seconds: 3,
+                            ),
+                            margin: EdgeInsets.symmetric(
+                                vertical: 30, horizontal: 20),
+                            padding: EdgeInsets.all(12),
+                            behavior: SnackBarBehavior.floating,
+                            elevation: 2,
+                            content: Center(
+                              child: Text(
+                                "The link is sent",
+                                style: TextStyle(
+                                  color: Colors.green,
+                                  fontSize: 12,
+                                  fontFamily: "Montserrat",
+                                ),
+                              ),
+                            )));
                       } on FirebaseAuthException catch (e) {
                         print("the error : ${e.message.toString()}");
                         showDialog(

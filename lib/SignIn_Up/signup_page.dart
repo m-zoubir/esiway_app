@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:esiway/Screens/Profile/profile_screen.dart';
+import 'package:esiway/SignIn_Up/email_verification.dart';
 import 'package:esiway/SignIn_Up/widgets/prefixe_icon_button.dart';
 import 'package:esiway/shared/icons_ESIWay.dart';
 import 'package:esiway/shared/text_field.dart';
@@ -50,10 +51,11 @@ class _SignUpPageState extends State<SignUpPage> with UserValidation {
 
     return Container(
       decoration: const BoxDecoration(
+          color: color3,
           image: DecorationImage(
-        image: AssetImage("Assets/Images/signup.png"),
-        fit: BoxFit.cover,
-      )),
+            image: AssetImage("Assets/Images/signup.png"),
+            fit: BoxFit.cover,
+          )),
       child: Scaffold(
         backgroundColor: Colors.transparent,
         body: SafeArea(
@@ -237,10 +239,12 @@ class _SignUpPageState extends State<SignUpPage> with UserValidation {
                                           "Phone": phonecontroller.text,
                                           "CreatedAt": DateTime.now(),
                                         });
+
                                         currentuser!.sendEmailVerification();
+
                                         Navigator.of(context).push(
                                           MaterialPageRoute(builder: (context) {
-                                            return CreateProfile();
+                                            return EmailVerification();
                                           }),
                                         );
                                       } on FirebaseAuthException catch (e) {

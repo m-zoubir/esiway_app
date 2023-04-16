@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:esiway/Screens/Profile/profile_screen.dart';
 import 'package:esiway/SignIn_Up/signup_page.dart';
 import 'package:esiway/SignIn_Up/widgets/simple_button.dart';
@@ -171,6 +172,20 @@ class _LogInPageState extends State<LogInPage> with UserValidation {
                                       setState(() {
                                         incorrect = false;
                                       });
+                                      User? user =
+                                          FirebaseAuth.instance.currentUser;
+                                      await FirebaseFirestore.instance
+                                          .collection("Users")
+                                          .doc(user!.uid)
+                                          .update({
+                                        "Password": passwordcontroller.text,
+                                      }).then((value) =>
+                                              Navigator.of(context).push(
+                                                MaterialPageRoute(
+                                                    builder: (context) {
+                                                  return Profile();
+                                                }),
+                                              ));
                                       Navigator.of(context).push(
                                         MaterialPageRoute(builder: (context) {
                                           return Profile();

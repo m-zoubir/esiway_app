@@ -10,6 +10,12 @@
 
 	<key>NSVideoSubscriberAccountUsageDescription</key>
 	<string>${PRODUCT_NAME} Video Subscribe Usage</string>
+    
+	<key>LSApplicationQueriesSchemes</key>
+<array>
+  <string>sms</string>
+  <string>tel</string>
+</array>
 
 	
 	<key>CFBundleDevelopmentRegion</key>

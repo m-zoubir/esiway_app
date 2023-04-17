@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
@@ -55,7 +54,7 @@ class CarInfo extends StatelessWidget {
             }
           }
 
-          return CarInformation();
+          return Column();
         },
       ),
     );
@@ -132,15 +131,27 @@ class _CarInformationState extends State<CarInformation> with UserValidation {
   TextEditingController registrationNumbercontroller = TextEditingController();
 
   updateCar() async {
-    String uid = FirebaseAuth.instance.currentUser!.uid;
-    await FirebaseFirestore.instance.collection("Cars").doc(uid).update({
-      "brand": brandcontroller.text,
-      "model": modelcontroller.text,
-      "registrationNumber": registrationNumbercontroller.text,
-    }).then((value) =>
-        Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-          return Profile();
-        })));
+    if (widget.Brand != null) {
+      String uid = FirebaseAuth.instance.currentUser!.uid;
+      await FirebaseFirestore.instance.collection("Cars").doc(uid).update({
+        "brand": brandcontroller.text,
+        "model": modelcontroller.text,
+        "registrationNumber": registrationNumbercontroller.text,
+      }).then((value) =>
+          Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+            return Profile();
+          })));
+    } else {
+      String uid = FirebaseAuth.instance.currentUser!.uid;
+      await FirebaseFirestore.instance.collection("Cars").doc(uid).set({
+        "brand": brandcontroller.text,
+        "model": modelcontroller.text,
+        "registrationNumber": registrationNumbercontroller.text,
+      }).then((value) =>
+          Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+            return Profile();
+          })));
+    }
   }
 
   bool carPicrtureExist() {

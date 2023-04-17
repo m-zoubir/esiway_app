@@ -268,8 +268,10 @@ class _HomeState extends State<Home> {
 //----------------------------------------------------------------------------------------------------------------------------------
 
 import 'package:esiway/SignIn_Up/login_page.dart';
+import 'package:esiway/SignIn_Up/registration_page.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'SignIn_Up/authentification.dart';
 import 'firebase_options.dart';
 
 // ...
@@ -289,7 +291,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: LogInPage(),
+      home: Auth(),
     );
   }
 }

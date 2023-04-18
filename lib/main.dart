@@ -267,6 +267,8 @@ class _HomeState extends State<Home> {
 
 //----------------------------------------------------------------------------------------------------------------------------------
 
+import 'package:esiway/Screens/home/Create_trip.dart';
+import 'package:esiway/Screens/home/search_trip.dart';
 import 'package:esiway/SignIn_Up/login_page.dart';
 import 'package:esiway/SignIn_Up/registration_page.dart';
 import 'package:flutter/material.dart';

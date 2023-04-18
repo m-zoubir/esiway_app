@@ -137,7 +137,7 @@ class _EditProfileState extends State<EditProfile> with UserValidation {
         context: context,
         initialDate: selectedDate,
         firstDate: DateTime(1912),
-        lastDate: DateTime(2101));
+        lastDate: DateTime(DateTime.now().year - 18));
     if (picked != null && picked != selectedDate) {
       setState(() {
         selectedDate = picked;

@@ -5,12 +5,12 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import '../../shared/button.dart';
-import '../../shared/constant.dart';
-import '../../shared/text_field.dart';
-import '../../shared/text_validation.dart';
-import '../../shared/tile_list.dart';
-import '../../shared/title_text_field.dart';
+import '../../widgets/button.dart';
+import '../../widgets/constant.dart';
+import '../../widgets/text_field.dart';
+import '../../widgets/text_validation.dart';
+import '../../widgets/tile_list.dart';
+import '../../widgets/title_text_field.dart';
 import 'profile_screen.dart';
 
 class EditProfileInfo extends StatelessWidget {
@@ -135,7 +135,7 @@ class _EditProfileState extends State<EditProfile> with UserValidation {
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
         context: context,
-        initialDate: selectedDate,
+        initialDate: DateTime(selectedDate.year - 17),
         firstDate: DateTime(1912),
         lastDate: DateTime(DateTime.now().year - 18));
     if (picked != null && picked != selectedDate) {

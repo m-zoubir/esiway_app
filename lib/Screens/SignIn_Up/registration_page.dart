@@ -1,9 +1,9 @@
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:esiway/SignIn_Up/signup_page.dart';
-import 'package:esiway/SignIn_Up/widgets/simple_button.dart';
+import 'package:esiway/Screens/SignIn_Up/signup_page.dart';
 import 'package:flutter/material.dart';
 
-import '../shared/constant.dart';
+import '../../widgets/constant.dart';
+import '../../widgets/simple_button.dart';
 import 'login_page.dart';
 
 class RegistrationPage extends StatefulWidget {

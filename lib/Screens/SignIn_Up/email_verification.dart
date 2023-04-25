@@ -1,12 +1,12 @@
 import 'dart:async';
 
-import 'package:esiway/SignIn_Up/CreateProfile.dart';
-import 'package:esiway/SignIn_Up/widgets/prefixe_icon_button.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import '../shared/button.dart';
-import '../shared/constant.dart';
+import '../../widgets/button.dart';
+import '../../widgets/constant.dart';
+import '../../widgets/prefixe_icon_button.dart';
+import 'CreateProfile.dart';
 
 class EmailVerification extends StatefulWidget {
   const EmailVerification({super.key});

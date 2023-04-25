@@ -1,24 +1,18 @@
 // ignore_for_file: file_names, non_constant_identifier_names, avoid_print, unused_element
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:esiway/SignIn_Up/Driver.dart';
-import 'package:esiway/SignIn_Up/widgets/CustomTextField.dart';
-import 'package:esiway/SignIn_Up/widgets/MabelText.dart';
-import 'package:esiway/SignIn_Up/widgets/MyAppBar.dart';
-import 'package:esiway/SignIn_Up/widgets/prefixe_icon_button.dart';
-import 'package:esiway/SignIn_Up/widgets/suffixe_icon_button.dart';
-import 'package:esiway/shared/constant.dart';
-import 'package:esiway/shared/text_field.dart';
-import 'package:esiway/shared/text_validation.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
-import '../Screens/Profile/profile_screen.dart';
-import '../shared/icons_ESIWay.dart';
 import 'package:iconsax/iconsax.dart';
 
-import '../shared/tile_list.dart';
-import '../shared/title_text_field.dart';
+import '../../widgets/constant.dart';
+import '../../widgets/prefixe_icon_button.dart';
+import '../../widgets/suffixe_icon_button.dart';
+import '../../widgets/text_field.dart';
+import '../../widgets/text_validation.dart';
+import '../../widgets/tile_list.dart';
+import '../../widgets/title_text_field.dart';
+import 'Driver.dart';
 
 class CreateProfile extends StatefulWidget {
   const CreateProfile({super.key});

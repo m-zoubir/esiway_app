@@ -4,9 +4,6 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:esiway/Screens/Profile/profile_screen.dart';
-import 'package:esiway/SignIn_Up/widgets/prefixe_icon_button.dart';
-import 'package:esiway/SignIn_Up/widgets/suffixe_icon_button.dart';
-import 'package:esiway/shared/text_validation.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -14,9 +11,12 @@ import 'package:iconsax/iconsax.dart';
 
 import 'package:image_picker/image_picker.dart';
 
-import '../shared/constant.dart';
-import '../shared/text_field.dart';
-import '../shared/title_text_field.dart';
+import '../../widgets/constant.dart';
+import '../../widgets/prefixe_icon_button.dart';
+import '../../widgets/suffixe_icon_button.dart';
+import '../../widgets/text_field.dart';
+import '../../widgets/text_validation.dart';
+import '../../widgets/title_text_field.dart';
 
 class Driver extends StatefulWidget {
   const Driver({super.key});

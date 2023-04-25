@@ -1,22 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:esiway/Screens/Profile/profile_screen.dart';
-import 'package:esiway/SignIn_Up/email_verification.dart';
-import 'package:esiway/SignIn_Up/widgets/prefixe_icon_button.dart';
-import 'package:esiway/shared/icons_ESIWay.dart';
-import 'package:esiway/shared/text_field.dart';
-import 'package:esiway/shared/text_validation.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import '../shared/constant.dart';
-import 'CreateProfile.dart';
-import 'Services/Auth.dart';
+import '../../widgets/constant.dart';
+import '../../widgets/login_text.dart';
+import '../../widgets/password_field.dart';
+import '../../widgets/prefixe_icon_button.dart';
+import '../../widgets/suffixe_icon_button.dart';
+import '../../widgets/text_field.dart';
+import '../../widgets/text_validation.dart';
+import 'email_verification.dart';
 import 'login_page.dart';
-import 'verification_page.dart';
-import 'widgets/login_text.dart';
-import 'widgets/login_text_field.dart';
-import 'widgets/password_field.dart';
-import 'widgets/suffixe_icon_button.dart';
 
 class SignUpPage extends StatefulWidget {
   SignUpPage({Key? key}) : super(key: key);

@@ -30,7 +30,6 @@ class AuthService {
       if (password == confirmpassword) {
         await auth.createUserWithEmailAndPassword(
             email: email, password: password);
-
       }
       return true;
     } on FirebaseException catch (e) {

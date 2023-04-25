@@ -1,19 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:esiway/Screens/Profile/profile_screen.dart';
-import 'package:esiway/SignIn_Up/signup_page.dart';
-import 'package:esiway/SignIn_Up/widgets/simple_button.dart';
-import 'package:esiway/shared/constant.dart';
-import 'package:esiway/shared/text_field.dart';
-import 'package:esiway/shared/text_validation.dart';
+import 'package:esiway/Screens/SignIn_Up/signup_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import '../Screens/Profile/forgot_password_mailadress.dart';
-import 'Services/Auth.dart';
-import 'widgets/login_text.dart';
-import 'widgets/login_text_field.dart';
-import 'widgets/password_field.dart';
+import '../../widgets/constant.dart';
+import '../../widgets/login_text.dart';
+import '../../widgets/password_field.dart';
+import '../../widgets/simple_button.dart';
+import '../../widgets/text_field.dart';
+import '../../widgets/text_validation.dart';
+import '../Profile/forgot_password_mailadress.dart';
 
 class LogInPage extends StatefulWidget {
   LogInPage({Key? key}) : super(key: key);
@@ -36,12 +33,6 @@ class _LogInPageState extends State<LogInPage> with UserValidation {
   bool emailvalidate = true;
   bool passwordvalidate = true;
   bool incorrect = false;
-
-  Future<void> logIn() async {
-    await AuthService().logIn(
-        email: emailcontroller.text.trim(),
-        password: passwordcontroller.text.trim());
-  }
 
   Widget build(BuildContext context) {
     var largeur = MediaQuery.of(context).size.width;

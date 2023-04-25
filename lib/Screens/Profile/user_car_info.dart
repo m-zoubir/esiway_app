@@ -1,10 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
-import '../../SignIn_Up/widgets/prefixe_icon_button.dart';
-import '../../shared/constant.dart';
-import '../../shared/title_text_field.dart';
+import '../../widgets/constant.dart';
+import '../../widgets/title_text_field.dart';
 
 class UserCarInfo extends StatefulWidget {
   UserCarInfo({Key? key}) : super(key: key);

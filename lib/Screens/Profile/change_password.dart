@@ -1,14 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:esiway/Screens/Profile/settings_screen.dart';
-import 'package:esiway/shared/button.dart';
-import 'package:esiway/shared/text_field.dart';
-import 'package:esiway/shared/text_validation.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:iconsax/iconsax.dart';
-
-import '../../SignIn_Up/widgets/password_field.dart';
-import '../../shared/constant.dart';
+import '../../widgets/button.dart';
+import '../../widgets/constant.dart';
+import '../../widgets/password_field.dart';
+import '../../widgets/text_validation.dart';
 
 class ChangePasswordInfo extends StatelessWidget {
   ChangePasswordInfo({super.key}) {

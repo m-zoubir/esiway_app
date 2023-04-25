@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
-
-import '../../shared/constant.dart';
-import '../../shared/tile_list.dart';
+import '../../widgets/constant.dart';
+import '../../widgets/tile_list.dart';
 import 'change_password.dart';
 import 'delete_account.dart';
 import 'forgot_password_mailadress.dart';

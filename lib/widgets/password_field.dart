@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../shared/constant.dart';
+import 'constant.dart';
 
 class MyPasswordField extends StatefulWidget {
   final TextEditingController controller;

@@ -8,7 +8,7 @@ import 'package:iconsax/iconsax.dart';
 // ignore: unused_import
 import 'package:cached_network_image/cached_network_image.dart';
 
-import '../../shared/icons_ESIWay.dart';
+import 'icons_ESIWay.dart';
 
 class ChatAppBar extends StatelessWidget implements PreferredSizeWidget {
   const ChatAppBar({

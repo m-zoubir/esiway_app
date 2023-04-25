@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'Services/Auth.dart';
-
+import '../../Auth.dart';
 
 class PageOne extends StatelessWidget {
   const PageOne({super.key});

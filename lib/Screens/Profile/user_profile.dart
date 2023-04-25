@@ -1,13 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:esiway/Screens/Profile/user_car_info.dart';
-import 'package:esiway/shared/button.dart';
-import 'package:esiway/shared/constant.dart';
-import 'package:esiway/shared/title_text_field.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:iconsax/iconsax.dart';
-import '../../SignIn_Up/widgets/prefixe_icon_button.dart';
+import '../../widgets/button.dart';
+import '../../widgets/constant.dart';
+import '../../widgets/prefixe_icon_button.dart';
+import '../../widgets/title_text_field.dart';
 
 class UserProfile extends StatefulWidget {
   const UserProfile({Key? key}) : super(key: key);

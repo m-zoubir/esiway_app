@@ -5,11 +5,11 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:image_picker/image_picker.dart';
-import '../../shared/button.dart';
-import '../../shared/constant.dart';
-import '../../shared/text_field.dart';
-import '../../shared/text_validation.dart';
-import '../../shared/title_text_field.dart';
+import '../../widgets/button.dart';
+import '../../widgets/constant.dart';
+import '../../widgets/text_field.dart';
+import '../../widgets/text_validation.dart';
+import '../../widgets/title_text_field.dart';
 import 'profile_screen.dart';
 
 class CarInfo extends StatelessWidget {

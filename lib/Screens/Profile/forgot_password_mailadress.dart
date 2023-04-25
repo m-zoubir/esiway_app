@@ -2,12 +2,11 @@ import 'package:esiway/Screens/Profile/settings_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
-
-import '../../SignIn_Up/widgets/prefixe_icon_button.dart';
-import '../../shared/button.dart';
-import '../../shared/constant.dart';
-import '../../shared/text_field.dart';
-import '../../shared/text_validation.dart';
+import '../../widgets/button.dart';
+import '../../widgets/constant.dart';
+import '../../widgets/prefixe_icon_button.dart';
+import '../../widgets/text_field.dart';
+import '../../widgets/text_validation.dart';
 
 class MailAdress extends StatefulWidget {
   const MailAdress({Key? key}) : super(key: key);

@@ -1,12 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:esiway/SignIn_Up/login_page.dart';
-import 'package:esiway/shared/button.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import '../../SignIn_Up/widgets/password_field.dart';
-import '../../shared/constant.dart';
+import '../../widgets/button.dart';
+import '../../widgets/constant.dart';
+import '../../widgets/password_field.dart';
+import '../SignIn_Up/login_page.dart';
 import 'forgot_password_mailadress.dart';
 
 class DeleteAccountPassword extends StatelessWidget {

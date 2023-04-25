@@ -1,11 +1,9 @@
-import 'package:esiway/shared/tile_list.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
-
-import '../../shared/button.dart';
-import '../../shared/constant.dart';
-import '../../shared/text_field.dart';
-import '../../shared/title_text_field.dart';
+import '../../widgets/button.dart';
+import '../../widgets/constant.dart';
+import '../../widgets/text_field.dart';
+import '../../widgets/title_text_field.dart';
 
 class CreateTrip extends StatefulWidget {
   const CreateTrip({super.key});

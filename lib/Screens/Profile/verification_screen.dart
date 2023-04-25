@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
-
-import '../../shared/button.dart';
-import '../../shared/constant.dart';
-import '../../shared/text_field.dart';
-import '../../shared/text_validation.dart';
+import '../../widgets/button.dart';
+import '../../widgets/constant.dart';
+import '../../widgets/text_field.dart';
+import '../../widgets/text_validation.dart';
 import 'profile_screen.dart';
 
 class Verification extends StatefulWidget {

@@ -197,8 +197,13 @@ class _CarInformationState extends State<CarInformation> with UserValidation {
           ),
           BottomNavigationBarItem(
             label: "",
-            icon: Icon(
-              Iconsax.user,
+            icon: Transform.scale(
+              scale: 0.7,
+              child: Icons_ESIWay(
+                icon: "user",
+                hauteur: 40,
+                largeur: 40,
+              ),
             ),
           ),
         ],

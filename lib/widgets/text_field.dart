@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'constant.dart';
+import 'icons_ESIWay.dart';
 
 class Text_Field extends StatefulWidget {
   Text_Field(
@@ -16,6 +17,7 @@ class Text_Field extends StatefulWidget {
       this.subtitle,
       required this.validate,
       required this.title,
+      this.iconName,
       required this.textfieldcontroller})
       : super(key: key);
 
@@ -30,6 +32,7 @@ class Text_Field extends StatefulWidget {
   String? error;
   bool validate;
   int? length;
+  String? iconName;
   double? bottomheigh;
   TextInputType? type;
   @override
@@ -107,7 +110,19 @@ class _Text_FieldState extends State<Text_Field> {
               suffix: widget.suffix != null ? widget.suffix : null,
               prefix: widget.prefix != null ? widget.prefix : null,
               suffixIcon: widget.suffixicon != null ? widget.suffixicon : null,
-              prefixIcon: widget.prefixicon != null ? widget.prefixicon : null,
+              prefixIcon: widget.prefixicon != null
+                  ? widget.prefixicon
+                  : widget.iconName == null
+                      ? null
+                      : Container(
+                          child: Transform.scale(
+                            scale: 0.5,
+                            child: Icons_ESIWay(
+                                icon: widget.iconName!,
+                                largeur: 20,
+                                hauteur: 20),
+                          ),
+                        ),
               filled: true,
               fillColor: Colors.white,
               enabledBorder: widget.validate

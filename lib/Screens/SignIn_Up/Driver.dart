@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:esiway/Screens/Profile/profile_screen.dart';
+import 'package:esiway/widgets/icons_ESIWay.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -188,10 +189,7 @@ class _DriverState extends State<Driver> with UserValidation {
                             validate: brandvalidate,
                             error: "Value can't be Empty",
                             hinttext: 'Peugeot',
-                            prefixicon: Icon(
-                              Iconsax.car,
-                              color: vert,
-                            ),
+                            iconName: "car",
                             textfieldcontroller: brandcontroller,
                           ),
                         ),
@@ -204,10 +202,7 @@ class _DriverState extends State<Driver> with UserValidation {
                             validate: modelvalidate,
                             error: "Value can't be Empty",
                             hinttext: '206',
-                            prefixicon: Icon(
-                              Iconsax.car,
-                              color: vert,
-                            ),
+                            iconName: "wheel",
                             textfieldcontroller: modelcontroller,
                           ),
                         )
@@ -222,10 +217,7 @@ class _DriverState extends State<Driver> with UserValidation {
                       error: "Value can't be Empty",
                       type: TextInputType.number,
                       hinttext: '00984-118-16',
-                      prefixicon: Icon(
-                        Iconsax.car,
-                        color: vert,
-                      ),
+                      iconName: "home",
                       textfieldcontroller: registrationNumbercontroller,
                     ),
 
@@ -263,15 +255,17 @@ class _DriverState extends State<Driver> with UserValidation {
                             ),
                             onPressed: () =>
                                 _openImagePicker("car", ImageSource.gallery),
-                            icon: Icon(
-                              Iconsax.document_upload,
-                              color: bleu_bg,
+                            icon: Transform.scale(
+                              scale: 0.5,
+                              child: Icons_ESIWay(
+                                  icon: "upload", largeur: 24, hauteur: 24),
                             ),
                             label: Text(
                               "Upload",
                               style: TextStyle(
                                 color: bleu_bg,
                                 fontWeight: FontWeight.bold,
+                                fontFamily: "Montserrat",
                               ),
                             ),
                           ),
@@ -285,15 +279,17 @@ class _DriverState extends State<Driver> with UserValidation {
                             ),
                             onPressed: () =>
                                 _openImagePicker("car", ImageSource.camera),
-                            icon: Icon(
-                              Iconsax.camera,
-                              color: bleu_bg,
+                            icon: Transform.scale(
+                              scale: 0.5,
+                              child: Icons_ESIWay(
+                                  icon: "camera", largeur: 24, hauteur: 24),
                             ),
                             label: Text(
                               "Take",
                               style: TextStyle(
                                 color: bleu_bg,
                                 fontWeight: FontWeight.bold,
+                                fontFamily: "Montserrat",
                               ),
                             ),
                           ),
@@ -336,15 +332,17 @@ class _DriverState extends State<Driver> with UserValidation {
                             ),
                             onPressed: () =>
                                 _openImagePicker("policy", ImageSource.gallery),
-                            icon: Icon(
-                              Iconsax.document_upload,
-                              color: bleu_bg,
+                            icon: Transform.scale(
+                              scale: 0.5,
+                              child: Icons_ESIWay(
+                                  icon: "upload", largeur: 24, hauteur: 24),
                             ),
                             label: Text(
                               "Upload",
                               style: TextStyle(
                                 color: bleu_bg,
                                 fontWeight: FontWeight.bold,
+                                fontFamily: "Montserrat",
                               ),
                             ),
                           ),

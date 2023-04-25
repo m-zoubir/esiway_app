@@ -120,10 +120,7 @@ class _SignUpPageState extends State<SignUpPage> with UserValidation {
                                 title: "Email",
                                 error: "It's not esi mail",
                                 textfieldcontroller: emailcontroller,
-                                prefixicon: const Icon(
-                                  Icons.email_rounded,
-                                  color: vert,
-                                ),
+                                iconName: "email",
                               ),
                               MyPasswordField(
                                 controller: passwordcontroller,

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:esiway/Screens/Profile/profile_screen.dart';
 import 'package:esiway/Screens/SignIn_Up/signup_page.dart';
+import 'package:esiway/widgets/icons_ESIWay.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -75,7 +76,7 @@ class _LogInPageState extends State<LogInPage> with UserValidation {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             MyText(
-                                largeur: largeur * 0.6,
+                                largeur: largeur,
                                 text: "Welcome",
                                 weight: FontWeight.w700,
                                 fontsize: 50,
@@ -88,10 +89,7 @@ class _LogInPageState extends State<LogInPage> with UserValidation {
                               title: "Email",
                               error: "Is not esi mail",
                               textfieldcontroller: emailcontroller,
-                              prefixicon: const Icon(
-                                Icons.email_rounded,
-                                color: Color(0xff72D2C2),
-                              ),
+                              iconName: "email",
                             ),
                             SizedBox(height: hauteur * 0.02375),
                             MyPasswordField(

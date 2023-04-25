@@ -103,7 +103,7 @@ class _CreateProfileState extends State<CreateProfile> with UserValidation {
                           fct: back),
                     ),
                     SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.22,
+                      height: MediaQuery.of(context).size.height * 0.2175,
                     ),
                     Center(
                       child: Text(
@@ -133,25 +133,19 @@ class _CreateProfileState extends State<CreateProfile> with UserValidation {
                       title: "Name",
                       error: "Value can't be empty",
                       textfieldcontroller: _nameController,
-                      prefixicon: Icon(
-                        Iconsax.user,
-                        color: vert,
-                      ),
+                      iconName: "user",
                     ),
                     //-----------------------------------------------------------------------
                     SizedBox(
                       height: 10.0,
                     ),
                     Text_Field(
-                      hinttext: "Enter your familyname",
+                      hinttext: "Enter your family name",
                       validate: familynamevalidate,
                       title: "Family name",
                       error: "Value can't be empty",
                       textfieldcontroller: _familynameController,
-                      prefixicon: Icon(
-                        Iconsax.user,
-                        color: vert,
-                      ),
+                      iconName: "user",
                     ),
                     SizedBox(
                       height: 10.0,
@@ -165,10 +159,7 @@ class _CreateProfileState extends State<CreateProfile> with UserValidation {
                       children: [
                         Expanded(
                           child: Listbox(
-                            iconleading: Icon(
-                              Icons.male_rounded,
-                              color: gender == false ? vert : Colors.white,
-                            ),
+                            iconName: "male",
                             title: "Male",
                             color: gender == false || gender == null
                                 ? null
@@ -188,10 +179,7 @@ class _CreateProfileState extends State<CreateProfile> with UserValidation {
                         ),
                         Expanded(
                           child: Listbox(
-                            iconleading: Icon(
-                              Icons.female_rounded,
-                              color: gender == true ? vert : Colors.white,
-                            ),
+                            iconName: "female",
                             title: "Female",
                             color: gender == true || gender == null
                                 ? null

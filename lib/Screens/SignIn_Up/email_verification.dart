@@ -107,7 +107,7 @@ class _EmailVerificationState extends State<EmailVerification> {
                         fct: back),
                   ),
                   SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.22,
+                    height: MediaQuery.of(context).size.height * 0.2175,
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 30),

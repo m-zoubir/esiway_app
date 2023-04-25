@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:esiway/widgets/icons_ESIWay.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -286,38 +287,41 @@ class _CarInformationState extends State<CarInformation> with UserValidation {
                   showDialog(
                     context: context,
                     builder: (BuildContext context) => SimpleDialog(
-                      title: Text("choose your source"),
+                      title: Text(
+                        "choose your source",
+                        style: TextStyle(fontFamily: "Montsserat"),
+                      ),
                       children: [
                         ListTile(
-                          title: Text(
-                            "Import a picture",
-                            style: TextStyle(
-                                color: bleu_bg,
-                                fontWeight: FontWeight.normal,
-                                fontFamily: "Montserrat"),
-                          ),
-                          onTap: () => _openImagePicker(
-                              "carpicture", ImageSource.gallery),
-                          leading: Icon(
-                            Icons.upload,
-                            color: vert,
-                          ),
-                        ),
+                            title: Text(
+                              "Import a picture",
+                              style: TextStyle(
+                                  color: bleu_bg,
+                                  fontWeight: FontWeight.normal,
+                                  fontFamily: "Montserrat"),
+                            ),
+                            onTap: () => _openImagePicker(
+                                "carpicture", ImageSource.gallery),
+                            leading: Transform.scale(
+                              scale: 0.5,
+                              child: Icons_ESIWay(
+                                  icon: "upload", largeur: 35, hauteur: 35),
+                            )),
                         ListTile(
-                          title: Text(
-                            "Take a picture",
-                            style: TextStyle(
-                                color: bleu_bg,
-                                fontWeight: FontWeight.normal,
-                                fontFamily: "Montserrat"),
-                          ),
-                          onTap: () => _openImagePicker(
-                              "carpicture", ImageSource.camera),
-                          leading: Icon(
-                            Icons.camera,
-                            color: vert,
-                          ),
-                        ),
+                            title: Text(
+                              "Take a picture",
+                              style: TextStyle(
+                                  color: bleu_bg,
+                                  fontWeight: FontWeight.normal,
+                                  fontFamily: "Montserrat"),
+                            ),
+                            onTap: () => _openImagePicker(
+                                "carpicture", ImageSource.camera),
+                            leading: Transform.scale(
+                              scale: 0.5,
+                              child: Icons_ESIWay(
+                                  icon: "camera", largeur: 35, hauteur: 35),
+                            )),
                       ],
                     ),
                   );
@@ -346,10 +350,7 @@ class _CarInformationState extends State<CarInformation> with UserValidation {
                       validate: brandvalidate,
                       error: "Value can't be Empty",
                       hinttext: 'Peugeot',
-                      prefixicon: Icon(
-                        Iconsax.car,
-                        color: vert,
-                      ),
+                      iconName: "car",
                       textfieldcontroller: brandcontroller,
                     ),
                   ),
@@ -362,10 +363,7 @@ class _CarInformationState extends State<CarInformation> with UserValidation {
                       validate: modelvalidate,
                       error: "Value can't be Empty",
                       hinttext: '206',
-                      prefixicon: Icon(
-                        Iconsax.car,
-                        color: vert,
-                      ),
+                      iconName: "wheel",
                       textfieldcontroller: modelcontroller,
                     ),
                   )
@@ -380,10 +378,7 @@ class _CarInformationState extends State<CarInformation> with UserValidation {
                 error: "Value can't be Empty",
                 type: TextInputType.number,
                 hinttext: '00984-118-16',
-                prefixicon: Icon(
-                  Iconsax.car,
-                  color: vert,
-                ),
+                iconName: "home",
                 textfieldcontroller: registrationNumbercontroller,
               ),
 
@@ -429,15 +424,20 @@ class _CarInformationState extends State<CarInformation> with UserValidation {
                       ),
                       onPressed: () =>
                           _openImagePicker("policy", ImageSource.gallery),
-                      icon: Icon(
-                        Iconsax.document_upload,
-                        color: bleu_bg,
+                      icon: Transform.scale(
+                        scale: 0.5,
+                        child: Icons_ESIWay(
+                          icon: "upload",
+                          hauteur: 35,
+                          largeur: 35,
+                        ),
                       ),
                       label: Text(
                         "Upload",
                         style: TextStyle(
                           color: bleu_bg,
                           fontWeight: FontWeight.bold,
+                          fontFamily: "Montserrat",
                         ),
                       ),
                     ),

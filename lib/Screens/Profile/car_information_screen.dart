@@ -174,11 +174,15 @@ class _CarInformationState extends State<CarInformation> with UserValidation {
         selectedIconTheme: IconThemeData(color: vert),
         items: [
           BottomNavigationBarItem(
-            label: "",
-            icon: Icon(
-              Iconsax.home_2,
-            ),
-          ),
+              label: "",
+              icon: Transform.scale(
+                scale: 0.7,
+                child: Icons_ESIWay(
+                  icon: "user",
+                  hauteur: 40,
+                  largeur: 40,
+                ),
+              )),
           BottomNavigationBarItem(
             label: "",
             icon: Icon(
@@ -214,9 +218,9 @@ class _CarInformationState extends State<CarInformation> with UserValidation {
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         centerTitle: true,
         leading: IconButton(
-          icon: Icon(
-            Iconsax.back_square,
-            color: vert,
+          icon: Transform.scale(
+            scale: 0.9,
+            child: Icons_ESIWay(icon: "arrow_left", largeur: 50, hauteur: 50),
           ),
           onPressed: () {
             Navigator.of(context).push(
@@ -239,9 +243,9 @@ class _CarInformationState extends State<CarInformation> with UserValidation {
         ),
         actions: [
           IconButton(
-            icon: Icon(
-              Iconsax.info_circle,
-              color: orange,
+            icon: Transform.scale(
+              scale: 0.8,
+              child: Icons_ESIWay(icon: "help", largeur: 35, hauteur: 35),
             ),
             onPressed: () {},
           ),
@@ -282,56 +286,56 @@ class _CarInformationState extends State<CarInformation> with UserValidation {
                           : Image.network(carpictureURL!),
                     ),
 
-              TextButton(
-                onPressed: () {
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) => SimpleDialog(
-                      title: Text(
-                        "choose your source",
-                        style: TextStyle(fontFamily: "Montsserat"),
+              Container(
+                width: MediaQuery.of(context).size.width * 0.40,
+                height: 25,
+                child: Button(
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) => SimpleDialog(
+                        shape: RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(10))),
+                        children: [
+                          ListTile(
+                              title: Text(
+                                "Import a picture",
+                                style: TextStyle(
+                                    color: bleu_bg,
+                                    fontWeight: FontWeight.normal,
+                                    fontFamily: "Montserrat"),
+                              ),
+                              onTap: () => _openImagePicker(
+                                  "carpicture", ImageSource.gallery),
+                              leading: Transform.scale(
+                                scale: 0.8,
+                                child: Icons_ESIWay(
+                                    icon: "galerie", largeur: 35, hauteur: 35),
+                              )),
+                          ListTile(
+                              title: Text(
+                                "Take a picture",
+                                style: TextStyle(
+                                    color: bleu_bg,
+                                    fontWeight: FontWeight.normal,
+                                    fontFamily: "Montserrat"),
+                              ),
+                              onTap: () => _openImagePicker(
+                                  "carpicture", ImageSource.camera),
+                              leading: Transform.scale(
+                                scale: 0.8,
+                                child: Icons_ESIWay(
+                                    icon: "camera", largeur: 35, hauteur: 35),
+                              )),
+                        ],
                       ),
-                      children: [
-                        ListTile(
-                            title: Text(
-                              "Import a picture",
-                              style: TextStyle(
-                                  color: bleu_bg,
-                                  fontWeight: FontWeight.normal,
-                                  fontFamily: "Montserrat"),
-                            ),
-                            onTap: () => _openImagePicker(
-                                "carpicture", ImageSource.gallery),
-                            leading: Transform.scale(
-                              scale: 0.5,
-                              child: Icons_ESIWay(
-                                  icon: "upload", largeur: 35, hauteur: 35),
-                            )),
-                        ListTile(
-                            title: Text(
-                              "Take a picture",
-                              style: TextStyle(
-                                  color: bleu_bg,
-                                  fontWeight: FontWeight.normal,
-                                  fontFamily: "Montserrat"),
-                            ),
-                            onTap: () => _openImagePicker(
-                                "carpicture", ImageSource.camera),
-                            leading: Transform.scale(
-                              scale: 0.5,
-                              child: Icons_ESIWay(
-                                  icon: "camera", largeur: 35, hauteur: 35),
-                            )),
-                      ],
-                    ),
-                  );
-                },
-                child: Text(
-                  "Add a picture",
-                  style: TextStyle(
-                      fontSize: 10,
-                      color: bleu_bg,
-                      fontWeight: FontWeight.bold),
+                    );
+                  },
+                  color: color6,
+                  title: carpictureURL == null
+                      ? 'Add picture'
+                      : 'Change the picture',
                 ),
               ),
               SizedBox(
@@ -363,7 +367,7 @@ class _CarInformationState extends State<CarInformation> with UserValidation {
                       validate: modelvalidate,
                       error: "Value can't be Empty",
                       hinttext: '206',
-                      iconName: "wheel",
+                      iconName: "car",
                       textfieldcontroller: modelcontroller,
                     ),
                   )
@@ -428,8 +432,8 @@ class _CarInformationState extends State<CarInformation> with UserValidation {
                         scale: 0.5,
                         child: Icons_ESIWay(
                           icon: "upload",
-                          hauteur: 35,
-                          largeur: 35,
+                          hauteur: 40,
+                          largeur: 40,
                         ),
                       ),
                       label: Text(

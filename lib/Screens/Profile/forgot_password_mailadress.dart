@@ -89,10 +89,7 @@ class _MailAdressState extends State<MailAdress> with UserValidation {
                 title: "Enter  your email",
                 error: "Not esi mail",
                 textfieldcontroller: email,
-                prefixicon: Icon(
-                  Icons.email,
-                  color: vert,
-                ),
+                iconName: "email",
               ),
             ),
             SizedBox(

@@ -3,10 +3,10 @@ import 'package:iconsax/iconsax.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 import '../../widgets/constant.dart';
+import '../../widgets/icons_ESIWay.dart';
 import '../../widgets/tile_list.dart';
 import 'change_password.dart';
 import 'delete_account.dart';
-import 'forgot_password_mailadress.dart';
 import 'profile_screen.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -73,9 +73,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         centerTitle: true,
         leading: IconButton(
-          icon: Icon(
-            Iconsax.back_square,
-            color: vert,
+          icon: Transform.scale(
+            scale: 0.9,
+            child: Icons_ESIWay(icon: "arrow_left", largeur: 50, hauteur: 50),
           ),
           onPressed: () {
             Navigator.of(context).push(
@@ -98,9 +98,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
         ),
         actions: [
           IconButton(
-            icon: Icon(
-              Iconsax.info_circle,
-              color: orange,
+            icon: Transform.scale(
+              scale: 0.8,
+              child: Icons_ESIWay(icon: "help", largeur: 35, hauteur: 35),
             ),
             onPressed: () {},
           ),
@@ -112,10 +112,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
           children: [
             Listbox(
               title: "Write to us",
-              iconleading: Icon(
-                Icons.email_outlined,
-                color: vert,
-              ),
+              iconName: "email",
+              scale: 0.7,
               onPressed: () async {
                 String emailUrl =
                     'mailto:lm_zoubir@esi.dz?subject=This is Subject Title&body=This is Body of Email';
@@ -129,7 +127,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             Listbox(
               title: "Call us",
               iconleading: Icon(
-                Iconsax.call,
+                Icons.call,
                 color: vert,
               ),
               onPressed: () async {

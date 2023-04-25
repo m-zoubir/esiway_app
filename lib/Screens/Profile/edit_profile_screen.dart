@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../widgets/button.dart';
 import '../../widgets/constant.dart';
+import '../../widgets/icons_ESIWay.dart';
 import '../../widgets/text_field.dart';
 import '../../widgets/text_validation.dart';
 import '../../widgets/tile_list.dart';
@@ -248,9 +249,9 @@ class _EditProfileState extends State<EditProfile> with UserValidation {
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         centerTitle: true,
         leading: IconButton(
-          icon: Icon(
-            Iconsax.back_square,
-            color: vert,
+          icon: Transform.scale(
+            scale: 0.9,
+            child: Icons_ESIWay(icon: "arrow_left", largeur: 50, hauteur: 50),
           ),
           onPressed: () {
             Navigator.of(context).push(
@@ -273,9 +274,9 @@ class _EditProfileState extends State<EditProfile> with UserValidation {
         ),
         actions: [
           IconButton(
-            icon: Icon(
-              Iconsax.info_circle,
-              color: orange,
+            icon: Transform.scale(
+              scale: 0.8,
+              child: Icons_ESIWay(icon: "help", largeur: 35, hauteur: 35),
             ),
             onPressed: () {},
           ),
@@ -334,38 +335,44 @@ class _EditProfileState extends State<EditProfile> with UserValidation {
                         showDialog(
                           context: context,
                           builder: (BuildContext context) => SimpleDialog(
-                            title: Text("choose your source"),
+                            shape: RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10))),
                             children: [
                               ListTile(
-                                title: Text(
-                                  "Import a picture",
-                                  style: TextStyle(
-                                      color: bleu_bg,
-                                      fontWeight: FontWeight.normal,
-                                      fontFamily: "Montserrat"),
-                                ),
-                                onTap: () =>
-                                    _openImagePicker(ImageSource.gallery),
-                                leading: Icon(
-                                  Icons.upload,
-                                  color: vert,
-                                ),
-                              ),
+                                  title: Text(
+                                    "Import a picture",
+                                    style: TextStyle(
+                                        color: bleu_bg,
+                                        fontWeight: FontWeight.normal,
+                                        fontFamily: "Montserrat"),
+                                  ),
+                                  onTap: () =>
+                                      _openImagePicker(ImageSource.gallery),
+                                  leading: Transform.scale(
+                                    scale: 0.8,
+                                    child: Icons_ESIWay(
+                                        icon: "upload",
+                                        largeur: 35,
+                                        hauteur: 35),
+                                  )),
                               ListTile(
-                                title: Text(
-                                  "Take a picture",
-                                  style: TextStyle(
-                                      color: bleu_bg,
-                                      fontWeight: FontWeight.normal,
-                                      fontFamily: "Montserrat"),
-                                ),
-                                onTap: () =>
-                                    _openImagePicker(ImageSource.camera),
-                                leading: Icon(
-                                  Icons.camera,
-                                  color: vert,
-                                ),
-                              ),
+                                  title: Text(
+                                    "Take a picture",
+                                    style: TextStyle(
+                                        color: bleu_bg,
+                                        fontWeight: FontWeight.normal,
+                                        fontFamily: "Montserrat"),
+                                  ),
+                                  onTap: () =>
+                                      _openImagePicker(ImageSource.camera),
+                                  leading: Transform.scale(
+                                    scale: 0.8,
+                                    child: Icons_ESIWay(
+                                        icon: "camera",
+                                        largeur: 35,
+                                        hauteur: 35),
+                                  )),
                             ],
                           ),
                         );
@@ -429,10 +436,8 @@ class _EditProfileState extends State<EditProfile> with UserValidation {
                 children: [
                   Expanded(
                     child: Listbox(
-                      iconleading: Icon(
-                        Icons.male_rounded,
-                        color: gender == false ? vert : Colors.white,
-                      ),
+                      iconName: "male",
+                      scale: 0.6,
                       title: "Male",
                       color: gender == false || gender == null
                           ? null
@@ -452,10 +457,8 @@ class _EditProfileState extends State<EditProfile> with UserValidation {
                   ),
                   Expanded(
                     child: Listbox(
-                      iconleading: Icon(
-                        Icons.female_rounded,
-                        color: gender == true ? vert : Colors.white,
-                      ),
+                      iconName: "female",
+                      scale: 0.6,
                       title: "Female",
                       color: gender == true || gender == null
                           ? null

@@ -5,6 +5,7 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:iconsax/iconsax.dart';
 import '../../widgets/button.dart';
 import '../../widgets/constant.dart';
+import '../../widgets/icons_ESIWay.dart';
 import '../../widgets/text_validation.dart';
 import '../../widgets/tile_list.dart';
 import '../SignIn_Up/login_page.dart';
@@ -111,9 +112,9 @@ class _ProfileState extends State<Profile> with UserValidation {
         ),
         actions: [
           IconButton(
-            icon: Icon(
-              Iconsax.info_circle,
-              color: orange,
+            icon: Transform.scale(
+              scale: 0.8,
+              child: Icons_ESIWay(icon: "help", largeur: 35, hauteur: 35),
             ),
             onPressed: () {},
           ),
@@ -210,20 +211,16 @@ class _ProfileState extends State<Profile> with UserValidation {
                           ),
                         );
                       },
-                      title: "My informations",
-                      iconleading: const Icon(
-                        Iconsax.user,
-                        color: vert,
-                      ),
+                      title: "Edit my profile",
+                      iconName: "user",
+                      scale: 0.7,
                     ),
                     Listbox(
                       onPressed: () {},
                       subtitle: "{Home , work , ...}",
                       title: "My adresses",
-                      iconleading: const Icon(
-                        Iconsax.home_2,
-                        color: vert,
-                      ),
+                      iconName: "home",
+                      scale: 0.65,
                     ),
                     Listbox(
                       onPressed: () {},
@@ -244,10 +241,8 @@ class _ProfileState extends State<Profile> with UserValidation {
                         );
                       },
                       title: "My car",
-                      iconleading: const Icon(
-                        Iconsax.car,
-                        color: vert,
-                      ),
+                      iconName: "car",
+                      scale: 0.7,
                     ),
                     Listbox(
                       onPressed: () {

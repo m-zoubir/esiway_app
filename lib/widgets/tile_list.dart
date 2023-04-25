@@ -14,11 +14,13 @@ class Listbox extends StatelessWidget {
       this.heigh,
       this.inCenter,
       this.iconName,
+      this.scale,
       required this.onPressed});
 
   String? iconName;
   String? subtitle;
   String title;
+  double? scale;
   Icon? iconleading;
   VoidCallback onPressed;
   Color? color;
@@ -38,12 +40,13 @@ class Listbox extends StatelessWidget {
             dense: true,
             onTap: onPressed,
             leading: iconleading != null
-                ? iconleading
+                ? Padding(
+                    padding: EdgeInsets.only(left: 5), child: iconleading!)
                 : iconName == null
                     ? null
                     : Container(
                         child: Transform.scale(
-                          scale: 0.5,
+                          scale: scale!,
                           child: Icons_ESIWay(
                               icon: iconName!, largeur: 35, hauteur: 35),
                         ),

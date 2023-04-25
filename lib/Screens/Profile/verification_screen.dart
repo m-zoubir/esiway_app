@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import '../../widgets/button.dart';
 import '../../widgets/constant.dart';
+import '../../widgets/icons_ESIWay.dart';
 import '../../widgets/text_field.dart';
 import '../../widgets/text_validation.dart';
 import 'profile_screen.dart';
@@ -79,9 +80,9 @@ class _VerificationState extends State<Verification> with UserValidation {
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         centerTitle: true,
         leading: IconButton(
-          icon: Icon(
-            Iconsax.back_square,
-            color: vert,
+          icon: Transform.scale(
+            scale: 0.9,
+            child: Icons_ESIWay(icon: "arrow_left", largeur: 50, hauteur: 50),
           ),
           onPressed: () {
             Navigator.of(context).push(
@@ -104,12 +105,12 @@ class _VerificationState extends State<Verification> with UserValidation {
         ),
         actions: [
           IconButton(
-            icon: Icon(
-              Iconsax.info_circle,
-              color: orange,
+            icon: Transform.scale(
+              scale: 0.8,
+              child: Icons_ESIWay(icon: "help", largeur: 35, hauteur: 35),
             ),
             onPressed: () {},
-          ),
+          )
         ],
       ),
       body: SingleChildScrollView(
@@ -128,7 +129,7 @@ class _VerificationState extends State<Verification> with UserValidation {
               ),
               Text_Field(
                 type: TextInputType.phone,
-                hinttext: "hinttext",
+                hinttext: "Enter your phone number",
                 validate: phonevalidate,
                 title: "Phone Number",
                 bottomheigh: 8,
@@ -163,7 +164,7 @@ class _VerificationState extends State<Verification> with UserValidation {
               ),
               Text_Field(
                 type: TextInputType.emailAddress,
-                hinttext: "hinttext",
+                hinttext: "Enter your email",
                 validate: emailvalidate,
                 title: "Email",
                 textfieldcontroller: emailController,

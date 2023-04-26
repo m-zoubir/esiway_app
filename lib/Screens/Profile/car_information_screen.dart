@@ -170,40 +170,46 @@ class _CarInformationState extends State<CarInformation> with UserValidation {
         fixedColor: Theme.of(context).scaffoldBackgroundColor,
         type: BottomNavigationBarType.fixed,
         currentIndex: _currentindex,
-        unselectedIconTheme: IconThemeData(color: bleu_bg),
-        selectedIconTheme: IconThemeData(color: vert),
         items: [
           BottomNavigationBarItem(
-              label: "",
-              icon: Transform.scale(
-                scale: 0.7,
-                child: Icons_ESIWay(
-                  icon: "user",
-                  hauteur: 40,
-                  largeur: 40,
-                ),
-              )),
-          BottomNavigationBarItem(
             label: "",
-            icon: Icon(
-              Iconsax.home_2,
-            ),
-          ),
-          BottomNavigationBarItem(
-            label: "",
-            icon: Icon(
-              Iconsax.home_2,
+            icon: Transform.scale(
+              scale: 1,
+              child: Icons_ESIWay(
+                hauteur: 24,
+                largeur: 24,
+                icon: "home_bleu",
+              ),
             ),
           ),
           BottomNavigationBarItem(
             label: "",
             icon: Transform.scale(
-              scale: 0.7,
+              scale: 1,
               child: Icons_ESIWay(
-                icon: "user",
-                hauteur: 40,
-                largeur: 40,
+                hauteur: 24,
+                largeur: 24,
+                icon: "routing",
               ),
+            ),
+          ),
+          BottomNavigationBarItem(
+            label: "",
+            icon: Transform.scale(
+              scale: 1,
+              child: Icons_ESIWay(
+                hauteur: 24,
+                largeur: 24,
+                icon: "messages",
+              ),
+            ),
+          ),
+          BottomNavigationBarItem(
+            label: "",
+            icon: Icons_ESIWay(
+              hauteur: 24,
+              largeur: 24,
+              icon: "user",
             ),
           ),
         ],
@@ -331,7 +337,9 @@ class _CarInformationState extends State<CarInformation> with UserValidation {
                               leading: Transform.scale(
                                 scale: 0.8,
                                 child: Icons_ESIWay(
-                                    icon: "camera", largeur: 35, hauteur: 35),
+                                    icon: "camera_vert",
+                                    largeur: 35,
+                                    hauteur: 35),
                               )),
                         ],
                       ),

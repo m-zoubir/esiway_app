@@ -5,6 +5,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import '../../widgets/button.dart';
 import '../../widgets/constant.dart';
+import '../../widgets/icons_ESIWay.dart';
 import '../../widgets/password_field.dart';
 import '../SignIn_Up/login_page.dart';
 import 'forgot_password_mailadress.dart';
@@ -72,9 +73,9 @@ class _DeleteAccountState extends State<DeleteAccount> {
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         centerTitle: true,
         leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back_ios_new_rounded,
-            color: vert,
+          icon: Transform.scale(
+            scale: 0.9,
+            child: Icons_ESIWay(icon: "arrow_left", largeur: 50, hauteur: 50),
           ),
           onPressed: () {
             Navigator.of(context).pop();

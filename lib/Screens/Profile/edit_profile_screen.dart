@@ -204,31 +204,46 @@ class _EditProfileState extends State<EditProfile> with UserValidation {
         fixedColor: Theme.of(context).scaffoldBackgroundColor,
         type: BottomNavigationBarType.fixed,
         currentIndex: _currentindex,
-        unselectedIconTheme: IconThemeData(color: bleu_bg),
-        selectedIconTheme: IconThemeData(color: vert),
         items: [
           BottomNavigationBarItem(
             label: "",
-            icon: Icon(
-              Iconsax.home_2,
+            icon: Transform.scale(
+              scale: 1,
+              child: Icons_ESIWay(
+                hauteur: 24,
+                largeur: 24,
+                icon: "home_bleu",
+              ),
             ),
           ),
           BottomNavigationBarItem(
             label: "",
-            icon: Icon(
-              Iconsax.home_2,
+            icon: Transform.scale(
+              scale: 1,
+              child: Icons_ESIWay(
+                hauteur: 24,
+                largeur: 24,
+                icon: "routing",
+              ),
             ),
           ),
           BottomNavigationBarItem(
             label: "",
-            icon: Icon(
-              Iconsax.home_2,
+            icon: Transform.scale(
+              scale: 1,
+              child: Icons_ESIWay(
+                hauteur: 24,
+                largeur: 24,
+                icon: "messages",
+              ),
             ),
           ),
           BottomNavigationBarItem(
             label: "",
-            icon: Icon(
-              Iconsax.user,
+            icon: Icons_ESIWay(
+              hauteur: 24,
+              largeur: 24,
+              icon: "user",
             ),
           ),
         ],
@@ -352,7 +367,7 @@ class _EditProfileState extends State<EditProfile> with UserValidation {
                                   leading: Transform.scale(
                                     scale: 0.8,
                                     child: Icons_ESIWay(
-                                        icon: "upload",
+                                        icon: "galerie",
                                         largeur: 35,
                                         hauteur: 35),
                                   )),
@@ -369,7 +384,7 @@ class _EditProfileState extends State<EditProfile> with UserValidation {
                                   leading: Transform.scale(
                                     scale: 0.8,
                                     child: Icons_ESIWay(
-                                        icon: "camera",
+                                        icon: "camera_vert",
                                         largeur: 35,
                                         hauteur: 35),
                                   )),

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import '../../widgets/button.dart';
 import '../../widgets/constant.dart';
+import '../../widgets/icons_ESIWay.dart';
 import '../../widgets/prefixe_icon_button.dart';
 import '../../widgets/text_field.dart';
 import '../../widgets/text_validation.dart';
@@ -54,10 +55,10 @@ class _MailAdressState extends State<MailAdress> with UserValidation {
                         textcolor: Color(0xFF20236C),
                         weight: FontWeight.w600,
                         fontsize: 14,
-                        icon: const Icon(
-                          Icons.arrow_back_ios_new_rounded,
-                          color: Color(0xFF72D2C2),
-                          size: 18,
+                        icon: Transform.scale(
+                          scale: 0.9,
+                          child: Icons_ESIWay(
+                              icon: "arrow_left", largeur: 50, hauteur: 50),
                         ),
                         espaceicontext: 5.0,
                         fct: back),

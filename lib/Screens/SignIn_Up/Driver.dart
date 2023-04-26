@@ -137,10 +137,10 @@ class _DriverState extends State<Driver> with UserValidation {
                           textcolor: Color(0xFF20236C),
                           weight: FontWeight.w600,
                           fontsize: 14,
-                          icon: const Icon(
-                            Icons.arrow_back_ios_new_rounded,
-                            color: Color(0xFF72D2C2),
-                            size: 18,
+                          icon: Transform.scale(
+                            scale: 0.75,
+                            child: Icons_ESIWay(
+                                icon: "arrow_left", largeur: 30, hauteur: 30),
                           ),
                           espaceicontext: 5.0,
                           fct: back),

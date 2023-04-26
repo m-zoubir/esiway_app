@@ -160,7 +160,9 @@ class _CreateProfileState extends State<CreateProfile> with UserValidation {
                       children: [
                         Expanded(
                           child: Listbox(
-                            iconName: "male",
+                            iconName: gender == false || gender == null
+                                ? "male"
+                                : "male_bleu",
                             scale: 0.6,
                             title: "Male",
                             color: gender == false || gender == null
@@ -181,7 +183,9 @@ class _CreateProfileState extends State<CreateProfile> with UserValidation {
                         ),
                         Expanded(
                           child: Listbox(
-                            iconName: "female",
+                            iconName: gender == true || gender == null
+                                ? "female"
+                                : "female_bleu",
                             scale: 0.6,
                             title: "Female",
                             color: gender == true || gender == null

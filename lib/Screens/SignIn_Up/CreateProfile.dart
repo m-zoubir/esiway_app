@@ -66,6 +66,7 @@ class _CreateProfileState extends State<CreateProfile> with UserValidation {
     var largeur = MediaQuery.of(context).size.width;
     var hauteur = MediaQuery.of(context).size.height;
     return Scaffold(
+      backgroundColor: const Color(0xFFF9F8FF),
       body: SafeArea(
         child: SingleChildScrollView(
           //bach ki ytla3 le clavier maysrach overflow
@@ -328,7 +329,8 @@ class _CreateProfileState extends State<CreateProfile> with UserValidation {
                                 "Gender": genderget(),
                                 "Status": workget(),
                                 "Name": _nameController.text,
-                                "FamilyName": _familynameController.text
+                                "FamilyName": _familynameController.text,
+                                "hasCar": false,
                               }).then((value) => Navigator.of(context).push(
                                         MaterialPageRoute(builder: (context) {
                                           return Driver();

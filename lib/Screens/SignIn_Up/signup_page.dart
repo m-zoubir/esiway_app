@@ -101,7 +101,7 @@ class _SignUpPageState extends State<SignUpPage> with UserValidation {
                             ],
                           ),
                         ),
-                        SizedBox(height: hauteur * 0.15),
+                        SizedBox(height: hauteur * 0.1),
                         Padding(
                           padding:
                               EdgeInsets.symmetric(horizontal: largeur * 0.075),
@@ -120,7 +120,6 @@ class _SignUpPageState extends State<SignUpPage> with UserValidation {
                                 type: TextInputType.emailAddress,
                                 hinttext: "Enter your email",
                                 validate: emailvalidate,
-                                bottomheigh: 14,
                                 title: "Email",
                                 error: "It's not esi mail",
                                 textfieldcontroller: emailcontroller,
@@ -128,14 +127,12 @@ class _SignUpPageState extends State<SignUpPage> with UserValidation {
                               ),
                               MyPasswordField(
                                 controller: passwordcontroller,
-                                bottomheigh: 14,
                                 title: "Password",
                                 error: "At least 8 characters",
                                 validate: passwordvalidate,
                               ),
                               MyPasswordField(
                                 controller: confirmpasswordcontroller,
-                                bottomheigh: 14,
                                 title: "Password confirmation",
                                 validate: confirmvalidate,
                                 error: "Reconfirm your password ",
@@ -144,7 +141,8 @@ class _SignUpPageState extends State<SignUpPage> with UserValidation {
                                 type: TextInputType.phone,
                                 hinttext: "+213 |",
                                 validate: phonevalidate,
-                                bottomheigh: 30,
+                                bottomheigh:
+                                    MediaQuery.of(context).size.height * 0.01,
                                 title: "Phone number",
                                 error: "It's not a phone number",
                                 textfieldcontroller: phonecontroller,

@@ -41,23 +41,26 @@ class PrefixeIconButton extends StatelessWidget {
           borderRadius: BorderRadius.circular(radius),
         ),
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          icon,
-          SizedBox(
-            width: espaceicontext,
-          ),
-          Text(
-            text,
-            style: TextStyle(
-              fontFamily: 'Montserrat',
-              fontWeight: weight,
-              color: textcolor,
-              fontSize: fontsize,
+      child: Center(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            icon,
+            SizedBox(
+              width: espaceicontext,
             ),
-          ),
-        ],
+            Text(
+              text,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontFamily: 'Montserrat',
+                fontWeight: weight,
+                color: textcolor,
+                fontSize: fontsize,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

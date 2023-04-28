@@ -86,7 +86,8 @@ class Listbox extends StatelessWidget {
           ),
         ),
         SizedBox(
-          height: heigh != null ? heigh : 10,
+          height:
+              heigh != null ? heigh : MediaQuery.of(context).size.height * 0.01,
         ),
       ],
     );

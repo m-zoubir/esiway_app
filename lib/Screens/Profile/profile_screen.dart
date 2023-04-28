@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:esiway/Screens/Profile/history.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:iconsax/iconsax.dart';
+import '../../widgets/bottom_navbar.dart';
 import '../../widgets/button.dart';
 import '../../widgets/constant.dart';
 import '../../widgets/icons_ESIWay.dart';
@@ -48,65 +50,7 @@ class _ProfileState extends State<Profile> with UserValidation {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: color3,
-      bottomNavigationBar: BottomNavigationBar(
-        fixedColor: Theme.of(context).scaffoldBackgroundColor,
-        type: BottomNavigationBarType.fixed,
-        currentIndex: _currentindex,
-        items: [
-          BottomNavigationBarItem(
-            label: "",
-            icon: Transform.scale(
-              scale: 1,
-              child: Icons_ESIWay(
-                hauteur: 24,
-                largeur: 24,
-                icon: "home_bleu",
-              ),
-            ),
-          ),
-          BottomNavigationBarItem(
-            label: "",
-            icon: Transform.scale(
-              scale: 1,
-              child: Icons_ESIWay(
-                hauteur: 24,
-                largeur: 24,
-                icon: "routing",
-              ),
-            ),
-          ),
-          BottomNavigationBarItem(
-            label: "",
-            icon: Transform.scale(
-              scale: 1,
-              child: Icons_ESIWay(
-                hauteur: 24,
-                largeur: 24,
-                icon: "messages",
-              ),
-            ),
-          ),
-          BottomNavigationBarItem(
-            label: "",
-            icon: Icons_ESIWay(
-              hauteur: 24,
-              largeur: 24,
-              icon: "user",
-            ),
-          ),
-        ],
-        onTap: (index) {
-          setState(() {
-            _selectedindex = index;
-          });
-          if (_selectedindex != _currentindex)
-            Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) {
-                return tab[_selectedindex];
-              }),
-            );
-        },
-      ),
+      bottomNavigationBar: BottomNavBar(currentindex: 3),
       appBar: AppBar(
         elevation: 2,
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -156,7 +100,7 @@ class _ProfileState extends State<Profile> with UserValidation {
             } catch (e) {
               name = "Name";
               familyName = "FamilyName";
-              rating = 2.5;
+              rating = 0;
             }
 
             //display the data
@@ -203,16 +147,20 @@ class _ProfileState extends State<Profile> with UserValidation {
                     const SizedBox(
                       height: 8.0,
                     ),
-                    RatingBarIndicator(
-                      rating: rating,
-                      itemBuilder: (context, index) => Icon(
-                        Iconsax.star1,
-                        color: Colors.amber,
-                      ),
-                      itemCount: 5,
-                      itemSize: 25.0,
-                      direction: Axis.horizontal,
-                    ),
+                    data["hasCar"] == true
+                        ? RatingBarIndicator(
+                            rating: rating,
+                            itemBuilder: (context, index) => Icon(
+                              Iconsax.star1,
+                              color: Colors.amber,
+                            ),
+                            itemCount: 5,
+                            itemSize: 25.0,
+                            direction: Axis.horizontal,
+                          )
+                        : const SizedBox(
+                            height: 1.0,
+                          ),
                     const SizedBox(
                       height: 21.0,
                     ),
@@ -238,7 +186,10 @@ class _ProfileState extends State<Profile> with UserValidation {
                       scale: 0.65,
                     ),
                     Listbox(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => HistoryScreen()));
+                      },
                       title: "History",
                       iconleading: const Icon(
                         Icons.history,

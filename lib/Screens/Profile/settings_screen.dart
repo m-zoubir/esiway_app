@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
+import '../../widgets/bottom_navbar.dart';
 import '../../widgets/constant.dart';
 import '../../widgets/icons_ESIWay.dart';
 import '../../widgets/tile_list.dart';
@@ -24,65 +25,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: color3,
-      bottomNavigationBar: BottomNavigationBar(
-        fixedColor: Theme.of(context).scaffoldBackgroundColor,
-        type: BottomNavigationBarType.fixed,
-        currentIndex: _currentindex,
-        items: [
-          BottomNavigationBarItem(
-            label: "",
-            icon: Transform.scale(
-              scale: 1,
-              child: Icons_ESIWay(
-                hauteur: 24,
-                largeur: 24,
-                icon: "home_bleu",
-              ),
-            ),
-          ),
-          BottomNavigationBarItem(
-            label: "",
-            icon: Transform.scale(
-              scale: 1,
-              child: Icons_ESIWay(
-                hauteur: 24,
-                largeur: 24,
-                icon: "routing",
-              ),
-            ),
-          ),
-          BottomNavigationBarItem(
-            label: "",
-            icon: Transform.scale(
-              scale: 1,
-              child: Icons_ESIWay(
-                hauteur: 24,
-                largeur: 24,
-                icon: "messages",
-              ),
-            ),
-          ),
-          BottomNavigationBarItem(
-            label: "",
-            icon: Icons_ESIWay(
-              hauteur: 24,
-              largeur: 24,
-              icon: "user",
-            ),
-          ),
-        ],
-        onTap: (index) {
-          setState(() {
-            _selectedindex = index;
-          });
-
-          Navigator.of(context).push(
-            MaterialPageRoute(builder: (context) {
-              return tab[_selectedindex];
-            }),
-          );
-        },
-      ),
+      bottomNavigationBar: BottomNavBar(currentindex: 3),
       appBar: AppBar(
         elevation: 2,
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,

@@ -64,10 +64,15 @@ class _DriverState extends State<Driver> with UserValidation {
   updateCar() async {
     try {
       String uid = FirebaseAuth.instance.currentUser!.uid;
-      await FirebaseFirestore.instance.collection("Cars").doc(uid).update({
+      await FirebaseFirestore.instance.collection("Cars").doc(uid).set({
         "brand": brandcontroller.text,
         "model": modelcontroller.text,
         "registrationNumber": registrationNumbercontroller.text,
+        "CarPicture": carpictureURL,
+        "Policy": policyURL,
+      });
+      await FirebaseFirestore.instance.collection("Users").doc(uid).update({
+        "hasCar": true,
       }).then((value) =>
           Navigator.of(context).push(MaterialPageRoute(builder: (context) {
             return Profile();
@@ -122,51 +127,60 @@ class _DriverState extends State<Driver> with UserValidation {
                     image: AssetImage("Assets/Images/background3.png"),
                   ),
                 ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      margin: EdgeInsets.only(top: 20, left: 20),
-                      width: 80,
-                      height: 35,
-                      child: PrefixeIconButton(
-                          size: const Size(73, 34),
-                          color: Colors.white,
-                          radius: 8,
-                          text: "Back",
-                          textcolor: Color(0xFF20236C),
-                          weight: FontWeight.w600,
-                          fontsize: 14,
-                          icon: Transform.scale(
-                            scale: 0.75,
-                            child: Icons_ESIWay(
-                                icon: "arrow_left", largeur: 30, hauteur: 30),
-                          ),
-                          espaceicontext: 5.0,
-                          fct: back),
-                    ),
-                    SizedBox(
-                      height: hauteur * 0.22,
-                    ),
-                    const Text(
-                      '   Car',
-                      style: TextStyle(
-                        fontFamily: 'Montserrat',
-                        fontWeight: FontWeight.bold,
-                        fontSize: 40,
-                        color: Color(0xFF20236C),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        margin: EdgeInsets.only(
+                          top: 20,
+                        ),
+                        width: 80,
+                        height: 35,
+                        child: PrefixeIconButton(
+                            size: const Size(73, 34),
+                            color: Colors.white,
+                            radius: 8,
+                            text: "Back",
+                            textcolor: Color(0xFF20236C),
+                            weight: FontWeight.w600,
+                            fontsize: 14,
+                            icon: Transform.scale(
+                              scale: 0.75,
+                              child: Icons_ESIWay(
+                                  icon: "arrow_left", largeur: 30, hauteur: 30),
+                            ),
+                            espaceicontext: 5.0,
+                            fct: back),
                       ),
-                    ),
-                  ],
+                      SizedBox(
+                        height: hauteur * 0.22,
+                      ),
+                      const Text(
+                        'Car',
+                        style: TextStyle(
+                          fontFamily: 'Montserrat',
+                          fontWeight: FontWeight.bold,
+                          fontSize: 40,
+                          color: Color(0xFF20236C),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-              const Text(
-                'information           ',
-                style: TextStyle(
-                  fontFamily: 'Montserrat',
-                  fontWeight: FontWeight.bold,
-                  fontSize: 40,
-                  color: Color(0xFF20236C),
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 20),
+                alignment: Alignment.topLeft,
+                child: const Text(
+                  'information',
+                  style: TextStyle(
+                    fontFamily: 'Montserrat',
+                    fontWeight: FontWeight.bold,
+                    fontSize: 40,
+                    color: Color(0xFF20236C),
+                  ),
                 ),
               ),
               SizedBox(
@@ -242,7 +256,7 @@ class _DriverState extends State<Driver> with UserValidation {
                             height: 2,
                           ),
                     SizedBox(
-                      height: 12,
+                      height: MediaQuery.of(context).size.height * 0.002,
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -297,7 +311,7 @@ class _DriverState extends State<Driver> with UserValidation {
                       ],
                     ),
                     SizedBox(
-                      height: 14,
+                      height: MediaQuery.of(context).size.height * 0.009,
                     ),
                     //*****************************************************************************/
 
@@ -320,7 +334,7 @@ class _DriverState extends State<Driver> with UserValidation {
                             height: 2,
                           ),
                     SizedBox(
-                      height: 12,
+                      height: MediaQuery.of(context).size.height * 0.002,
                     ),
                     Row(
                       children: [
@@ -350,7 +364,7 @@ class _DriverState extends State<Driver> with UserValidation {
                       ],
                     ),
                     SizedBox(
-                      height: 8,
+                      height: MediaQuery.of(context).size.height * 0.01,
                     ),
                     SuffixeIconButton(
                         size: Size(largeur, hauteur * 0.06),
@@ -424,14 +438,6 @@ class _DriverState extends State<Driver> with UserValidation {
 
                                   carpictureURL = await referenceImageToUpload
                                       .getDownloadURL();
-
-                                  print(carpictureURL);
-                                  await FirebaseFirestore.instance
-                                      .collection("Cars")
-                                      .doc(currentuser.uid)
-                                      .set({
-                                    "CarPicture": carpictureURL,
-                                  });
                                 } catch (error) {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(
@@ -473,12 +479,6 @@ class _DriverState extends State<Driver> with UserValidation {
 
                                   policyURL = await referenceImageToUpload
                                       .getDownloadURL();
-                                  await FirebaseFirestore.instance
-                                      .collection("Cars")
-                                      .doc(currentuser.uid)
-                                      .update({
-                                    "Policy": policyURL,
-                                  });
                                 } catch (error) {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(

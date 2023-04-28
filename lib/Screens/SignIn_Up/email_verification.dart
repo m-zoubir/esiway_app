@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:esiway/Screens/SignIn_Up/SingnUp_carousel.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -77,7 +78,7 @@ class _EmailVerificationState extends State<EmailVerification> {
           child: Column(children: [
             Container(
               width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height * 0.35,
+              height: MediaQuery.of(context).size.height * 0.373,
               decoration: BoxDecoration(
                 image: DecorationImage(
                   fit: BoxFit.cover,
@@ -108,7 +109,7 @@ class _EmailVerificationState extends State<EmailVerification> {
                         fct: back),
                   ),
                   SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.2175,
+                    height: MediaQuery.of(context).size.height * 0.24,
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 30),

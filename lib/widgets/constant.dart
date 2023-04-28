@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../Screens/Profile/profile_screen.dart';
 import '../Screens/SignIn_Up/myTrips.dart';
+import '../Screens/SignIn_Up/notification_page.dart';
 import '../Screens/home/rating.dart';
 
 const Color bleu_bg = Color.fromARGB(0xFF, 0x20, 0x23, 0x6C);
@@ -20,7 +21,7 @@ final isphone = RegExp(r'^(0|\+213)[5-7]( */d{2}){4}$');
 final tab = [
   Home(),
   MyTrips(),
-  Text("data"),
+  NotificationPage(),
   Profile(),
 ];
 

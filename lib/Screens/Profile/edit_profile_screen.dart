@@ -5,6 +5,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import '../../widgets/bottom_navbar.dart';
 import '../../widgets/button.dart';
 import '../../widgets/constant.dart';
 import '../../widgets/icons_ESIWay.dart';
@@ -138,7 +139,7 @@ class _EditProfileState extends State<EditProfile> with UserValidation {
         context: context,
         initialDate: DateTime(selectedDate.year - 17),
         firstDate: DateTime(1912),
-        lastDate: DateTime(DateTime.now().year - 18));
+        lastDate: DateTime(DateTime.now().year - 17));
     if (picked != null && picked != selectedDate) {
       setState(() {
         selectedDate = picked;
@@ -200,65 +201,7 @@ class _EditProfileState extends State<EditProfile> with UserValidation {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: color3,
-      bottomNavigationBar: BottomNavigationBar(
-        fixedColor: Theme.of(context).scaffoldBackgroundColor,
-        type: BottomNavigationBarType.fixed,
-        currentIndex: _currentindex,
-        items: [
-          BottomNavigationBarItem(
-            label: "",
-            icon: Transform.scale(
-              scale: 1,
-              child: Icons_ESIWay(
-                hauteur: 24,
-                largeur: 24,
-                icon: "home_bleu",
-              ),
-            ),
-          ),
-          BottomNavigationBarItem(
-            label: "",
-            icon: Transform.scale(
-              scale: 1,
-              child: Icons_ESIWay(
-                hauteur: 24,
-                largeur: 24,
-                icon: "routing",
-              ),
-            ),
-          ),
-          BottomNavigationBarItem(
-            label: "",
-            icon: Transform.scale(
-              scale: 1,
-              child: Icons_ESIWay(
-                hauteur: 24,
-                largeur: 24,
-                icon: "messages",
-              ),
-            ),
-          ),
-          BottomNavigationBarItem(
-            label: "",
-            icon: Icons_ESIWay(
-              hauteur: 24,
-              largeur: 24,
-              icon: "user",
-            ),
-          ),
-        ],
-        onTap: (index) {
-          setState(() {
-            _selectedindex = index;
-          });
-
-          Navigator.of(context).push(
-            MaterialPageRoute(builder: (context) {
-              return tab[_selectedindex];
-            }),
-          );
-        },
-      ),
+      bottomNavigationBar: BottomNavBar(currentindex: 3),
       appBar: AppBar(
         elevation: 2,
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -427,7 +370,7 @@ class _EditProfileState extends State<EditProfile> with UserValidation {
                   suffixicon: Icon(Icons.edit, color: color6),
                   textfieldcontroller: namecontroller),
               SizedBox(
-                height: 14.0,
+                height: MediaQuery.of(context).size.height * 0.008,
               ),
 //*****************************************************************************/
 
@@ -439,7 +382,7 @@ class _EditProfileState extends State<EditProfile> with UserValidation {
                   suffixicon: Icon(Icons.edit, color: color6),
                   textfieldcontroller: lastNamecontroller),
               SizedBox(
-                height: 14.0,
+                height: MediaQuery.of(context).size.height * 0.008,
               ),
 //*****************************************************************************/
               TitleTextFeild(title: "Gender"),
@@ -495,7 +438,7 @@ class _EditProfileState extends State<EditProfile> with UserValidation {
                 ],
               ),
               SizedBox(
-                height: 14.0,
+                height: MediaQuery.of(context).size.height * 0.008,
               ),
 //*****************************************************************************/
               TitleTextFeild(title: "Status "),
@@ -571,7 +514,7 @@ class _EditProfileState extends State<EditProfile> with UserValidation {
                 ],
               ),
               SizedBox(
-                height: 14.0,
+                height: MediaQuery.of(context).size.height * 0.008,
               ),
 //*****************************************************************************/
               TitleTextFeild(title: "Birth"),

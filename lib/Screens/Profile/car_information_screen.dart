@@ -6,6 +6,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:image_picker/image_picker.dart';
+import '../../widgets/bottom_navbar.dart';
 import '../../widgets/button.dart';
 import '../../widgets/constant.dart';
 import '../../widgets/text_field.dart';
@@ -138,6 +139,8 @@ class _CarInformationState extends State<CarInformation> with UserValidation {
         "brand": brandcontroller.text,
         "model": modelcontroller.text,
         "registrationNumber": registrationNumbercontroller.text,
+        "CarPicture": carpictureURL,
+        "Policy": policyURL,
       }).then((value) =>
           Navigator.of(context).push(MaterialPageRoute(builder: (context) {
             return Profile();
@@ -148,6 +151,11 @@ class _CarInformationState extends State<CarInformation> with UserValidation {
         "brand": brandcontroller.text,
         "model": modelcontroller.text,
         "registrationNumber": registrationNumbercontroller.text,
+        "CarPicture": carpictureURL,
+        "Policy": policyURL,
+      });
+      await FirebaseFirestore.instance.collection("Users").doc(uid).update({
+        "hasCar": true,
       }).then((value) =>
           Navigator.of(context).push(MaterialPageRoute(builder: (context) {
             return Profile();
@@ -166,64 +174,7 @@ class _CarInformationState extends State<CarInformation> with UserValidation {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: color3,
-      bottomNavigationBar: BottomNavigationBar(
-        fixedColor: Theme.of(context).scaffoldBackgroundColor,
-        type: BottomNavigationBarType.fixed,
-        currentIndex: _currentindex,
-        items: [
-          BottomNavigationBarItem(
-            label: "",
-            icon: Transform.scale(
-              scale: 1,
-              child: Icons_ESIWay(
-                hauteur: 24,
-                largeur: 24,
-                icon: "home_bleu",
-              ),
-            ),
-          ),
-          BottomNavigationBarItem(
-            label: "",
-            icon: Transform.scale(
-              scale: 1,
-              child: Icons_ESIWay(
-                hauteur: 24,
-                largeur: 24,
-                icon: "routing",
-              ),
-            ),
-          ),
-          BottomNavigationBarItem(
-            label: "",
-            icon: Transform.scale(
-              scale: 1,
-              child: Icons_ESIWay(
-                hauteur: 24,
-                largeur: 24,
-                icon: "messages",
-              ),
-            ),
-          ),
-          BottomNavigationBarItem(
-            label: "",
-            icon: Icons_ESIWay(
-              hauteur: 24,
-              largeur: 24,
-              icon: "user",
-            ),
-          ),
-        ],
-        onTap: (index) {
-          setState(() {
-            _selectedindex = index;
-          });
-          Navigator.of(context).push(
-            MaterialPageRoute(builder: (context) {
-              return tab[_selectedindex];
-            }),
-          );
-        },
-      ),
+      bottomNavigationBar: BottomNavBar(currentindex: 3),
       appBar: AppBar(
         elevation: 2,
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -298,7 +249,9 @@ class _CarInformationState extends State<CarInformation> with UserValidation {
                     ),
 
               Container(
-                width: MediaQuery.of(context).size.width * 0.40,
+                width: carpictureURL == null
+                    ? MediaQuery.of(context).size.width * 0.40
+                    : MediaQuery.of(context).size.width * 0.45,
                 height: 25,
                 child: Button(
                   onPressed: () {
@@ -529,14 +482,6 @@ class _CarInformationState extends State<CarInformation> with UserValidation {
 
                               carpictureURL =
                                   await referenceImageToUpload.getDownloadURL();
-
-                              print(carpictureURL);
-                              await FirebaseFirestore.instance
-                                  .collection("Cars")
-                                  .doc(currentuser.uid)
-                                  .update({
-                                "CarPicture": carpictureURL,
-                              });
                             } catch (error) {
                               print(error);
                             }
@@ -558,12 +503,6 @@ class _CarInformationState extends State<CarInformation> with UserValidation {
 
                               policyURL =
                                   await referenceImageToUpload.getDownloadURL();
-                              await FirebaseFirestore.instance
-                                  .collection("Cars")
-                                  .doc(currentuser.uid)
-                                  .update({
-                                "Policy": policyURL,
-                              });
                             } catch (error) {
                               print(error);
                             }

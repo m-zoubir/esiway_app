@@ -48,17 +48,17 @@ class _MailAdressState extends State<MailAdress> with UserValidation {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     PrefixeIconButton(
-                        size: const Size(73, 34),
+                        size: const Size(77, 34),
                         color: Colors.white,
-                        radius: 8,
+                        radius: 10,
                         text: "Back",
                         textcolor: Color(0xFF20236C),
                         weight: FontWeight.w600,
                         fontsize: 14,
                         icon: Transform.scale(
-                          scale: 0.9,
+                          scale: 0.75,
                           child: Icons_ESIWay(
-                              icon: "arrow_left", largeur: 50, hauteur: 50),
+                              icon: "arrow_left", largeur: 30, hauteur: 30),
                         ),
                         espaceicontext: 5.0,
                         fct: back),

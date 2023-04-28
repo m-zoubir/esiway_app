@@ -91,86 +91,97 @@ class _Text_FieldState extends State<Text_Field> {
               ),
             ],
           ),
-          child: TextField(
-            maxLength: widget.length,
-            keyboardType:
-                widget.type == null ? TextInputType.text : widget.type,
-            controller: widget.textfieldcontroller,
-            style: TextStyle(
-              color: bleu_bg,
-              fontSize: 12,
-            ),
-            decoration: InputDecoration(
-              hintText: widget.hinttext,
-              hintStyle: TextStyle(
-                fontSize: 12.0,
+          child: Container(
+            height: MediaQuery.of(context).size.height < 700
+                ? MediaQuery.of(context).size.height * 0.07
+                : null,
+            child: TextField(
+              maxLength: widget.length,
+              keyboardType:
+                  widget.type == null ? TextInputType.text : widget.type,
+              controller: widget.textfieldcontroller,
+              textAlignVertical: TextAlignVertical.center,
+              style: TextStyle(
+                color: bleu_bg,
+                fontFamily: "Montserrat",
+                fontSize: MediaQuery.of(context).size.height < 700
+                    ? MediaQuery.of(context).size.height * 0.021
+                    : 12.5,
               ),
-              contentPadding:
-                  EdgeInsets.symmetric(horizontal: 15, vertical: 20),
-              suffix: widget.suffix != null ? widget.suffix : null,
-              prefix: widget.prefix != null ? widget.prefix : null,
-              suffixIcon: widget.suffixicon != null ? widget.suffixicon : null,
-              prefixIcon: widget.prefixicon != null
-                  ? widget.prefixicon
-                  : widget.iconName == null
-                      ? null
-                      : Container(
-                          child: Transform.scale(
-                            scale: 0.5,
-                            child: Icons_ESIWay(
-                                icon: widget.iconName!,
-                                largeur: 20,
-                                hauteur: 20),
+              decoration: InputDecoration(
+                hintText: widget.hinttext,
+                hintStyle: TextStyle(fontFamily: 'Montserrat', fontSize: 12),
+                //   contentPadding:
+                //       EdgeInsets.symmetric(horizontal: 15, vertical: 20),
+                suffix: widget.suffix != null ? widget.suffix : null,
+                prefix: widget.prefix != null ? widget.prefix : null,
+                suffixIcon:
+                    widget.suffixicon != null ? widget.suffixicon : null,
+                prefixIcon: widget.prefixicon != null
+                    ? widget.prefixicon
+                    : widget.iconName == null
+                        ? null
+                        : Container(
+                            child: Transform.scale(
+                              scale: 0.5,
+                              child: Icons_ESIWay(
+                                  icon: widget.iconName!,
+                                  largeur: 20,
+                                  hauteur: 20),
+                            ),
                           ),
+                filled: true,
+                fillColor: Colors.white,
+                enabledBorder: widget.validate
+                    ? OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(5),
+                        borderSide: BorderSide(
+                          color: Colors.white,
                         ),
-              filled: true,
-              fillColor: Colors.white,
-              enabledBorder: widget.validate
-                  ? OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(5),
-                      borderSide: BorderSide(
-                        color: Colors.white,
+                      )
+                    : OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(5),
+                        borderSide: BorderSide(
+                          color: Colors.red,
+                        ),
                       ),
-                    )
-                  : OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(5),
-                      borderSide: BorderSide(
-                        color: Colors.red,
+                focusedBorder: widget.validate
+                    ? OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(5),
+                        borderSide: BorderSide(
+                          color: vert,
+                        ),
+                      )
+                    : OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(5),
+                        borderSide: BorderSide(
+                          color: Colors.red,
+                        ),
                       ),
-                    ),
-              focusedBorder: widget.validate
-                  ? OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(5),
-                      borderSide: BorderSide(
-                        color: vert,
-                      ),
-                    )
-                  : OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(5),
-                      borderSide: BorderSide(
-                        color: Colors.red,
-                      ),
-                    ),
+              ),
             ),
           ),
         ),
         widget.validate
             ? SizedBox(
-                height: widget.bottomheigh != null ? widget.bottomheigh : 14.0,
+                height: widget.bottomheigh != null
+                    ? widget.bottomheigh
+                    : MediaQuery.of(context).size.height * 0.01,
               )
             : Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   SizedBox(
-                    height: 8,
+                    height: MediaQuery.of(context).size.height * 0.008,
                   ),
                   Text(
                     widget.error!,
                     style: TextStyle(color: Colors.red, fontSize: 12.0),
                   ),
                   SizedBox(
-                    height:
-                        widget.bottomheigh != null ? widget.bottomheigh : 14.0,
+                    height: widget.bottomheigh != null
+                        ? widget.bottomheigh
+                        : MediaQuery.of(context).size.height * 0.01,
                   )
                 ],
               )

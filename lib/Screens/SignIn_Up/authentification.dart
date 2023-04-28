@@ -16,6 +16,9 @@ class Auth extends StatelessWidget {
           if (snapshot.hasData) {
             return Profile();
           } else {
+            print("---------------------------------------");
+            print(MediaQuery.of(context).size.height);
+            print(MediaQuery.of(context).size.width);
             return RegistrationPage();
           }
         },

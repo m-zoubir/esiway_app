@@ -72,53 +72,57 @@ class _CreateProfileState extends State<CreateProfile> with UserValidation {
           //bach ki ytla3 le clavier maysrach overflow
           child: Column(
             children: [
-              Container(
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height * 0.35,
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    fit: BoxFit.cover,
-                    image: AssetImage("Assets/Images/background3.png"),
-                  ),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      margin: EdgeInsets.only(top: 20, left: 20),
-                      width: 80,
-                      height: 35,
-                      child: PrefixeIconButton(
-                          size: const Size(73, 34),
-                          color: Colors.white,
-                          radius: 8,
-                          text: "Back",
-                          textcolor: Color(0xFF20236C),
-                          weight: FontWeight.w600,
-                          fontsize: 14,
-                          icon: Transform.scale(
-                            scale: 0.75,
-                            child: Icons_ESIWay(
-                                icon: "arrow_left", largeur: 30, hauteur: 30),
-                          ),
-                          espaceicontext: 5.0,
-                          fct: back),
-                    ),
-                    SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.2175,
-                    ),
-                    Center(
-                      child: Text(
-                        "Create profile",
-                        style: TextStyle(
-                            color: bleu_bg,
-                            fontFamily: "Montserrat",
-                            fontSize: 42,
-                            fontWeight: FontWeight.bold),
+              Stack(
+                children: [
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.height * 0.35,
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        fit: BoxFit.cover,
+                        image: AssetImage("Assets/Images/background3.png"),
                       ),
-                    )
-                  ],
-                ),
+                    ),
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        margin: EdgeInsets.only(top: 20, left: 20),
+                        width: 80,
+                        height: 35,
+                        child: PrefixeIconButton(
+                            size: const Size(73, 34),
+                            color: Colors.white,
+                            radius: 8,
+                            text: "Back",
+                            textcolor: Color(0xFF20236C),
+                            weight: FontWeight.w600,
+                            fontsize: 14,
+                            icon: Transform.scale(
+                              scale: 0.75,
+                              child: Icons_ESIWay(
+                                  icon: "arrow_left", largeur: 30, hauteur: 30),
+                            ),
+                            espaceicontext: 5.0,
+                            fct: back),
+                      ),
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.2175,
+                      ),
+                      Center(
+                        child: Text(
+                          "Create profile",
+                          style: TextStyle(
+                              color: bleu_bg,
+                              fontFamily: "Montserrat",
+                              fontSize: 42,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      )
+                    ],
+                  ),
+                ],
               ),
 
               Padding(

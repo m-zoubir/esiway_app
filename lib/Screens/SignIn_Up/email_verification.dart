@@ -1,6 +1,4 @@
 import 'dart:async';
-
-import 'package:esiway/Screens/SignIn_Up/SingnUp_carousel.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -76,54 +74,58 @@ class _EmailVerificationState extends State<EmailVerification> {
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(children: [
-            Container(
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height * 0.373,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  fit: BoxFit.cover,
-                  image: AssetImage("Assets/Images/background3.png"),
-                ),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    margin: EdgeInsets.only(top: 20, left: 20),
-                    width: 80,
-                    height: 35,
-                    child: PrefixeIconButton(
-                        size: const Size(73, 34),
-                        color: Colors.white,
-                        radius: 8,
-                        text: "Back",
-                        textcolor: Color(0xFF20236C),
-                        weight: FontWeight.w600,
-                        fontsize: 14,
-                        icon: Transform.scale(
-                          scale: 0.75,
-                          child: Icons_ESIWay(
-                              icon: "arrow_left", largeur: 30, hauteur: 30),
-                        ),
-                        espaceicontext: 5.0,
-                        fct: back),
-                  ),
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.24,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 30),
-                    child: Text(
-                      "Check your ",
-                      style: TextStyle(
-                          color: bleu_bg,
-                          fontFamily: "Montserrat",
-                          fontSize: 42,
-                          fontWeight: FontWeight.bold),
+            Stack(
+              children: [
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height * 0.373,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      fit: BoxFit.cover,
+                      image: AssetImage("Assets/Images/background3.png"),
                     ),
-                  )
-                ],
-              ),
+                  ),
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      margin: EdgeInsets.only(top: 20, left: 20),
+                      width: 80,
+                      height: 35,
+                      child: PrefixeIconButton(
+                          size: const Size(73, 34),
+                          color: Colors.white,
+                          radius: 8,
+                          text: "Back",
+                          textcolor: Color(0xFF20236C),
+                          weight: FontWeight.w600,
+                          fontsize: 14,
+                          icon: Transform.scale(
+                            scale: 0.75,
+                            child: Icons_ESIWay(
+                                icon: "arrow_left", largeur: 30, hauteur: 30),
+                          ),
+                          espaceicontext: 5.0,
+                          fct: back),
+                    ),
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.24,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 30),
+                      child: Text(
+                        "Check your ",
+                        style: TextStyle(
+                            color: bleu_bg,
+                            fontFamily: "Montserrat",
+                            fontSize: 42,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    )
+                  ],
+                ),
+              ],
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 30.0),

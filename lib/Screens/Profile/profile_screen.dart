@@ -268,7 +268,7 @@ class _ProfileState extends State<Profile> with UserValidation {
             );
           }
 
-          return Container();
+          return Center(child: CircularProgressIndicator());
         },
       ),
     );

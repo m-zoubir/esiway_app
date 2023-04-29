@@ -128,7 +128,7 @@ class _SignUpPageState extends State<SignUpPage> with UserValidation {
                               MyPasswordField(
                                 controller: passwordcontroller,
                                 title: "Password",
-                                error: "At least 8 characters",
+                                error: "At least 6 characters",
                                 validate: passwordvalidate,
                               ),
                               MyPasswordField(

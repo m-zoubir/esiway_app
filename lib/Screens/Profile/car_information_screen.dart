@@ -56,7 +56,7 @@ class CarInfo extends StatelessWidget {
             }
           }
 
-          return Column();
+          return Center(child: CircularProgressIndicator());
         },
       ),
     );

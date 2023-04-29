@@ -1,5 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:esiway/Screens/Profile/profile_screen.dart';
 import 'package:esiway/widgets/bottom_navbar.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
@@ -60,22 +64,44 @@ class _HistoryScreenState extends State<HistoryScreen> {
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-          child: TripInfoResume(
-              arrival: "arrival",
-              departure: "departure",
-              color: orange.withOpacity(0.5),
-              date: "23-14-2022",
-              name: "name",
-              price: "150",
-              time: "2:30"),
-        ),
-      ),
+
+//******************************************************************************************* */
+//******************************************************************************************* */
+//******************************************************************************************* */
+      body: FutureBuilder(
+          future: FirebaseFirestore.instance.collection("Users").get(), //  ***
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return ListView.builder(itemBuilder: (context, index) {
+                return TripInfoResume(
+                  arrival: snapshot.data?.docs[index].data()['arrival'],
+                  /** */
+                  departure:
+                      snapshot.data?.docs[index].data()['departure'], //*** */
+                  color:
+                      snapshot.data?.docs[index].data()['driverUID'] == //*** */
+                              FirebaseAuth.instance.currentUser!.uid
+                          ? orange.withOpacity(
+                              0.5) // if the current user is the driver
+                          : bleu_ciel.withOpacity(
+                              0.4), // if the current user isn't the driver
+                  date: "date", //** */
+                  name: snapshot.data?.docs[index].data()['driverName'], //** */
+                  price: snapshot.data?.docs[index].data()['price'], //** */
+                  time: "time", //** */
+                );
+              });
+            }
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }),
     );
   }
 }
+//***********************************************************************************
+//************************************************************************************
+//*************************************************************************************
 
 class TripInfoResume extends StatelessWidget {
   TripInfoResume({
@@ -102,6 +128,7 @@ class TripInfoResume extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+      margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       height: 120,
       decoration:
           BoxDecoration(color: color, borderRadius: BorderRadius.circular(6)),

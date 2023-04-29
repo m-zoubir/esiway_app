@@ -118,57 +118,63 @@ class _DriverState extends State<Driver> with UserValidation {
         child: SafeArea(
           child: Column(
             children: [
-              Container(
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height * 0.35,
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    fit: BoxFit.cover,
-                    image: AssetImage("Assets/Images/background3.png"),
+              Stack(
+                children: [
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.height * 0.35,
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        fit: BoxFit.cover,
+                        image: AssetImage("Assets/Images/background3.png"),
+                      ),
+                    ),
                   ),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        margin: EdgeInsets.only(
-                          top: 20,
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          margin: EdgeInsets.only(
+                            top: 20,
+                          ),
+                          width: 80,
+                          height: 35,
+                          child: PrefixeIconButton(
+                              size: const Size(73, 34),
+                              color: Colors.white,
+                              radius: 8,
+                              text: "Back",
+                              textcolor: Color(0xFF20236C),
+                              weight: FontWeight.w600,
+                              fontsize: 14,
+                              icon: Transform.scale(
+                                scale: 0.75,
+                                child: Icons_ESIWay(
+                                    icon: "arrow_left",
+                                    largeur: 30,
+                                    hauteur: 30),
+                              ),
+                              espaceicontext: 5.0,
+                              fct: back),
                         ),
-                        width: 80,
-                        height: 35,
-                        child: PrefixeIconButton(
-                            size: const Size(73, 34),
-                            color: Colors.white,
-                            radius: 8,
-                            text: "Back",
-                            textcolor: Color(0xFF20236C),
-                            weight: FontWeight.w600,
-                            fontsize: 14,
-                            icon: Transform.scale(
-                              scale: 0.75,
-                              child: Icons_ESIWay(
-                                  icon: "arrow_left", largeur: 30, hauteur: 30),
-                            ),
-                            espaceicontext: 5.0,
-                            fct: back),
-                      ),
-                      SizedBox(
-                        height: hauteur * 0.22,
-                      ),
-                      const Text(
-                        'Car',
-                        style: TextStyle(
-                          fontFamily: 'Montserrat',
-                          fontWeight: FontWeight.bold,
-                          fontSize: 40,
-                          color: Color(0xFF20236C),
+                        SizedBox(
+                          height: hauteur * 0.22,
                         ),
-                      ),
-                    ],
+                        const Text(
+                          'Car',
+                          style: TextStyle(
+                            fontFamily: 'Montserrat',
+                            fontWeight: FontWeight.bold,
+                            fontSize: 40,
+                            color: Color(0xFF20236C),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
+                ],
               ),
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 20),
@@ -272,7 +278,7 @@ class _DriverState extends State<Driver> with UserValidation {
                             icon: Transform.scale(
                               scale: 0.5,
                               child: Icons_ESIWay(
-                                  icon: "upload", largeur: 24, hauteur: 24),
+                                  icon: "upload", largeur: 35, hauteur: 35),
                             ),
                             label: Text(
                               "Upload",
@@ -296,7 +302,7 @@ class _DriverState extends State<Driver> with UserValidation {
                             icon: Transform.scale(
                               scale: 0.5,
                               child: Icons_ESIWay(
-                                  icon: "camera", largeur: 24, hauteur: 24),
+                                  icon: "camera", largeur: 35, hauteur: 35),
                             ),
                             label: Text(
                               "Take",
@@ -349,7 +355,7 @@ class _DriverState extends State<Driver> with UserValidation {
                             icon: Transform.scale(
                               scale: 0.5,
                               child: Icons_ESIWay(
-                                  icon: "upload", largeur: 24, hauteur: 24),
+                                  icon: "upload", largeur: 35, hauteur: 35),
                             ),
                             label: Text(
                               "Upload",

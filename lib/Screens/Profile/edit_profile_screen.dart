@@ -66,7 +66,7 @@ class EditProfileInfo extends StatelessWidget {
             }
           }
 
-          return Container();
+          return Center(child: CircularProgressIndicator());
         },
       ),
     );

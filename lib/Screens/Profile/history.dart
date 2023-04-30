@@ -24,79 +24,61 @@ class _HistoryScreenState extends State<HistoryScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: color3,
-      bottomNavigationBar: BottomNavBar(currentindex: 3),
-      appBar: AppBar(
-        elevation: 2,
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        centerTitle: true,
-        leading: IconButton(
-          icon: Transform.scale(
-            scale: 0.9,
-            child: Icons_ESIWay(icon: "arrow_left", largeur: 50, hauteur: 50),
-          ),
-          onPressed: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) {
-                  return Profile();
-                },
-              ),
-            );
-          },
-          color: vert,
-        ),
-        title: Text(
-          "History",
-          style: TextStyle(
-            color: bleu_bg,
-            fontSize: 20.0,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        actions: [
-          IconButton(
+        backgroundColor: color3,
+        bottomNavigationBar: BottomNavBar(currentindex: 3),
+        appBar: AppBar(
+          elevation: 2,
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          centerTitle: true,
+          leading: IconButton(
             icon: Transform.scale(
-              scale: 0.8,
-              child: Icons_ESIWay(icon: "help", largeur: 35, hauteur: 35),
+              scale: 0.9,
+              child: Icons_ESIWay(icon: "arrow_left", largeur: 50, hauteur: 50),
             ),
-            onPressed: () {},
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) {
+                    return Profile();
+                  },
+                ),
+              );
+            },
+            color: vert,
           ),
-        ],
-      ),
+          title: Text(
+            "History",
+            style: TextStyle(
+              color: bleu_bg,
+              fontSize: 20.0,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          actions: [
+            IconButton(
+              icon: Transform.scale(
+                scale: 0.8,
+                child: Icons_ESIWay(icon: "help", largeur: 35, hauteur: 35),
+              ),
+              onPressed: () {},
+            ),
+          ],
+        ),
 
 //******************************************************************************************* */
 //******************************************************************************************* */
 //******************************************************************************************* */
-      body: FutureBuilder(
-          future: FirebaseFirestore.instance.collection("Users").get(), //  ***
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              return ListView.builder(itemBuilder: (context, index) {
-                return TripInfoResume(
-                  arrival: snapshot.data?.docs[index].data()['arrival'],
-                  /** */
-                  departure:
-                      snapshot.data?.docs[index].data()['departure'], //*** */
-                  color:
-                      snapshot.data?.docs[index].data()['driverUID'] == //*** */
-                              FirebaseAuth.instance.currentUser!.uid
-                          ? orange.withOpacity(
-                              0.5) // if the current user is the driver
-                          : bleu_ciel.withOpacity(
-                              0.4), // if the current user isn't the driver
-                  date: "date", //** */
-                  name: snapshot.data?.docs[index].data()['driverName'], //** */
-                  price: snapshot.data?.docs[index].data()['price'], //** */
-                  time: "time", //** */
-                );
-              });
-            }
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          }),
-    );
+        body: TripInfoResume(
+          arrival: "price",
+          /** */
+          departure: "price", //*** */
+          color:
+              orange.withOpacity(0.5), // if the current user isn't the driver
+          date: "date", //** */
+          name: "price", //** */
+          price: "price", //** */
+          time: "time", //** */
+        ));
   }
 }
 //***********************************************************************************

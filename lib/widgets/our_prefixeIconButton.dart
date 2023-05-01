@@ -2,7 +2,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import '../../../widgets/icons_ESIWay.dart';
 import 'package:flutter/material.dart';
 
-class OurPrefixeIconButton extends StatelessWidget{
+class OurPrefixeIconButton extends StatelessWidget {
   final Size size;
   final Color color;
   final double radius;
@@ -14,7 +14,6 @@ class OurPrefixeIconButton extends StatelessWidget{
   final double espaceicontext;
   final Function fct;
   final double sizebutton;
-
 
   const OurPrefixeIconButton({
     super.key,
@@ -34,7 +33,9 @@ class OurPrefixeIconButton extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      onPressed: () {fct();},
+      onPressed: () {
+        fct();
+      },
       style: ElevatedButton.styleFrom(
         backgroundColor: color,
         padding: EdgeInsets.zero,
@@ -49,9 +50,8 @@ class OurPrefixeIconButton extends StatelessWidget{
         children: [
           Transform.scale(
               scale: sizebutton, // to make the icon smaller or larger
-              child: Icons_ESIWay(icon: iconName, largeur: 20, hauteur: 20)
-          ),
-          SizedBox(width: espaceicontext,),
+              child: Icons_ESIWay(icon: "help", largeur: 20, hauteur: 20)),
+          //  SizedBox(width: espaceicontext,),
           AutoSizeText(
             text,
             style: TextStyle(
@@ -61,7 +61,6 @@ class OurPrefixeIconButton extends StatelessWidget{
               fontSize: fontsize,
             ),
           ),
-
         ],
       ),
     );

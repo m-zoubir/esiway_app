@@ -20,15 +20,12 @@ import '../../widgets/bottom_navbar.dart';
 import '../../widgets/our_text_field.dart';
 import 'createTrip_Page.dart';
 
-
-
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
 
   @override
   State<HomePage> createState() => _HomePageState();
 }
-
 
 class _HomePageState extends State<HomePage> {
   @override
@@ -53,7 +50,8 @@ class _HomePageState extends State<HomePage> {
 
   Map<PolylineId, Polyline> polylines = {}; //polylines to show direction
 
-  static LatLng startLocation = const LatLng(36.705219106281575, 3.173786850126649);
+  static LatLng startLocation =
+      const LatLng(36.705219106281575, 3.173786850126649);
 
   LatLng endLocation = const LatLng(36.687677024859354, 2.9965016961469324);
 
@@ -69,22 +67,19 @@ class _HomePageState extends State<HomePage> {
 
   LatLng LocationEsi = const LatLng(36.705219106281575, 3.173786850126649);
 
-  String paimentMethode="";
+  String paimentMethode = "";
 
   DateTime selectedDate = DateTime.now();
 
-  static bool bags =false;
+  static bool bags = false;
   static bool talking = false;
-  static bool animals =false ;
+  static bool animals = false;
   static bool smoking = false;
   static bool others = false;
-
-
 
 //======================================================================================================//
 //=========================================| Functions |================================================//
 //======================================================================================================//
-
 
   ///=============================| Map Functions|===================================//
 
@@ -92,7 +87,6 @@ class _HomePageState extends State<HomePage> {
   getDirections() async {
     List<LatLng> polylineCoordinates = [];
     List<String> cities = [];
-
 
     PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
       googleAPiKey,
@@ -103,7 +97,8 @@ class _HomePageState extends State<HomePage> {
     if (result.points.isNotEmpty) {
       result.points.forEach((PointLatLng point) async {
         polylineCoordinates.add(LatLng(point.latitude, point.longitude));
-        List<Placemark> placemarks = await placemarkFromCoordinates(point.latitude, point.longitude);
+        List<Placemark> placemarks =
+            await placemarkFromCoordinates(point.latitude, point.longitude);
         String? city = placemarks[0].locality;
         cities.add(city!);
       });
@@ -128,23 +123,25 @@ class _HomePageState extends State<HomePage> {
 
     addPolyLine(polylineCoordinates);
   }
-  PointLatLng debut =const PointLatLng(36.72376684085901, 2.991892973393687);
-  PointLatLng fin =const PointLatLng(36.64364699576445, 2.9943386163692787);
+
+  PointLatLng debut = const PointLatLng(36.72376684085901, 2.991892973393687);
+  PointLatLng fin = const PointLatLng(36.64364699576445, 2.9943386163692787);
 
   ///+++++++++++++++++++++++++++++< ajouter Markers >+++++++++++++++++++++++++++///
 
-  ajouterMarkers(PointLatLng point) async{
-    markers.add(Marker( //add start location marker
-      markerId: MarkerId(LatLng(point.latitude,point.longitude).toString()),
-      position: LatLng(point.latitude,point.longitude), //position of marker
-      infoWindow: const InfoWindow( //popup info
+  ajouterMarkers(PointLatLng point) async {
+    markers.add(Marker(
+      //add start location marker
+      markerId: MarkerId(LatLng(point.latitude, point.longitude).toString()),
+      position: LatLng(point.latitude, point.longitude), //position of marker
+      infoWindow: const InfoWindow(
+        //popup info
         title: 'Starting Point ',
         snippet: 'Staaaaaaaaaaaaaaaaaaaart Marker',
       ),
       icon: BitmapDescriptor.defaultMarker, //Icon for Marker
     ));
   }
-
 
   ///-----------------------------< get Direction 2 >---------------------------///
 
@@ -166,7 +163,7 @@ class _HomePageState extends State<HomePage> {
     } else {
       print(result.errorMessage);
     }
-   /* print('lenght ==');
+    /* print('lenght ==');
     print({polylineCoordinates.length} );
     for (var i = 0; i < polylineCoordinates.length - 1; i+10) {
       print('Test');
@@ -248,10 +245,7 @@ class _HomePageState extends State<HomePage> {
     return position;
   }
 
-
   /// test
-
-
 
 //==============================| Controllers |=============================//
   TextEditingController arrivalcontroller = TextEditingController();
@@ -266,8 +260,6 @@ class _HomePageState extends State<HomePage> {
 
   TextEditingController pricecontroller = TextEditingController();
 
-
-
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
         context: context,
@@ -281,19 +273,19 @@ class _HomePageState extends State<HomePage> {
     if (picked != null) {
       setState(() {
         selectedDate = picked;
-        date = "${selectedDate.day} - ${selectedDate.month} - ${selectedDate.year}";
+        date =
+            "${selectedDate.day} - ${selectedDate.month} - ${selectedDate.year}";
       });
     }
   }
 
-  void next(PointLatLng one,PointLatLng two) {
-
-    getDirection(one,two);//fetch direction polylines from Google API
-    mapController?.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(target: LatLng(one.latitude,one.longitude), zoom: 17)));
-
+  void next(PointLatLng one, PointLatLng two) {
+    getDirection(one, two); //fetch direction polylines from Google API
+    mapController?.animateCamera(CameraUpdate.newCameraPosition(
+        CameraPosition(target: LatLng(one.latitude, one.longitude), zoom: 17)));
   }
 
-  void depart(String? value,PointLatLng position,String name) async {
+  void depart(String? value, PointLatLng position, String name) async {
     print(startLocation.toString());
     if (value == "1") {
       Position positione = await determinePosition();
@@ -301,12 +293,16 @@ class _HomePageState extends State<HomePage> {
       markers.add(Marker(
           markerId: const MarkerId("current location"),
           position: LatLng(position.latitude, position.longitude)));
-      mapController?.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(target: LatLng(position.latitude, position.longitude), zoom: 14)));
+      mapController?.animateCamera(CameraUpdate.newCameraPosition(
+          CameraPosition(
+              target: LatLng(position.latitude, position.longitude),
+              zoom: 14)));
       setState(() {});
-    };
+    }
+    ;
 
     if (value == "2") {
-      position =PointLatLng(LocationEsi.latitude, LocationEsi.longitude);
+      position = PointLatLng(LocationEsi.latitude, LocationEsi.longitude);
       markers.add(Marker(
         //add start location marker
         markerId: MarkerId(endLocation.toString()),
@@ -318,43 +314,51 @@ class _HomePageState extends State<HomePage> {
         ),
         icon: BitmapDescriptor.defaultMarker, //Icon for Marker
       ));
-      mapController?.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(target: LatLng(position.latitude, position.longitude), zoom: 14)));
-
-    };
+      mapController?.animateCamera(CameraUpdate.newCameraPosition(
+          CameraPosition(
+              target: LatLng(position.latitude, position.longitude),
+              zoom: 14)));
+    }
+    ;
 
     if (value == "3") {
-      LatLng point = LatLng(position.latitude,position.longitude);
-      mapController?.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(target: point, zoom: 17)));
+      LatLng point = LatLng(position.latitude, position.longitude);
+      mapController?.animateCamera(CameraUpdate.newCameraPosition(
+          CameraPosition(target: point, zoom: 17)));
       markers.add(Marker(
         //add start location marker
         markerId: MarkerId(point.toString()),
         position: point, //position of marker
-        infoWindow:  InfoWindow(
+        infoWindow: InfoWindow(
           //popup info
           title: 'Starting Point ',
           snippet: name,
         ),
         icon: BitmapDescriptor.defaultMarker, //Icon for Marker
       ));
-
-    };
+    }
+    ;
 
     setState(() {});
   }
 
-  void arrival(String? value,PointLatLng position,String name) async {
+  void arrival(String? value, PointLatLng position, String name) async {
     if (value == "1") {
       Position positione = await determinePosition();
       position = PointLatLng(positione.latitude, positione.longitude);
       markers.add(Marker(
           markerId: const MarkerId("current location"),
           position: LatLng(position.latitude, position.longitude)));
-      mapController?.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(target: LatLng(position.latitude, position.longitude), zoom: 14)));
+      mapController?.animateCamera(CameraUpdate.newCameraPosition(
+          CameraPosition(
+              target: LatLng(position.latitude, position.longitude),
+              zoom: 14)));
       setState(() {});
-    };
+    }
+    ;
 
     if (value == "2") {
-      position =PointLatLng(LocationEsi.latitude, LocationEsi.longitude);
+      position = PointLatLng(LocationEsi.latitude, LocationEsi.longitude);
       markers.add(Marker(
         //add start location marker
         markerId: MarkerId(endLocation.toString()),
@@ -366,39 +370,40 @@ class _HomePageState extends State<HomePage> {
         ),
         icon: BitmapDescriptor.defaultMarker, //Icon for Marker
       ));
-      mapController?.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(target: LatLng(position.latitude, position.longitude), zoom: 14)));
-
-    };
+      mapController?.animateCamera(CameraUpdate.newCameraPosition(
+          CameraPosition(
+              target: LatLng(position.latitude, position.longitude),
+              zoom: 14)));
+    }
+    ;
 
     if (value == "3") {
-
-      LatLng point = LatLng(position.latitude,position.longitude);
-      mapController?.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(target: point, zoom: 17)));
+      LatLng point = LatLng(position.latitude, position.longitude);
+      mapController?.animateCamera(CameraUpdate.newCameraPosition(
+          CameraPosition(target: point, zoom: 17)));
       markers.add(Marker(
         //add start location marker
         markerId: MarkerId(point.toString()),
         position: point, //position of marker
-        infoWindow:  InfoWindow(
+        infoWindow: InfoWindow(
           //popup info
           title: 'Destination Point ',
           snippet: name,
         ),
         icon: BitmapDescriptor.defaultMarker, //Icon for Marker
       ));
-
-    };
+    }
+    ;
     //setState(() {});
   }
 
-
   @override
   Widget build(BuildContext context) {
-
     var largeur = MediaQuery.of(context).size.width;
     var hauteur = MediaQuery.of(context).size.height;
     var dropdownValue = "-1"; // drop down value
 
-    searchTrip (){
+    searchTrip() {
       return showModalBottomSheet(
           context: context,
           builder: (context) {
@@ -412,12 +417,11 @@ class _HomePageState extends State<HomePage> {
                     Container(
                       color: const Color(0xFFF9F8FF),
                       child: Padding(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: largeur * 0.075),
+                        padding:
+                            EdgeInsets.symmetric(horizontal: largeur * 0.075),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment:
-                          CrossAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             SizedBox(height: hauteur * 0.03),
 
@@ -426,10 +430,12 @@ class _HomePageState extends State<HomePage> {
                                 width: largeur * 0.55,
                                 height: hauteur * 0.025,
                                 child: MyText(
-                                    text: "Departure",
-                                    weight: FontWeight.w700,
-                                    fontsize: 14,
-                                    color: Color(0xff20236C), largeur: largeur * 0.55,)),
+                                  text: "Departure",
+                                  weight: FontWeight.w700,
+                                  fontsize: 14,
+                                  color: Color(0xff20236C),
+                                  largeur: largeur * 0.55,
+                                )),
 
                             SizedBox(height: hauteur * 0.005),
 
@@ -437,14 +443,18 @@ class _HomePageState extends State<HomePage> {
                             Container(
                               width: largeur * 0.9,
                               height: hauteur * 0.0625,
-                              decoration:
-                              const BoxDecoration(boxShadow: [BoxShadow(blurRadius: 18, color: Color.fromRGBO(32, 35, 108, 0.15), spreadRadius: 10)]),
+                              decoration: const BoxDecoration(boxShadow: [
+                                BoxShadow(
+                                    blurRadius: 18,
+                                    color: Color.fromRGBO(32, 35, 108, 0.15),
+                                    spreadRadius: 10)
+                              ]),
                               child: DropdownButtonFormField(
                                 value: dropdownValue,
                                 decoration: const InputDecoration(
                                   enabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          color: Colors.white)),
+                                      borderSide:
+                                          BorderSide(color: Colors.white)),
                                   focusedBorder: InputBorder.none,
                                   filled: true,
                                   fillColor: Colors.white,
@@ -465,101 +475,121 @@ class _HomePageState extends State<HomePage> {
                                     value: "1",
                                     child: Row(
                                       mainAxisAlignment:
-                                      MainAxisAlignment
-                                          .spaceBetween,
+                                          MainAxisAlignment.spaceBetween,
                                       children: const [
                                         AutoSizeText(
                                           " Your current location",
                                           style: TextStyle(
-                                              fontFamily:
-                                              'Montserrat',
-                                              fontWeight:
-                                              FontWeight.w500,
-                                              color:
-                                              Color(0xff20236C),
+                                              fontFamily: 'Montserrat',
+                                              fontWeight: FontWeight.w500,
+                                              color: Color(0xff20236C),
                                               fontSize: 12),
                                         ),
-                                        Icon(Icons.my_location_outlined, color: Color(0xFF72D2C2)),
+                                        Icon(Icons.my_location_outlined,
+                                            color: Color(0xFF72D2C2)),
                                       ],
                                     ),
                                   ),
                                   DropdownMenuItem(
                                     value: "2",
                                     child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
                                         children: const [
                                           AutoSizeText(
                                             " ESI ",
                                             style: TextStyle(
-                                                fontFamily:
-                                                'Montserrat',
-                                                fontWeight:
-                                                FontWeight.w500,
-                                                color:
-                                                Color(0xff20236C),
+                                                fontFamily: 'Montserrat',
+                                                fontWeight: FontWeight.w500,
+                                                color: Color(0xff20236C),
                                                 fontSize: 12),
                                           ),
                                           Icon(Icons.account_circle,
-                                              color:
-                                              Color(0xFF72D2C2)),
+                                              color: Color(0xFF72D2C2)),
                                         ]),
                                   ),
                                   DropdownMenuItem(
                                     value: "3",
                                     child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
                                       children: [
                                         Text(
-                                          locationName??"search places",
-                                          style:const TextStyle(fontFamily: 'Montserrat', fontWeight: FontWeight.w500, color: Color(0xff20236C), fontSize: 12),
+                                          locationName ?? "search places",
+                                          style: const TextStyle(
+                                              fontFamily: 'Montserrat',
+                                              fontWeight: FontWeight.w500,
+                                              color: Color(0xff20236C),
+                                              fontSize: 12),
                                         ),
                                         InkWell(
                                           onTap: () async {
-                                            var place = await PlacesAutocomplete.show(
-                                                context: context,
-                                                apiKey: googleAPiKey,
-                                                mode: Mode.overlay,
-                                                types: [],
-                                                strictbounds: false,
-                                                components: [Component(Component.country, 'dz')],
-                                                //google_map_webservice package
-                                                onError: (err){
-                                                  print(err);
-                                                }
-                                            );
-                                            if(place != null){
+                                            var place =
+                                                await PlacesAutocomplete.show(
+                                                    context: context,
+                                                    apiKey: googleAPiKey,
+                                                    mode: Mode.overlay,
+                                                    types: [],
+                                                    strictbounds: false,
+                                                    components: [
+                                                      Component(
+                                                          Component.country,
+                                                          'dz')
+                                                    ],
+                                                    //google_map_webservice package
+                                                    onError: (err) {
+                                                      print(err);
+                                                    });
+                                            if (place != null) {
                                               setState(() {
-                                                locationName = place.description.toString();
-                                                print( locationName);
-
+                                                locationName = place.description
+                                                    .toString();
+                                                print(locationName);
                                               });
 
                                               //form google_maps_webservice package
-                                              final plist = GoogleMapsPlaces(apiKey:googleAPiKey, apiHeaders: await const GoogleApiHeaders().getHeaders());
-                                              String placeid = place.placeId ?? "0";
-                                              final detail = await plist.getDetailsByPlaceId(placeid);
-                                              final geometry = detail.result.geometry!;
+                                              final plist = GoogleMapsPlaces(
+                                                  apiKey: googleAPiKey,
+                                                  apiHeaders:
+                                                      await const GoogleApiHeaders()
+                                                          .getHeaders());
+                                              String placeid =
+                                                  place.placeId ?? "0";
+                                              final detail = await plist
+                                                  .getDetailsByPlaceId(placeid);
+                                              final geometry =
+                                                  detail.result.geometry!;
                                               final lat = geometry.location.lat;
-                                              final lang = geometry.location.lng;
-                                              var newlatlang = LatLng(lat, lang);
+                                              final lang =
+                                                  geometry.location.lng;
+                                              var newlatlang =
+                                                  LatLng(lat, lang);
                                               location = newlatlang;
-                                              debut = PointLatLng(newlatlang.latitude, newlatlang.longitude);
+                                              debut = PointLatLng(
+                                                  newlatlang.latitude,
+                                                  newlatlang.longitude);
                                               //move map camera to selected place with animation
-                                              mapController?.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(target: newlatlang, zoom: 17)));
-                                            };
-                                            setState(() {
-
-                                            });
+                                              mapController?.animateCamera(
+                                                  CameraUpdate
+                                                      .newCameraPosition(
+                                                          CameraPosition(
+                                                              target:
+                                                                  newlatlang,
+                                                              zoom: 17)));
+                                            }
+                                            ;
+                                            setState(() {});
                                           },
-                                          child:const Icon(Icons.search_rounded,color: Color(0xFF72D2C2)),
-
-
+                                          child: const Icon(
+                                              Icons.search_rounded,
+                                              color: Color(0xFF72D2C2)),
                                         ),
                                       ],
                                     ),
                                   ),
                                 ],
-                                onChanged: (value) => depart(value,debut,locationName!),
+                                onChanged: (value) =>
+                                    depart(value, debut, locationName!),
                               ),
                             ),
 
@@ -569,11 +599,13 @@ class _HomePageState extends State<HomePage> {
                             SizedBox(
                                 width: largeur * 0.139,
                                 height: hauteur * 0.025,
-                                child:  MyText(
-                                    text: "Arrival",
-                                    weight: FontWeight.w700,
-                                    fontsize: 14,
-                                    color: Color(0xff20236C), largeur: largeur * 0.139,)),
+                                child: MyText(
+                                  text: "Arrival",
+                                  weight: FontWeight.w700,
+                                  fontsize: 14,
+                                  color: Color(0xff20236C),
+                                  largeur: largeur * 0.139,
+                                )),
 
                             SizedBox(height: hauteur * 0.005),
 
@@ -581,14 +613,18 @@ class _HomePageState extends State<HomePage> {
                             Container(
                               width: largeur * 0.9,
                               height: hauteur * 0.0625,
-                              decoration:
-                              const BoxDecoration(boxShadow: [BoxShadow(blurRadius: 18, color: Color.fromRGBO(32, 35, 108, 0.15), spreadRadius: 10)]),
+                              decoration: const BoxDecoration(boxShadow: [
+                                BoxShadow(
+                                    blurRadius: 18,
+                                    color: Color.fromRGBO(32, 35, 108, 0.15),
+                                    spreadRadius: 10)
+                              ]),
                               child: DropdownButtonFormField(
                                 value: dropdownValue,
                                 decoration: const InputDecoration(
                                   enabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          color: Colors.white)),
+                                      borderSide:
+                                          BorderSide(color: Colors.white)),
                                   focusedBorder: InputBorder.none,
                                   filled: true,
                                   fillColor: Colors.white,
@@ -596,129 +632,205 @@ class _HomePageState extends State<HomePage> {
                                 items: [
                                   const DropdownMenuItem(
                                     value: "-1",
-                                    child: Text("select your address of Arrival ", style: TextStyle(fontFamily: 'Montserrat', fontWeight: FontWeight.w500, color: Color(0xff20236C), fontSize: 12),),
+                                    child: Text(
+                                      "select your address of Arrival ",
+                                      style: TextStyle(
+                                          fontFamily: 'Montserrat',
+                                          fontWeight: FontWeight.w500,
+                                          color: Color(0xff20236C),
+                                          fontSize: 12),
+                                    ),
                                   ),
                                   DropdownMenuItem(
                                     value: "1",
                                     child: Row(
                                       mainAxisAlignment:
-                                      MainAxisAlignment
-                                          .spaceBetween,
+                                          MainAxisAlignment.spaceBetween,
                                       children: const [
-                                        AutoSizeText(" Your current location", style: TextStyle(fontFamily: 'Montserrat', fontWeight: FontWeight.w500, color: Color(0xff20236C), fontSize: 12),),
-                                        Icon(Icons.my_location_outlined, color: Color(0xFF72D2C2)),
+                                        AutoSizeText(
+                                          " Your current location",
+                                          style: TextStyle(
+                                              fontFamily: 'Montserrat',
+                                              fontWeight: FontWeight.w500,
+                                              color: Color(0xff20236C),
+                                              fontSize: 12),
+                                        ),
+                                        Icon(Icons.my_location_outlined,
+                                            color: Color(0xFF72D2C2)),
                                       ],
                                     ),
                                   ),
                                   DropdownMenuItem(
                                     value: "2",
                                     child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
                                         children: const [
-                                          AutoSizeText(" ESI ", style: TextStyle(fontFamily: 'Montserrat', fontWeight: FontWeight.w500, color: Color(0xff20236C), fontSize: 12),),
-                                          Icon(Icons.account_circle, color: Color(0xFF72D2C2)),
+                                          AutoSizeText(
+                                            " ESI ",
+                                            style: TextStyle(
+                                                fontFamily: 'Montserrat',
+                                                fontWeight: FontWeight.w500,
+                                                color: Color(0xff20236C),
+                                                fontSize: 12),
+                                          ),
+                                          Icon(Icons.account_circle,
+                                              color: Color(0xFF72D2C2)),
                                         ]),
                                   ),
                                   DropdownMenuItem(
                                     value: "3",
                                     child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
                                       children: [
                                         Text(
-                                          locationNamea??"search places",
-                                          style:const TextStyle(fontFamily: 'Montserrat', fontWeight: FontWeight.w500, color: Color(0xff20236C), fontSize: 12),
+                                          locationNamea ?? "search places",
+                                          style: const TextStyle(
+                                              fontFamily: 'Montserrat',
+                                              fontWeight: FontWeight.w500,
+                                              color: Color(0xff20236C),
+                                              fontSize: 12),
                                         ),
                                         InkWell(
                                           onTap: () async {
-                                            var place = await PlacesAutocomplete.show(
-                                                context: context,
-                                                apiKey: googleAPiKey,
-                                                mode: Mode.overlay,
-                                                types: [],
-                                                strictbounds: false,
-                                                components: [Component(Component.country, 'dz')],
-                                                //google_map_webservice package
-                                                onError: (err){
-                                                  print(err);
-                                                }
-                                            );
-                                            if(place != null){
+                                            var place =
+                                                await PlacesAutocomplete.show(
+                                                    context: context,
+                                                    apiKey: googleAPiKey,
+                                                    mode: Mode.overlay,
+                                                    types: [],
+                                                    strictbounds: false,
+                                                    components: [
+                                                      Component(
+                                                          Component.country,
+                                                          'dz')
+                                                    ],
+                                                    //google_map_webservice package
+                                                    onError: (err) {
+                                                      print(err);
+                                                    });
+                                            if (place != null) {
                                               setState(() {
-                                                locationNamea = place.description.toString();
-                                                print( locationNamea);
-
+                                                locationNamea = place
+                                                    .description
+                                                    .toString();
+                                                print(locationNamea);
                                               });
 
                                               //form google_maps_webservice package
-                                              final plist = GoogleMapsPlaces(apiKey:googleAPiKey, apiHeaders: await const GoogleApiHeaders().getHeaders());
-                                              String placeid = place.placeId ?? "0";
-                                              final detail = await plist.getDetailsByPlaceId(placeid);
-                                              final geometry = detail.result.geometry!;
+                                              final plist = GoogleMapsPlaces(
+                                                  apiKey: googleAPiKey,
+                                                  apiHeaders:
+                                                      await const GoogleApiHeaders()
+                                                          .getHeaders());
+                                              String placeid =
+                                                  place.placeId ?? "0";
+                                              final detail = await plist
+                                                  .getDetailsByPlaceId(placeid);
+                                              final geometry =
+                                                  detail.result.geometry!;
                                               final lat = geometry.location.lat;
-                                              final lang = geometry.location.lng;
-                                              var newlatlang = LatLng(lat, lang);
+                                              final lang =
+                                                  geometry.location.lng;
+                                              var newlatlang =
+                                                  LatLng(lat, lang);
                                               location = newlatlang;
-                                              fin = PointLatLng(newlatlang.latitude, newlatlang.longitude);
+                                              fin = PointLatLng(
+                                                  newlatlang.latitude,
+                                                  newlatlang.longitude);
                                               //move map camera to selected place with animation
-                                              mapController?.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(target: newlatlang, zoom: 17)));
-                                            };
-
+                                              mapController?.animateCamera(
+                                                  CameraUpdate
+                                                      .newCameraPosition(
+                                                          CameraPosition(
+                                                              target:
+                                                                  newlatlang,
+                                                              zoom: 17)));
+                                            }
+                                            ;
                                           },
-                                          child:const Icon(Icons.search_rounded,color: Color(0xFF72D2C2)),
-
-
+                                          child: const Icon(
+                                              Icons.search_rounded,
+                                              color: Color(0xFF72D2C2)),
                                         ),
                                       ],
                                     ),
                                   ),
                                 ],
-                                onChanged: (value) => arrival(value,fin,locationNamea!),
+                                onChanged: (value) =>
+                                    arrival(value, fin, locationNamea!),
                               ),
                             ),
 
                             SizedBox(height: hauteur * 0.02),
 
                             Row(
-                              mainAxisAlignment:
-                              MainAxisAlignment.spaceBetween,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Column(
-                                  crossAxisAlignment:
-                                  CrossAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     /// "Date"
                                     SizedBox(
-                                        width: largeur * 0.11,
-                                        height: hauteur * 0.025,
-                                        child:  MyText(text: "Date", weight: FontWeight.w700, fontsize: 14, color: Color(0xff20236C),largeur: largeur * 0.11),),
+                                      width: largeur * 0.11,
+                                      height: hauteur * 0.025,
+                                      child: MyText(
+                                          text: "Date",
+                                          weight: FontWeight.w700,
+                                          fontsize: 14,
+                                          color: Color(0xff20236C),
+                                          largeur: largeur * 0.11),
+                                    ),
                                     SizedBox(height: hauteur * 0.005),
-
 
                                     /// +Date Filed
                                     GestureDetector(
-                                      onTap: ()async{_selectDate(context);},
-                                      child:  SizedBox(
+                                      onTap: () async {
+                                        _selectDate(context);
+                                      },
+                                      child: SizedBox(
                                         height: hauteur * 0.0625,
                                         width: largeur * 0.5,
                                         child: Container(
-                                            decoration:  BoxDecoration(boxShadow: const [BoxShadow(blurRadius: 18, color: Color.fromRGBO(32, 35, 108, 0.15))],color: Colors.white,borderRadius: BorderRadius.circular(5)),
+                                            decoration: BoxDecoration(
+                                                boxShadow: const [
+                                                  BoxShadow(
+                                                      blurRadius: 18,
+                                                      color: Color.fromRGBO(
+                                                          32, 35, 108, 0.15))
+                                                ],
+                                                color: Colors.white,
+                                                borderRadius:
+                                                    BorderRadius.circular(5)),
                                             child: Row(
-                                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.spaceEvenly,
                                               children: [
-                                                SizedBox(width: 5,),
-                                                Transform.scale(
-                                                  scale:1.5,  // to make the icon smaller or larger
-                                                  child:  const Icons_ESIWay(icon: "calendar", largeur: 20, hauteur: 20),
+                                                SizedBox(
+                                                  width: 5,
                                                 ),
-
-                                                MyText(text: date!, weight: FontWeight.w500, fontsize: 14, color: const Color(0xFF20236C), largeur: largeur*0.2,),
-                                                SizedBox(width: 5,),
-
+                                                Transform.scale(
+                                                  scale:
+                                                      1.5, // to make the icon smaller or larger
+                                                  child: const Icons_ESIWay(
+                                                      icon: "calendar",
+                                                      largeur: 20,
+                                                      hauteur: 20),
+                                                ),
+                                                MyText(
+                                                  text: date!,
+                                                  weight: FontWeight.w500,
+                                                  fontsize: 14,
+                                                  color:
+                                                      const Color(0xFF20236C),
+                                                  largeur: largeur * 0.2,
+                                                ),
+                                                SizedBox(
+                                                  width: 5,
+                                                ),
                                               ],
-                                            )
-                                        ),
-
-
+                                            )),
                                       ),
                                     ),
                                   ],
@@ -731,12 +843,11 @@ class _HomePageState extends State<HomePage> {
                                         width: largeur * 0.13,
                                         height: hauteur * 0.025,
                                         child: MyText(
-                                            text: "Heure",
-                                            weight: FontWeight.w700,
-                                            fontsize: 14,
-                                            color:
-                                            Color(0xff20236C),
-                                          largeur: largeur * 0.13 ,
+                                          text: "Heure",
+                                          weight: FontWeight.w700,
+                                          fontsize: 14,
+                                          color: Color(0xff20236C),
+                                          largeur: largeur * 0.13,
                                         )),
 
                                     SizedBox(height: hauteur * 0.005),
@@ -761,14 +872,15 @@ class _HomePageState extends State<HomePage> {
                             SizedBox(height: hauteur * 0.05),
 
                             SimpleButton(
-                                backgroundcolor:
-                                const Color(0xffFFA18E),
+                                backgroundcolor: const Color(0xffFFA18E),
                                 size: Size(largeur, hauteur * 0.06),
                                 radius: 10,
                                 text: "Search",
                                 textcolor: const Color(0xFF20236C),
                                 fontsize: 20,
-                                fct:(){next(debut,fin);},
+                                fct: () {
+                                  next(debut, fin);
+                                },
                                 weight: FontWeight.w700),
                             SizedBox(height: hauteur * 0.05),
                           ],
@@ -780,15 +892,16 @@ class _HomePageState extends State<HomePage> {
               ),
             );
           });
-    };
+    }
 
-    void createTrip ()async{
+    ;
+
+    void createTrip() async {
       await showModalBottomSheet(
           context: context,
           builder: (context) {
             return Scaffold(
               bottomNavigationBar: BottomNavBar(currentindex: 3),
-
               body: SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -798,8 +911,8 @@ class _HomePageState extends State<HomePage> {
                     Container(
                       color: const Color(0xFFF9F8FF),
                       child: Padding(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: largeur * 0.075),
+                        padding:
+                            EdgeInsets.symmetric(horizontal: largeur * 0.075),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -811,12 +924,13 @@ class _HomePageState extends State<HomePage> {
                             SizedBox(
                                 width: largeur * 0.55,
                                 height: hauteur * 0.025,
-                                child:  MyText(
-                                    text: "Departure",
-                                    weight: FontWeight.w700,
-                                    fontsize: 14,
-                                    color: Color(0xff20236C),
-                                largeur: largeur * 0.55 ,)),
+                                child: MyText(
+                                  text: "Departure",
+                                  weight: FontWeight.w700,
+                                  fontsize: 14,
+                                  color: Color(0xff20236C),
+                                  largeur: largeur * 0.55,
+                                )),
 
                             SizedBox(height: hauteur * 0.005),
 
@@ -824,22 +938,20 @@ class _HomePageState extends State<HomePage> {
                             Container(
                               width: largeur * 0.9,
                               height: hauteur * 0.0625,
-                              decoration:
-                              const BoxDecoration(boxShadow: [
+                              decoration: const BoxDecoration(boxShadow: [
                                 BoxShadow(
                                     blurRadius: 18,
-                                    color: Color.fromRGBO(
-                                        32, 35, 108, 0.15),
+                                    color: Color.fromRGBO(32, 35, 108, 0.15),
                                     spreadRadius: 10)
                               ]),
                               child: DropdownButtonFormField(
                                 value: dropdownValue,
-                                icon: const Icon(Icons.arrow_drop_down_rounded,color: Color(0xFF72D2C2)),
-
+                                icon: const Icon(Icons.arrow_drop_down_rounded,
+                                    color: Color(0xFF72D2C2)),
                                 decoration: const InputDecoration(
                                   enabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          color: Colors.white)),
+                                      borderSide:
+                                          BorderSide(color: Colors.white)),
                                   focusedBorder: InputBorder.none,
                                   filled: true,
                                   fillColor: Colors.white,
@@ -860,23 +972,17 @@ class _HomePageState extends State<HomePage> {
                                     value: "1",
                                     child: Row(
                                       mainAxisAlignment:
-                                      MainAxisAlignment
-                                          .spaceBetween,
+                                          MainAxisAlignment.spaceBetween,
                                       children: const [
                                         AutoSizeText(
                                           " Your current location",
                                           style: TextStyle(
-                                              fontFamily:
-                                              'Montserrat',
-                                              fontWeight:
-                                              FontWeight.w500,
-                                              color:
-                                              Color(0xff20236C),
+                                              fontFamily: 'Montserrat',
+                                              fontWeight: FontWeight.w500,
+                                              color: Color(0xff20236C),
                                               fontSize: 12),
                                         ),
-                                        Icon(
-                                            Icons
-                                                .my_location_outlined,
+                                        Icon(Icons.my_location_outlined,
                                             color: Color(0xFF72D2C2)),
                                       ],
                                     ),
@@ -885,82 +991,102 @@ class _HomePageState extends State<HomePage> {
                                     value: "2",
                                     child: Row(
                                         mainAxisAlignment:
-                                        MainAxisAlignment
-                                            .spaceBetween,
+                                            MainAxisAlignment.spaceBetween,
                                         children: const [
                                           AutoSizeText(
                                             " ESI ",
                                             style: TextStyle(
-                                                fontFamily:
-                                                'Montserrat',
-                                                fontWeight:
-                                                FontWeight.w500,
-                                                color:
-                                                Color(0xff20236C),
+                                                fontFamily: 'Montserrat',
+                                                fontWeight: FontWeight.w500,
+                                                color: Color(0xff20236C),
                                                 fontSize: 12),
                                           ),
                                           Icon(Icons.account_circle,
-                                              color:
-                                              Color(0xFF72D2C2)),
+                                              color: Color(0xFF72D2C2)),
                                         ]),
                                   ),
                                   DropdownMenuItem(
                                     value: "3",
                                     child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
                                       children: [
                                         Text(
-                                          locationName??"search places",
-                                          style:const TextStyle(fontFamily: 'Montserrat', fontWeight: FontWeight.w500, color: Color(0xff20236C), fontSize: 12),
+                                          locationName ?? "search places",
+                                          style: const TextStyle(
+                                              fontFamily: 'Montserrat',
+                                              fontWeight: FontWeight.w500,
+                                              color: Color(0xff20236C),
+                                              fontSize: 12),
                                         ),
                                         InkWell(
                                           onTap: () async {
-                                            var place = await PlacesAutocomplete.show(
-                                                context: context,
-                                                apiKey: googleAPiKey,
-                                                mode: Mode.overlay,
-                                                types: [],
-                                                strictbounds: false,
-                                                components: [Component(Component.country, 'dz')],
-                                                //google_map_webservice package
-                                                onError: (err){
-                                                  print(err);
-                                                }
-                                            );
-                                            if(place != null){
+                                            var place =
+                                                await PlacesAutocomplete.show(
+                                                    context: context,
+                                                    apiKey: googleAPiKey,
+                                                    mode: Mode.overlay,
+                                                    types: [],
+                                                    strictbounds: false,
+                                                    components: [
+                                                      Component(
+                                                          Component.country,
+                                                          'dz')
+                                                    ],
+                                                    //google_map_webservice package
+                                                    onError: (err) {
+                                                      print(err);
+                                                    });
+                                            if (place != null) {
                                               setState(() {
-                                                locationName = place.description.toString();
-                                                print( locationName);
-
+                                                locationName = place.description
+                                                    .toString();
+                                                print(locationName);
                                               });
 
                                               //form google_maps_webservice package
-                                              final plist = GoogleMapsPlaces(apiKey:googleAPiKey, apiHeaders: await const GoogleApiHeaders().getHeaders());
-                                              String placeid = place.placeId ?? "0";
-                                              final detail = await plist.getDetailsByPlaceId(placeid);
-                                              final geometry = detail.result.geometry!;
+                                              final plist = GoogleMapsPlaces(
+                                                  apiKey: googleAPiKey,
+                                                  apiHeaders:
+                                                      await const GoogleApiHeaders()
+                                                          .getHeaders());
+                                              String placeid =
+                                                  place.placeId ?? "0";
+                                              final detail = await plist
+                                                  .getDetailsByPlaceId(placeid);
+                                              final geometry =
+                                                  detail.result.geometry!;
                                               final lat = geometry.location.lat;
-                                              final lang = geometry.location.lng;
-                                              var newlatlang = LatLng(lat, lang);
+                                              final lang =
+                                                  geometry.location.lng;
+                                              var newlatlang =
+                                                  LatLng(lat, lang);
                                               location = newlatlang;
-                                              debut = PointLatLng(newlatlang.latitude, newlatlang.longitude);
+                                              debut = PointLatLng(
+                                                  newlatlang.latitude,
+                                                  newlatlang.longitude);
                                               //move map camera to selected place with animation
-                                              mapController?.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(target: newlatlang, zoom: 17)));
-                                            };
-                                            setState(() {
-
-                                            });
+                                              mapController?.animateCamera(
+                                                  CameraUpdate
+                                                      .newCameraPosition(
+                                                          CameraPosition(
+                                                              target:
+                                                                  newlatlang,
+                                                              zoom: 17)));
+                                            }
+                                            ;
+                                            setState(() {});
                                           },
-                                          child:const Icon(Icons.search_rounded,color: Color(0xFF72D2C2)),
-
-
+                                          child: const Icon(
+                                              Icons.search_rounded,
+                                              color: Color(0xFF72D2C2)),
                                         ),
                                       ],
                                     ),
                                   ),
-
                                 ],
-                                onChanged: (value) => depart(value,debut,locationName!),
+                                onChanged: (value) =>
+                                    depart(value, debut, locationName!),
                               ),
                             ),
 
@@ -970,12 +1096,13 @@ class _HomePageState extends State<HomePage> {
                             SizedBox(
                                 width: largeur * 0.139,
                                 height: hauteur * 0.025,
-                                child:  MyText(
-                                    text: "Arrival",
-                                    weight: FontWeight.w700,
-                                    fontsize: 14,
-                                    color: Color(0xff20236C),
-                                largeur: largeur * 0.139,)),
+                                child: MyText(
+                                  text: "Arrival",
+                                  weight: FontWeight.w700,
+                                  fontsize: 14,
+                                  color: Color(0xff20236C),
+                                  largeur: largeur * 0.139,
+                                )),
 
                             SizedBox(height: hauteur * 0.005),
 
@@ -983,15 +1110,20 @@ class _HomePageState extends State<HomePage> {
                             Container(
                               width: largeur * 0.9,
                               height: hauteur * 0.0625,
-                              decoration:
-                              const BoxDecoration(boxShadow: [BoxShadow(blurRadius: 18, color: Color.fromRGBO(32, 35, 108, 0.15), spreadRadius: 10)]),
+                              decoration: const BoxDecoration(boxShadow: [
+                                BoxShadow(
+                                    blurRadius: 18,
+                                    color: Color.fromRGBO(32, 35, 108, 0.15),
+                                    spreadRadius: 10)
+                              ]),
                               child: DropdownButtonFormField(
-                                icon: const Icon(Icons.arrow_drop_down_rounded,color: Color(0xFF72D2C2)),
+                                icon: const Icon(Icons.arrow_drop_down_rounded,
+                                    color: Color(0xFF72D2C2)),
                                 value: dropdownValue,
                                 decoration: const InputDecoration(
                                   enabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          color: Colors.white)),
+                                      borderSide:
+                                          BorderSide(color: Colors.white)),
                                   focusedBorder: InputBorder.none,
                                   filled: true,
                                   fillColor: Colors.white,
@@ -999,136 +1131,213 @@ class _HomePageState extends State<HomePage> {
                                 items: [
                                   const DropdownMenuItem(
                                     value: "-1",
-                                    child: Text("select your address of Arrival ", style: TextStyle(fontFamily: 'Montserrat', fontWeight: FontWeight.w500, color: Color(0xff20236C), fontSize: 12),),
+                                    child: Text(
+                                      "select your address of Arrival ",
+                                      style: TextStyle(
+                                          fontFamily: 'Montserrat',
+                                          fontWeight: FontWeight.w500,
+                                          color: Color(0xff20236C),
+                                          fontSize: 12),
+                                    ),
                                   ),
                                   DropdownMenuItem(
                                     value: "1",
                                     child: Row(
                                       mainAxisAlignment:
-                                      MainAxisAlignment
-                                          .spaceBetween,
+                                          MainAxisAlignment.spaceBetween,
                                       children: const [
-                                        AutoSizeText(" Your current location", style: TextStyle(fontFamily: 'Montserrat', fontWeight: FontWeight.w500, color: Color(0xff20236C), fontSize: 12),),
-                                        Icon(Icons.my_location_outlined, color: Color(0xFF72D2C2)),
+                                        AutoSizeText(
+                                          " Your current location",
+                                          style: TextStyle(
+                                              fontFamily: 'Montserrat',
+                                              fontWeight: FontWeight.w500,
+                                              color: Color(0xff20236C),
+                                              fontSize: 12),
+                                        ),
+                                        Icon(Icons.my_location_outlined,
+                                            color: Color(0xFF72D2C2)),
                                       ],
                                     ),
                                   ),
                                   DropdownMenuItem(
                                     value: "2",
                                     child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
                                         children: const [
-                                          AutoSizeText(" ESI ", style: TextStyle(fontFamily: 'Montserrat', fontWeight: FontWeight.w500, color: Color(0xff20236C), fontSize: 12),),
-                                          Icon(Icons.account_circle, color: Color(0xFF72D2C2)),
+                                          AutoSizeText(
+                                            " ESI ",
+                                            style: TextStyle(
+                                                fontFamily: 'Montserrat',
+                                                fontWeight: FontWeight.w500,
+                                                color: Color(0xff20236C),
+                                                fontSize: 12),
+                                          ),
+                                          Icon(Icons.account_circle,
+                                              color: Color(0xFF72D2C2)),
                                         ]),
                                   ),
                                   DropdownMenuItem(
                                     value: "3",
                                     child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
                                       children: [
                                         Text(
-                                          locationNamea??"search places",
-                                          style:const TextStyle(fontFamily: 'Montserrat', fontWeight: FontWeight.w500, color: Color(0xff20236C), fontSize: 12),
+                                          locationNamea ?? "search places",
+                                          style: const TextStyle(
+                                              fontFamily: 'Montserrat',
+                                              fontWeight: FontWeight.w500,
+                                              color: Color(0xff20236C),
+                                              fontSize: 12),
                                         ),
                                         InkWell(
                                           onTap: () async {
-                                            var place = await PlacesAutocomplete.show(
-                                                context: context,
-                                                apiKey: googleAPiKey,
-                                                mode: Mode.overlay,
-                                                types: [],
-                                                strictbounds: false,
-                                                components: [Component(Component.country, 'dz')],
-                                                //google_map_webservice package
-                                                onError: (err){
-                                                  print(err);
-                                                }
-                                            );
-                                            if(place != null){
+                                            var place =
+                                                await PlacesAutocomplete.show(
+                                                    context: context,
+                                                    apiKey: googleAPiKey,
+                                                    mode: Mode.overlay,
+                                                    types: [],
+                                                    strictbounds: false,
+                                                    components: [
+                                                      Component(
+                                                          Component.country,
+                                                          'dz')
+                                                    ],
+                                                    //google_map_webservice package
+                                                    onError: (err) {
+                                                      print(err);
+                                                    });
+                                            if (place != null) {
                                               setState(() {
-                                                locationNamea = place.description.toString();
-                                                print( locationNamea);
-
+                                                locationNamea = place
+                                                    .description
+                                                    .toString();
+                                                print(locationNamea);
                                               });
 
                                               //form google_maps_webservice package
-                                              final plist = GoogleMapsPlaces(apiKey:googleAPiKey, apiHeaders: await const GoogleApiHeaders().getHeaders());
-                                              String placeid = place.placeId ?? "0";
-                                              final detail = await plist.getDetailsByPlaceId(placeid);
-                                              final geometry = detail.result.geometry!;
+                                              final plist = GoogleMapsPlaces(
+                                                  apiKey: googleAPiKey,
+                                                  apiHeaders:
+                                                      await const GoogleApiHeaders()
+                                                          .getHeaders());
+                                              String placeid =
+                                                  place.placeId ?? "0";
+                                              final detail = await plist
+                                                  .getDetailsByPlaceId(placeid);
+                                              final geometry =
+                                                  detail.result.geometry!;
                                               final lat = geometry.location.lat;
-                                              final lang = geometry.location.lng;
-                                              var newlatlang = LatLng(lat, lang);
+                                              final lang =
+                                                  geometry.location.lng;
+                                              var newlatlang =
+                                                  LatLng(lat, lang);
                                               location = newlatlang;
-                                              fin = PointLatLng(newlatlang.latitude, newlatlang.longitude);
+                                              fin = PointLatLng(
+                                                  newlatlang.latitude,
+                                                  newlatlang.longitude);
                                               //move map camera to selected place with animation
-                                              mapController?.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(target: newlatlang, zoom: 17)));
-                                            };
-                                            setState(() {
-
-                                            });
+                                              mapController?.animateCamera(
+                                                  CameraUpdate
+                                                      .newCameraPosition(
+                                                          CameraPosition(
+                                                              target:
+                                                                  newlatlang,
+                                                              zoom: 17)));
+                                            }
+                                            ;
+                                            setState(() {});
                                           },
-                                          child:const Icon(Icons.search_rounded,color: Color(0xFF72D2C2)),
-
-
+                                          child: const Icon(
+                                              Icons.search_rounded,
+                                              color: Color(0xFF72D2C2)),
                                         ),
                                       ],
                                     ),
                                   ),
                                 ],
-                                onChanged: (value) => arrival(value,fin,locationNamea!),
+                                onChanged: (value) =>
+                                    arrival(value, fin, locationNamea!),
                               ),
                             ),
 
                             SizedBox(height: hauteur * 0.02),
 
                             Row(
-                              mainAxisAlignment:
-                              MainAxisAlignment.spaceBetween,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Column(
-                                  crossAxisAlignment:
-                                  CrossAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     /// "Date"
                                     SizedBox(
                                         width: largeur * 0.11,
                                         height: hauteur * 0.025,
-                                        child:  MyText(text: "Date", weight: FontWeight.w700, fontsize: 14, color: Color(0xff20236C),largeur: largeur * 0.11,)),
+                                        child: MyText(
+                                          text: "Date",
+                                          weight: FontWeight.w700,
+                                          fontsize: 14,
+                                          color: Color(0xff20236C),
+                                          largeur: largeur * 0.11,
+                                        )),
 
                                     SizedBox(height: hauteur * 0.005),
 
                                     /// +Date Filed
                                     GestureDetector(
-                                      onTap: ()async{_selectDate(context);},
-                                      child:  SizedBox(
+                                      onTap: () async {
+                                        _selectDate(context);
+                                      },
+                                      child: SizedBox(
                                         height: hauteur * 0.0625,
                                         width: largeur * 0.5,
                                         child: Container(
-                                            decoration:  BoxDecoration(boxShadow: const [BoxShadow(blurRadius: 18, color: Color.fromRGBO(32, 35, 108, 0.15))],color: Colors.white,borderRadius: BorderRadius.circular(5)),
+                                            decoration: BoxDecoration(
+                                                boxShadow: const [
+                                                  BoxShadow(
+                                                      blurRadius: 18,
+                                                      color: Color.fromRGBO(
+                                                          32, 35, 108, 0.15))
+                                                ],
+                                                color: Colors.white,
+                                                borderRadius:
+                                                    BorderRadius.circular(5)),
                                             child: Row(
-                                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.spaceEvenly,
                                               children: [
-                                                SizedBox(width: 5,),
-                                                Transform.scale(
-                                                  scale:1.5,  // to make the icon smaller or larger
-                                                  child:  const Icons_ESIWay(icon: "calendar", largeur: 20, hauteur: 20),
+                                                SizedBox(
+                                                  width: 5,
                                                 ),
-
-                                                MyText(text: date!, weight: FontWeight.w500, fontsize: 14, color: const Color(0xFF20236C), largeur: largeur*0.2,),
-                                                SizedBox(width: 5,),
-
+                                                Transform.scale(
+                                                  scale:
+                                                      1.5, // to make the icon smaller or larger
+                                                  child: const Icons_ESIWay(
+                                                      icon: "calendar",
+                                                      largeur: 20,
+                                                      hauteur: 20),
+                                                ),
+                                                MyText(
+                                                  text: date!,
+                                                  weight: FontWeight.w500,
+                                                  fontsize: 14,
+                                                  color:
+                                                      const Color(0xFF20236C),
+                                                  largeur: largeur * 0.2,
+                                                ),
+                                                SizedBox(
+                                                  width: 5,
+                                                ),
                                               ],
-                                            )
-                                        ),
+                                            )),
 
                                         /* SizedBox(
                                       height: hauteur * 0.0625,
                                       width: largeur * 0.5,
                                       child: OurTextField(controller: datecontroller, text: "DD/MM/YY", iconName: "calendar", borderColor: Colors.white, size: 0.7,),
                                     ),*/
-
                                       ),
                                     ),
                                   ],
@@ -1141,12 +1350,12 @@ class _HomePageState extends State<HomePage> {
                                         width: largeur * 0.13,
                                         height: hauteur * 0.025,
                                         child: MyText(
-                                            text: "Heure",
-                                            weight: FontWeight.w700,
-                                            fontsize: 14,
-                                            color:
-                                            Color(0xff20236C),
-                                        largeur: largeur * 0.13 ,)),
+                                          text: "Heure",
+                                          weight: FontWeight.w700,
+                                          fontsize: 14,
+                                          color: Color(0xff20236C),
+                                          largeur: largeur * 0.13,
+                                        )),
 
                                     SizedBox(height: hauteur * 0.005),
 
@@ -1169,53 +1378,89 @@ class _HomePageState extends State<HomePage> {
 
                             SizedBox(height: hauteur * 0.02),
 
-
                             ///  "Paiment"
                             SizedBox(
                                 width: largeur * 0.2,
                                 height: hauteur * 0.025,
-                                child:  MyText(
-                                    text: "Paiment",
-                                    weight: FontWeight.w700,
-                                    fontsize: 14,
-                                    color: Color(0xff20236C),
-                                     largeur: largeur * 0.2,)),
+                                child: MyText(
+                                  text: "Paiment",
+                                  weight: FontWeight.w700,
+                                  fontsize: 14,
+                                  color: Color(0xff20236C),
+                                  largeur: largeur * 0.2,
+                                )),
 
                             /// +Paiment Field
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Container(
-                                  width: largeur*0.3,
-                                  height: hauteur*0.0625,
-                                  decoration:  BoxDecoration(boxShadow: const [BoxShadow(blurRadius: 18, color: Color.fromRGBO(32, 35, 108, 0.15))],color: Colors.white,borderRadius:BorderRadius.circular(5) ),
+                                  width: largeur * 0.3,
+                                  height: hauteur * 0.0625,
+                                  decoration: BoxDecoration(
+                                      boxShadow: const [
+                                        BoxShadow(
+                                            blurRadius: 18,
+                                            color: Color.fromRGBO(
+                                                32, 35, 108, 0.15))
+                                      ],
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(5)),
                                   child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
                                       const SizedBox(width: 10),
                                       Expanded(
-                                        child:TextField(
+                                        child: TextField(
                                           controller: pricecontroller,
-                                          decoration: const InputDecoration(hintText: "Price", hintStyle:  TextStyle(fontFamily: 'Montserrat', fontWeight: FontWeight.w500, color: Color(0xff20236C), fontSize: 14), focusedBorder: InputBorder.none, enabledBorder: InputBorder.none, disabledBorder:  InputBorder.none, filled: false,),
+                                          decoration: const InputDecoration(
+                                            hintText: "Price",
+                                            hintStyle: TextStyle(
+                                                fontFamily: 'Montserrat',
+                                                fontWeight: FontWeight.w500,
+                                                color: Color(0xff20236C),
+                                                fontSize: 14),
+                                            focusedBorder: InputBorder.none,
+                                            enabledBorder: InputBorder.none,
+                                            disabledBorder: InputBorder.none,
+                                            filled: false,
+                                          ),
                                         ),
                                       ),
-                                      const AutoSizeText("Da",style: TextStyle(fontFamily: 'Montserrat', fontWeight: FontWeight.w500, color: const Color(0xff20236C), fontSize: 14)),
+                                      const AutoSizeText("Da",
+                                          style: TextStyle(
+                                              fontFamily: 'Montserrat',
+                                              fontWeight: FontWeight.w500,
+                                              color: const Color(0xff20236C),
+                                              fontSize: 14)),
                                       const SizedBox(width: 10),
                                     ],
                                   ),
                                 ),
+
                                 /// methode
                                 Container(
-                                  width: largeur*0.51,
-                                  height: hauteur*0.0625,
-                                  decoration:  BoxDecoration(boxShadow: const [BoxShadow(blurRadius: 18, color: Color.fromRGBO(32, 35, 108, 0.15))],color: Colors.white,borderRadius:BorderRadius.circular(5)),
+                                  width: largeur * 0.51,
+                                  height: hauteur * 0.0625,
+                                  decoration: BoxDecoration(
+                                      boxShadow: const [
+                                        BoxShadow(
+                                            blurRadius: 18,
+                                            color: Color.fromRGBO(
+                                                32, 35, 108, 0.15))
+                                      ],
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(5)),
                                   child: DropdownButtonFormField(
                                     value: dropdownValue,
-                                    icon: const Icon(Icons.arrow_drop_down_rounded,color: Color(0xFF72D2C2)),
+                                    icon: const Icon(
+                                        Icons.arrow_drop_down_rounded,
+                                        color: Color(0xFF72D2C2)),
                                     decoration: const InputDecoration(
                                       enabledBorder: OutlineInputBorder(
-                                          borderSide: BorderSide(
-                                              color: Colors.white)),
+                                          borderSide:
+                                              BorderSide(color: Colors.white)),
                                       focusedBorder: InputBorder.none,
                                       filled: true,
                                       fillColor: Colors.white,
@@ -1223,35 +1468,66 @@ class _HomePageState extends State<HomePage> {
                                     items: const [
                                       DropdownMenuItem(
                                         value: "-1",
-                                        child: Text("choose a method ", style: TextStyle(fontFamily: 'Montserrat', fontWeight: FontWeight.w500, color: Color(0xff20236C), fontSize: 12),),
+                                        child: Text(
+                                          "choose a method ",
+                                          style: TextStyle(
+                                              fontFamily: 'Montserrat',
+                                              fontWeight: FontWeight.w500,
+                                              color: Color(0xff20236C),
+                                              fontSize: 12),
+                                        ),
                                       ),
                                       DropdownMenuItem(
                                         value: "1",
-                                        child: AutoSizeText("Negociable", style: TextStyle(fontFamily: 'Montserrat', fontWeight: FontWeight.w500, color: Color(0xff20236C), fontSize: 12),),
-
+                                        child: AutoSizeText(
+                                          "Negociable",
+                                          style: TextStyle(
+                                              fontFamily: 'Montserrat',
+                                              fontWeight: FontWeight.w500,
+                                              color: Color(0xff20236C),
+                                              fontSize: 12),
+                                        ),
                                       ),
                                       DropdownMenuItem(
                                         value: "2",
-                                        child:
-                                        AutoSizeText("Service", style: TextStyle(fontFamily: 'Montserrat', fontWeight: FontWeight.w500, color: Color(0xff20236C), fontSize: 12),),
-
+                                        child: AutoSizeText(
+                                          "Service",
+                                          style: TextStyle(
+                                              fontFamily: 'Montserrat',
+                                              fontWeight: FontWeight.w500,
+                                              color: Color(0xff20236C),
+                                              fontSize: 12),
+                                        ),
                                       ),
                                       DropdownMenuItem(
                                         value: "3",
-                                        child: AutoSizeText("Rien", style: TextStyle(fontFamily: 'Montserrat', fontWeight: FontWeight.w500, color: Color(0xff20236C), fontSize: 12),),
-
+                                        child: AutoSizeText(
+                                          "Rien",
+                                          style: TextStyle(
+                                              fontFamily: 'Montserrat',
+                                              fontWeight: FontWeight.w500,
+                                              color: Color(0xff20236C),
+                                              fontSize: 12),
+                                        ),
                                       ),
                                     ],
                                     onChanged: (value) {
-                                      if (value == "1") { methode = "Negociable";};
-                                      if (value == "2") {methode = "Service";};
-                                      if (value == "3") {methode = "Rien";};
+                                      if (value == "1") {
+                                        methode = "Negociable";
+                                      }
+                                      ;
+                                      if (value == "2") {
+                                        methode = "Service";
+                                      }
+                                      ;
+                                      if (value == "3") {
+                                        methode = "Rien";
+                                      }
+                                      ;
                                       print(methode);
                                     },
                                   ),
                                 ),
-
-
                               ],
                             ),
 
@@ -1261,30 +1537,94 @@ class _HomePageState extends State<HomePage> {
                             SizedBox(
                                 width: largeur * 0.266,
                                 height: hauteur * 0.025,
-                                child:  MyText(
-                                    text: "Preferences",
-                                    weight: FontWeight.w700,
-                                    fontsize: 14,
-                                    color: Color(0xff20236C),
-                                    largeur: largeur * 0.266,)),
+                                child: MyText(
+                                  text: "Preferences",
+                                  weight: FontWeight.w700,
+                                  fontsize: 14,
+                                  color: Color(0xff20236C),
+                                  largeur: largeur * 0.266,
+                                )),
 
                             /// +Preferences Field
                             Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween ,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                SimpleButton(backgroundcolor: bags ?bleu_ciel :Colors.white , size: Size(largeur*0.2, hauteur*0.00875), radius: 3, text: "Bags", textcolor: bleu_bg, fontsize: 12, fct:(){bags=!bags;setState(() {});},blur: 18),
-                                SimpleButton(backgroundcolor: talking ?bleu_ciel :Colors.white  , size: Size(largeur*0.277, hauteur*0.00875), radius: 3, text: "Talking", textcolor: bleu_bg, fontsize: 12, fct:(){(talking=!talking)!;setState(() {});},blur: 18),
-                                SimpleButton(backgroundcolor: animals ?bleu_ciel :Colors.white  , size: Size(largeur*0.277, hauteur*0.00875), radius: 3, text: "Animals", textcolor: bleu_bg, fontsize: 12, fct:(){(animals=!animals)!;setState(() {});},blur: 18),
-
+                                SimpleButton(
+                                    backgroundcolor:
+                                        bags ? bleu_ciel : Colors.white,
+                                    size:
+                                        Size(largeur * 0.2, hauteur * 0.00875),
+                                    radius: 3,
+                                    text: "Bags",
+                                    textcolor: bleu_bg,
+                                    fontsize: 12,
+                                    fct: () {
+                                      bags = !bags;
+                                      setState(() {});
+                                    },
+                                    blur: 18),
+                                SimpleButton(
+                                    backgroundcolor:
+                                        talking ? bleu_ciel : Colors.white,
+                                    size: Size(
+                                        largeur * 0.277, hauteur * 0.00875),
+                                    radius: 3,
+                                    text: "Talking",
+                                    textcolor: bleu_bg,
+                                    fontsize: 12,
+                                    fct: () {
+                                      (talking = !talking)!;
+                                      setState(() {});
+                                    },
+                                    blur: 18),
+                                SimpleButton(
+                                    backgroundcolor:
+                                        animals ? bleu_ciel : Colors.white,
+                                    size: Size(
+                                        largeur * 0.277, hauteur * 0.00875),
+                                    radius: 3,
+                                    text: "Animals",
+                                    textcolor: bleu_bg,
+                                    fontsize: 12,
+                                    fct: () {
+                                      (animals = !animals)!;
+                                      setState(() {});
+                                    },
+                                    blur: 18),
                               ],
                             ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                SimpleButton(backgroundcolor: smoking ?bleu_ciel :Colors.white  , size: Size(largeur*0.277, hauteur*0.00875), radius: 3, text: "Smoking", textcolor: bleu_bg, fontsize: 12, fct:(){(smoking=!smoking)!;setState(() {});},blur: 18),
-                                SizedBox(width: largeur*0.07),
-                                SimpleButton(backgroundcolor: others ?bleu_ciel :Colors.white , size: Size(largeur*0.277, hauteur*0.00875), radius: 3, text: "Other", textcolor: bleu_bg, fontsize: 12, fct:(){(others=!others)!;setState(() {});},blur: 18),
-
+                                SimpleButton(
+                                    backgroundcolor:
+                                        smoking ? bleu_ciel : Colors.white,
+                                    size: Size(
+                                        largeur * 0.277, hauteur * 0.00875),
+                                    radius: 3,
+                                    text: "Smoking",
+                                    textcolor: bleu_bg,
+                                    fontsize: 12,
+                                    fct: () {
+                                      (smoking = !smoking)!;
+                                      setState(() {});
+                                    },
+                                    blur: 18),
+                                SizedBox(width: largeur * 0.07),
+                                SimpleButton(
+                                    backgroundcolor:
+                                        others ? bleu_ciel : Colors.white,
+                                    size: Size(
+                                        largeur * 0.277, hauteur * 0.00875),
+                                    radius: 3,
+                                    text: "Other",
+                                    textcolor: bleu_bg,
+                                    fontsize: 12,
+                                    fct: () {
+                                      (others = !others)!;
+                                      setState(() {});
+                                    },
+                                    blur: 18),
                               ],
                             ),
 
@@ -1299,19 +1639,20 @@ class _HomePageState extends State<HomePage> {
                                     weight: FontWeight.w700,
                                     fontsize: 14,
                                     color: Color(0xff20236C),
-                                largeur: largeur * 0.2)),
+                                    largeur: largeur * 0.2)),
 
                             SizedBox(height: hauteur * 0.05),
 
                             SimpleButton(
-                                backgroundcolor:
-                                const Color(0xffFFA18E),
+                                backgroundcolor: const Color(0xffFFA18E),
                                 size: Size(largeur, hauteur * 0.06),
                                 radius: 10,
                                 text: "Create",
                                 textcolor: const Color(0xFF20236C),
                                 fontsize: 20,
-                                fct: (){next(debut,fin);},
+                                fct: () {
+                                  next(debut, fin);
+                                },
                                 weight: FontWeight.w700),
                             SizedBox(height: hauteur * 0.05),
                           ],
@@ -1323,18 +1664,16 @@ class _HomePageState extends State<HomePage> {
               ),
             );
           });
-      setState(() {
+      setState(() {});
+    }
 
-      });
-    };
-
+    ;
 
     return Scaffold(
       bottomNavigationBar: BottomNavBar(currentindex: 3),
-
       body: Stack(
         children: [
-          GoogleMap(
+          /*  GoogleMap(
             //Map widget from google_maps_flutter package
             zoomGesturesEnabled: false, //enable Zoom in, out on map
             initialCameraPosition: CameraPosition(
@@ -1351,23 +1690,60 @@ class _HomePageState extends State<HomePage> {
                 mapController = controller;
               });
             },
+          ), */
+          GoogleMap(
+            //Map widget from google_maps_flutter package
+            zoomGesturesEnabled: true, //enable Zoom in, out on map
+            zoomControlsEnabled: false,
+
+            initialCameraPosition: CameraPosition(
+              //innital position in map
+              target: startLocation, //initial position
+
+              zoom: 16.0, //initial zoom level
+            ),
+            markers: markers, //markers to show on map
+            //  polylines: Set<Polyline>.of(polylines.values), //polylines
+            mapType: MapType.normal, //map type
+            onMapCreated: (controller) {
+              //method called when map is created
+              setState(() {
+                mapController = controller;
+              });
+            },
           ),
+
           ///Total Distance
           Positioned(
             bottom: 25,
             left: 10,
             child: Container(
-                decoration:BoxDecoration(boxShadow: const [BoxShadow(blurRadius: 18, color: Color.fromRGBO(32, 35, 108, 0.15), spreadRadius: 10)],color: Colors.grey.shade50,borderRadius: BorderRadius.circular(20)),
-
+                decoration: BoxDecoration(
+                    boxShadow: const [
+                      BoxShadow(
+                          blurRadius: 18,
+                          color: Color.fromRGBO(32, 35, 108, 0.15),
+                          spreadRadius: 10)
+                    ],
+                    color: Colors.grey.shade50,
+                    borderRadius: BorderRadius.circular(20)),
                 padding: const EdgeInsets.all(20),
                 child: Text(
                   "Total Distance: ${distance.toStringAsFixed(2)} KM",
-                  style: const TextStyle(fontFamily: 'Montserrat', fontWeight: FontWeight.w700, color: Color(0xFF20236C), fontSize: 18,),
+                  style: const TextStyle(
+                    fontFamily: 'Montserrat',
+                    fontWeight: FontWeight.w700,
+                    color: Color(0xFF20236C),
+                    fontSize: 18,
+                  ),
                 )),
           ),
           Column(
             children: [
-              Container(height: hauteur * 0.035, width: largeur, color: Colors.transparent), // pour laisser l'espace ctt
+              Container(
+                  height: hauteur * 0.035,
+                  width: largeur,
+                  color: Colors.transparent), // pour laisser l'espace ctt
               SizedBox(
                 width: largeur,
                 height: hauteur * 0.5,
@@ -1390,6 +1766,7 @@ class _HomePageState extends State<HomePage> {
                               iconName: "search",
                               espaceicontext: largeur * 0.05,
                               fct: searchTrip),
+
                           ///Notification Button
                           ElevatedButton(
                             onPressed: () {},
@@ -1397,7 +1774,7 @@ class _HomePageState extends State<HomePage> {
                                 backgroundColor: Colors.white,
                                 elevation: 0.0,
                                 fixedSize:
-                                Size(largeur * 0.13, hauteur * 0.0625)),
+                                    Size(largeur * 0.13, hauteur * 0.0625)),
                             child: const Icons_ESIWay(
                                 icon: "notification_on",
                                 largeur: 100,
@@ -1415,19 +1792,22 @@ class _HomePageState extends State<HomePage> {
             bottom: 20,
             right: 20,
             child: ElevatedButton(
-              onPressed:()async{createTrip();},// createTrip,
+              onPressed: () async {
+                createTrip();
+              }, // createTrip,
               /*onPressed: (){     Navigator.push(
                   context, MaterialPageRoute(builder: (context) => CreateTripPage()));},*/
               style: ElevatedButton.styleFrom(
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(50)),
                 backgroundColor: const Color(0xffFFA18E),
                 elevation: 0.0,
                 fixedSize: Size(largeur * 0.183, largeur * 0.183),
               ),
-              child: const Icons_ESIWay(icon: "add_trip", largeur: 100, hauteur: 100),
+              child: const Icons_ESIWay(
+                  icon: "add_trip", largeur: 100, hauteur: 100),
             ),
           ),
-
         ],
       ),
     );

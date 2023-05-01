@@ -70,6 +70,7 @@ dependencies:
   url_launcher: ^6.1.10
   dropdown_search: ^5.0.6
   auto_size_text: ^3.0.0
+  flutter_native_splash: ^2.2.19
 
 
 
@@ -87,7 +88,7 @@ dev_dependencies:
 
 flutter_native_splash:
  color: "#FFFFFF"
- image: "lib/images/logo_app.png"
+ image: "lib/images/app.png"
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 

@@ -58,7 +58,7 @@ class _ProfileState extends State<Profile> with UserValidation {
         leading: Container(
           padding: EdgeInsets.only(left: 8),
           child: Center(
-            child: Image.asset(LOGO),
+            child: Image.asset(app),
           ),
         ),
         title: Text(

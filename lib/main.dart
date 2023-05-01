@@ -1,6 +1,3 @@
-import 'package:esiway/Screens/Profile/history.dart';
-import 'package:esiway/Screens/home/Create_trip.dart';
-import 'package:esiway/Screens/home/search_trip.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'Screens/SignIn_Up/authentification.dart';

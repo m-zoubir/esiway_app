@@ -71,6 +71,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
 //******************************************************************************************* */
 //******************************************************************************************* */
 //******************************************************************************************* */
+
         body: StreamBuilder(
           stream: FirebaseFirestore.instance.collection('Users').snapshots(),
           builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -104,6 +105,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
         )
         /*  */
         );
+
   }
 }
 

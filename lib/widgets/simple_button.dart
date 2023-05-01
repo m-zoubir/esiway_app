@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 
 class SimpleButton extends StatelessWidget {
   final Color backgroundcolor;
@@ -8,7 +9,8 @@ class SimpleButton extends StatelessWidget {
   final FontWeight weight;
   final Color textcolor;
   final double fontsize;
-  final VoidCallback fct;
+  final Function fct;
+  final double blur;
   const SimpleButton({
     required this.backgroundcolor,
     required this.size,
@@ -18,27 +20,35 @@ class SimpleButton extends StatelessWidget {
     this.weight = FontWeight.w500,
     required this.fontsize,
     required this.fct,
+    this.blur = 0,
   });
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
-      onPressed: fct ,
-      style: ElevatedButton.styleFrom(
-        backgroundColor: backgroundcolor,
-        elevation: 0.0,
-        fixedSize: size,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(radius),
+    return Container(
+      decoration:  BoxDecoration(boxShadow: [
+        BoxShadow(blurRadius: blur, color: Color.fromRGBO(32, 35, 108, 0.15))
+      ]),
+      child: ElevatedButton(
+        onPressed: () async {
+          fct();
+        },
+        style: ElevatedButton.styleFrom(
+          backgroundColor: backgroundcolor,
+          elevation: 0.0,
+          fixedSize: size,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(radius),
+          ),
         ),
-      ),
-      child: Text(
-        text,
-        style: TextStyle(
-          fontFamily: 'Montserrat',
-          fontWeight: weight,
-          color: textcolor,
-          fontSize: fontsize,
+        child: AutoSizeText(
+          text,
+          style: TextStyle(
+            fontFamily: 'Montserrat',
+            fontWeight: weight,
+            color: textcolor,
+            fontSize: fontsize,
+          ),
         ),
       ),
     );

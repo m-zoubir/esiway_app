@@ -1,3 +1,5 @@
+import 'package:esiway/Screens/Profile/admin.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -128,6 +130,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) => DeleteAccountPassword()));
                 }),
+            FirebaseAuth.instance.currentUser!.email == "lm_zoubir@esi.dz"
+                ? Listbox(
+                    title: "Adminstrator",
+                    iconleading: Icon(
+                      Icons.admin_panel_settings,
+                      color: vert,
+                    ),
+                    onPressed: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => AdminScreen()));
+                    })
+                : SizedBox(),
           ],
         ),
       ),

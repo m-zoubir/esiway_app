@@ -50,7 +50,7 @@ class OurPrefixeIconButton extends StatelessWidget {
         children: [
           Transform.scale(
               scale: sizebutton, // to make the icon smaller or larger
-              child: Icons_ESIWay(icon: "help", largeur: 20, hauteur: 20)),
+              child: Icons_ESIWay(icon: iconName, largeur: 20, hauteur: 20)),
           //  SizedBox(width: espaceicontext,),
           AutoSizeText(
             text,

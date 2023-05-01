@@ -1631,15 +1631,104 @@ class _HomePageState extends State<HomePage> {
                             SizedBox(height: hauteur * 0.01),
 
                             ///Places
-                            SizedBox(
-                                width: largeur * 0.2,
-                                height: hauteur * 0.025,
-                                child: MyText(
-                                    text: "Places",
-                                    weight: FontWeight.w700,
-                                    fontsize: 14,
-                                    color: Color(0xff20236C),
-                                    largeur: largeur * 0.2)),
+                            Row(
+                              children: [
+                                SizedBox(
+                                    width: largeur * 0.2,
+                                    height: hauteur * 0.025,
+                                    child: MyText(
+                                        text: "Places",
+                                        weight: FontWeight.w700,
+                                        fontsize: 14,
+                                        color: Color(0xff20236C),
+                                        largeur: largeur * 0.2)),
+                                SizedBox(width: 10),
+                                Container(
+                                  width: largeur * 0.4,
+                                  height: hauteur * 0.0625,
+                                  decoration: BoxDecoration(
+                                      boxShadow: const [
+                                        BoxShadow(
+                                            blurRadius: 18,
+                                            color: Color.fromRGBO(
+                                                32, 35, 108, 0.15))
+                                      ],
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(5)),
+                                  child: DropdownButtonFormField(
+                                    value: dropdownValue,
+                                    icon: const Icon(
+                                        Icons.arrow_drop_down_rounded,
+                                        color: Color(0xFF72D2C2)),
+                                    decoration: const InputDecoration(
+                                      enabledBorder: OutlineInputBorder(
+                                          borderSide:
+                                              BorderSide(color: Colors.white)),
+                                      focusedBorder: InputBorder.none,
+                                      filled: true,
+                                      fillColor: Colors.white,
+                                    ),
+                                    items: const [
+                                      DropdownMenuItem(
+                                        value: "-1",
+                                        child: Text(
+                                          "4",
+                                          style: TextStyle(
+                                              fontFamily: 'Montserrat',
+                                              fontWeight: FontWeight.w500,
+                                              color: Color(0xff20236C),
+                                              fontSize: 12),
+                                        ),
+                                      ),
+                                      DropdownMenuItem(
+                                        value: "1",
+                                        child: AutoSizeText(
+                                          "3",
+                                          style: TextStyle(
+                                              fontFamily: 'Montserrat',
+                                              fontWeight: FontWeight.w500,
+                                              color: Color(0xff20236C),
+                                              fontSize: 12),
+                                        ),
+                                      ),
+                                      DropdownMenuItem(
+                                        value: "2",
+                                        child: AutoSizeText(
+                                          "2",
+                                          style: TextStyle(
+                                              fontFamily: 'Montserrat',
+                                              fontWeight: FontWeight.w500,
+                                              color: Color(0xff20236C),
+                                              fontSize: 12),
+                                        ),
+                                      ),
+                                      DropdownMenuItem(
+                                        value: "3",
+                                        child: AutoSizeText(
+                                          "1",
+                                          style: TextStyle(
+                                              fontFamily: 'Montserrat',
+                                              fontWeight: FontWeight.w500,
+                                              color: Color(0xff20236C),
+                                              fontSize: 12),
+                                        ),
+                                      ),
+                                    ],
+                                    onChanged: (value) {
+                                      if (value == "1") {
+                                        methode = "Negociable";
+                                      }
+                                      ;
+                                      if (value == "2") {
+                                        methode = "Service";
+                                      }
+                                      ;
+                                      print(methode);
+                                    },
+                                  ),
+                                ),
+                              ],
+                            ),
 
                             SizedBox(height: hauteur * 0.05),
 
@@ -1673,37 +1762,17 @@ class _HomePageState extends State<HomePage> {
       bottomNavigationBar: BottomNavBar(currentindex: 3),
       body: Stack(
         children: [
-          /*  GoogleMap(
-            //Map widget from google_maps_flutter package
-            zoomGesturesEnabled: false, //enable Zoom in, out on map
-            initialCameraPosition: CameraPosition(
-              //innital position in map
-              target: startLocation, //initial position
-              zoom: 16.0, //initial zoom level
-            ),
-            markers: markers, //markers to show on map
-            polylines: Set<Polyline>.of(polylines.values), //polylines
-            mapType: MapType.normal, //map type
-            onMapCreated: (controller) {
-              //method called when map is created
-              setState(() {
-                mapController = controller;
-              });
-            },
-          ), */
           GoogleMap(
             //Map widget from google_maps_flutter package
             zoomGesturesEnabled: true, //enable Zoom in, out on map
             zoomControlsEnabled: false,
-
             initialCameraPosition: CameraPosition(
               //innital position in map
               target: startLocation, //initial position
-
-              zoom: 16.0, //initial zoom level
+              zoom: 14.0, //initial zoom level
             ),
             markers: markers, //markers to show on map
-            //  polylines: Set<Polyline>.of(polylines.values), //polylines
+            polylines: Set<Polyline>.of(polylines.values), //polylines
             mapType: MapType.normal, //map type
             onMapCreated: (controller) {
               //method called when map is created
@@ -1793,7 +1862,8 @@ class _HomePageState extends State<HomePage> {
             right: 20,
             child: ElevatedButton(
               onPressed: () async {
-                createTrip();
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => CreateTripPage()));
               }, // createTrip,
               /*onPressed: (){     Navigator.push(
                   context, MaterialPageRoute(builder: (context) => CreateTripPage()));},*/

@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:esiway/Screens/Profile/profile_screen.dart';
 import 'package:esiway/widgets/bottom_navbar.dart';
+import 'package:esiway/widgets/login_text.dart';
+import 'package:esiway/widgets/login_text_field.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -23,6 +25,7 @@ class HistoryScreen extends StatefulWidget {
 class _HistoryScreenState extends State<HistoryScreen> {
   @override
   Widget build(BuildContext context) {
+    int vari;
     return Scaffold(
         backgroundColor: color3,
         bottomNavigationBar: BottomNavBar(currentindex: 3),
@@ -68,19 +71,44 @@ class _HistoryScreenState extends State<HistoryScreen> {
 //******************************************************************************************* */
 //******************************************************************************************* */
 //******************************************************************************************* */
-        body: TripInfoResume(
-          arrival: "price",
-          /** */
-          departure: "price", //*** */
-          color:
-              orange.withOpacity(0.5), // if the current user isn't the driver
-          date: "date", //** */
-          name: "price", //** */
-          price: "price", //** */
-          time: "time", //** */
-        ));
+
+        body: StreamBuilder(
+          stream: FirebaseFirestore.instance.collection('Users').snapshots(),
+          builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+            if (snapshot.hasData) {
+              return ListView.builder(
+                  itemCount: snapshot.data!.docs.length,
+                  itemBuilder: (context, index) => TripInfoResume(
+                        arrival: snapshot.data?.docs[index]['Name'],
+                        /** */
+                        departure: "price", //*** */
+                        color: orange.withOpacity(
+                            0.5), // if the current user isn't the driver
+                        date: "date", //** */
+                        name: "price", //** */
+                        price: "price", //** */
+                        time: "time", //** */
+                      ));
+            } else {
+              return Container(
+                child: Text(
+                  "No history",
+                  style: TextStyle(
+                      color: bleu_bg,
+                      fontFamily: "Montserrat",
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold),
+                ),
+              );
+            }
+          },
+        )
+        /*  */
+        );
+
   }
 }
+
 //***********************************************************************************
 //************************************************************************************
 //*************************************************************************************

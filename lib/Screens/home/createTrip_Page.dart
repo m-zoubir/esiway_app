@@ -2,7 +2,6 @@ import 'dart:math';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 
 import '../../../widgets/constant.dart';
 
@@ -282,6 +281,7 @@ class _CreateTripPageState extends State<CreateTripPage> {
   }
 
   Future<void> next(
+      String conducteur,
       PointLatLng one,
       PointLatLng two,
       String depart,
@@ -292,6 +292,7 @@ class _CreateTripPageState extends State<CreateTripPage> {
       String places,
       String methode) async {
     final json = {
+      "Conducteur": conducteur,
       "Depart_LatLng": "$one",
       "Arrivee_LatLng": "$two",
       "Depart": depart,
@@ -1274,6 +1275,7 @@ class _CreateTripPageState extends State<CreateTripPage> {
                                 fontsize: 20,
                                 fct: () {
                                   next(
+                                      auth.currentUser!.uid,
                                       debut,
                                       fin,
                                       locationName!,

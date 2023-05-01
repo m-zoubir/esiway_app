@@ -73,7 +73,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
 //******************************************************************************************* */
 
         body: StreamBuilder(
-          stream: FirebaseFirestore.instance.collection('Users').snapshots(),
+          stream: FirebaseFirestore.instance.collection('Trips').snapshots(),
           builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
             if (snapshot.hasData) {
               return ListView.builder(
@@ -105,7 +105,6 @@ class _HistoryScreenState extends State<HistoryScreen> {
         )
         /*  */
         );
-
   }
 }
 

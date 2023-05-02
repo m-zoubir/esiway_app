@@ -1,8 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 
 class AuthService {
+  Future<void> setupInteractMsg() async {
+    FirebaseMessaging.instance.getInitialMessage();
+  }
+
   final auth = FirebaseAuth.instance;
   /*  Future<void> authAnonym() =>
       auth.signInAnonymously().then((credetial) => null);

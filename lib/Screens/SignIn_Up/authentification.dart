@@ -1,4 +1,5 @@
 import 'package:esiway/Screens/Profile/profile_screen.dart';
+import 'package:esiway/Screens/SignIn_Up/notification_page.dart';
 import 'package:esiway/Screens/SignIn_Up/registration_page.dart';
 import 'package:esiway/Screens/home/home_page.dart';
 

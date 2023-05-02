@@ -1,15 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:esiway/Screens/Profile/profile_screen.dart';
 import 'package:esiway/widgets/bottom_navbar.dart';
-import 'package:esiway/widgets/login_text.dart';
-import 'package:esiway/widgets/login_text_field.dart';
+
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_database/firebase_database.dart';
+
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_svg/svg.dart';
 
 import '../../widgets/constant.dart';
@@ -25,7 +20,15 @@ class HistoryScreen extends StatefulWidget {
 class _HistoryScreenState extends State<HistoryScreen> {
   @override
   Widget build(BuildContext context) {
-    int vari;
+    CollectionReference users = FirebaseFirestore.instance.collection('Users');
+
+    Future<String> getName(String uid) async {
+      DocumentSnapshot documentSnapshot = await users.doc(uid).get();
+
+      return documentSnapshot.get('Name');
+    }
+
+    final auth = FirebaseAuth.instance; // pour l'utilisateur
     return Scaffold(
         backgroundColor: color3,
         bottomNavigationBar: BottomNavBar(currentindex: 3),
@@ -79,15 +82,20 @@ class _HistoryScreenState extends State<HistoryScreen> {
               return ListView.builder(
                   itemCount: snapshot.data!.docs.length,
                   itemBuilder: (context, index) => TripInfoResume(
-                        arrival: snapshot.data?.docs[index]['Name'],
+                        //   profile_picture: snapshot.data?.docs[index][''],
+                        arrival: snapshot.data?.docs[index]['Arrivee'],
                         /** */
-                        departure: "price", //*** */
-                        color: orange.withOpacity(
-                            0.5), // if the current user isn't the driver
-                        date: "date", //** */
-                        name: "price", //** */
-                        price: "price", //** */
-                        time: "time", //** */
+                        departure: snapshot.data?.docs[index]
+                            ['Depart'], //*** */
+                        color: auth.currentUser!.uid ==
+                                snapshot.data?.docs[index]['Conducteur']
+                            ? orange.withOpacity(0.5)
+                            : bleu_ciel.withOpacity(
+                                0.5), // if the current user isn't the driver
+                        date: snapshot.data?.docs[index]['Date'], //** */
+                        name: "Zaidi", //** */
+                        price: snapshot.data?.docs[index]['Price'], //** */
+                        time: snapshot.data?.docs[index]['Heure'], //** */
                       ));
             } else {
               return Container(

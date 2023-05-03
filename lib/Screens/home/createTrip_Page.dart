@@ -83,11 +83,11 @@ class _CreateTripPageState extends State<CreateTripPage> {
   static bool animals =false ;
   static bool smoking = false;
   static bool others = false;
-  String? seats;
+  String? seats = "4";
 
 
-  String? date;
-  String? time;
+  String? date = "00/00/0000";
+  String? time = "00:00";
   String? minute;
   String? hour;
   TimeOfDay TimeNow = TimeOfDay(hour: DateTime.now().hour, minute: DateTime.now().minute);
@@ -253,6 +253,7 @@ class _CreateTripPageState extends State<CreateTripPage> {
   void toHome(){setState(() { Navigator.push(context, MaterialPageRoute(builder: (context) => const HomePage()));});}
   
   Future<void> createTrip(String conducteur, PointLatLng one, PointLatLng two, String depart, String arrivee, String date, String heure, String price, String places, String methode) async {
+    print('ttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt');
     final json = {
       "Conducteur": conducteur,
       "Depart_LatLng": "$one",
@@ -781,6 +782,7 @@ class _CreateTripPageState extends State<CreateTripPage> {
                                 textcolor: const Color(0xFF20236C),
                                 fontsize: 20,
                                 fct: (){
+                                  print('tttttttttttttttttttttttttttttihububyvyvugcgftc00');
                                   createTrip(
                                       auth.currentUser!.uid,
                                       debut,

@@ -1862,8 +1862,7 @@ class _HomePageState extends State<HomePage> {
             right: 20,
             child: ElevatedButton(
               onPressed: () async {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => CreateTripPage()));
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => CreateTripPage(markers: markers,mapController: mapController,polylinePoints: polylinePoints,polylines: polylines,distance: distance,)));
               }, // createTrip,
               /*onPressed: (){     Navigator.push(
                   context, MaterialPageRoute(builder: (context) => CreateTripPage()));},*/

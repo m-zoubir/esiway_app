@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import '../Screens/Profile/profile_screen.dart';
 import '../Screens/SignIn_Up/myTrips.dart';
@@ -16,6 +17,8 @@ const Color color1_disable = Color.fromARGB(0xFF, 0x70, 0x80, 0x90);
 const Color color4_disable = Color.fromARGB(0xFF, 0xFF, 0xA1, 0x8E);
 
 const String app = "Assets/Images/app.png";
+const String APIKEY="AIzaSyDHViWe1GaVUfN-w6tcCbdGFsPuHSiNwfw";
+const LatLng LocationEsi = const LatLng(36.705219106281575, 3.173786850126649);
 
 final isphone = RegExp(r'^(0|\+213)[5-7]( */d{2}){4}$');
 

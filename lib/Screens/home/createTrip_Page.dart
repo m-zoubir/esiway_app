@@ -117,7 +117,7 @@ class _CreateTripPageState extends State<CreateTripPage> {
     List<LatLng> polylineCoordinates = [];
     List<String> cities = [];
 
-    PolylineResult result = await  widget.polylinePoints.getRouteBetweenCoordinates(
+    PolylineResult result = await  polylinePoints.getRouteBetweenCoordinates(
       APIKEY,
       depart,
       arrival,
@@ -168,7 +168,7 @@ class _CreateTripPageState extends State<CreateTripPage> {
       points: polylineCoordinates,
       width: 8,
     );
-    widget.polylines[id] = polyline;
+    polylines[id] = polyline;
     setState(() {});
   }
   ///++++++++++++++++< Calculer la distance entre deux point >++++++++++++++++++///
@@ -277,11 +277,12 @@ class _CreateTripPageState extends State<CreateTripPage> {
     };
 
     await docTrips.doc(auth.currentUser?.uid).set(json);
+    print('teeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeese');
     setState(() {});
     getDirection(one,two);//fetch direction polylines from Google API
     ajouterMarkers(one);
     ajouterMarkers(two);
-     widget.mapController?.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(target: LatLng(one.latitude,one.longitude), zoom: 17)));
+     mapController?.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(target: LatLng(one.latitude,one.longitude), zoom: 17)));
   }
 
 
@@ -304,11 +305,11 @@ class _CreateTripPageState extends State<CreateTripPage> {
               zoom: 14.0, //initial zoom level
             ),
              markers:  widget.markers, //markers to show on map
-            polylines: Set<Polyline>.of(widget.polylines.values), //polylines
+            polylines: Set<Polyline>.of(polylines.values), //polylines
             mapType: MapType.normal, //map type
             onMapCreated: (controller) {
               //method called when map is created
-              setState(() {widget.mapController = controller;});
+              setState(() {mapController = controller;});
             },
           ),
           Positioned(
@@ -384,7 +385,7 @@ class _CreateTripPageState extends State<CreateTripPage> {
                                     location = newlatlang;
                                     debut = PointLatLng(newlatlang.latitude, newlatlang.longitude);
                                     //move map camera to selected place with animation
-                                     widget.mapController?.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(target: newlatlang, zoom: 17)));
+                                     mapController?.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(target: newlatlang, zoom: 17)));
                                      };
                                     setState(() {});
                                   },
@@ -469,7 +470,7 @@ class _CreateTripPageState extends State<CreateTripPage> {
                                       location = newlatlang;
                                       fin = PointLatLng(newlatlang.latitude, newlatlang.longitude);
                                       //move map camera to selected place with animation
-                                      widget.mapController?.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(target: newlatlang, zoom: 17)));
+                                     mapController?.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(target: newlatlang, zoom: 17)));
                                     };
                                     setState(() {});
                                   },

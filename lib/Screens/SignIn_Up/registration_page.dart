@@ -39,97 +39,85 @@ class _RegistrationPageState extends State<RegistrationPage> {
     final hauteur = MediaQuery.of(context).size.height;
 
     return SafeArea(
-      child: Container(
+      child: Scaffold(
+        backgroundColor: color3,
+        body: Container(
           decoration: const BoxDecoration(
             image: DecorationImage(
                 image: AssetImage('Assets/Images/Register.png'),
                 fit: BoxFit.fill),
           ),
-          child: Scaffold(
-            backgroundColor: color3,
-            body: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Column(
-                  children: [
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        InkWell(
-                          child: CarouselSlider(
-                            items: imageList
-                                .map((item) => Image.asset(item['image_path']))
-                                .toList(),
-                            carouselController: carouselController,
-                            options: CarouselOptions(
-                              scrollPhysics: const BouncingScrollPhysics(),
-                              autoPlay: true,
-                              // aspectRatio: 1,
-                              height: hauteur * 0.37,
-                              viewportFraction: 1,
-                              onPageChanged: (index, reason) {
-                                setState(() {
-                                  currentIndex = index;
-                                });
-                              },
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 0.011 * hauteur,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: imageList.asMap().entries.map((entry) {
-                            return GestureDetector(
-                              onTap: () =>
-                                  carouselController.animateToPage(entry.key),
-                              child: Container(
-                                width: currentIndex == entry.key ? 22 : 7,
-                                height: 7.0,
-                                margin:
-                                    const EdgeInsets.symmetric(horizontal: 3.0),
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    color: currentIndex == entry.key
-                                        ? const Color(0xFF20236C)
-                                        : const Color(0xFFDFE1E2)),
-                              ),
-                            );
-                          }).toList(),
-                        )
-                      ],
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              InkWell(
+                child: CarouselSlider(
+                  items: imageList
+                      .map((item) => Image.asset(item['image_path']))
+                      .toList(),
+                  carouselController: carouselController,
+                  options: CarouselOptions(
+                    scrollPhysics: const BouncingScrollPhysics(),
+                    autoPlay: true,
+                    // aspectRatio: 1,
+                    height: hauteur * 0.37,
+                    viewportFraction: 1,
+                    onPageChanged: (index, reason) {
+                      setState(() {
+                        currentIndex = index;
+                      });
+                    },
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 0.011 * hauteur,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: imageList.asMap().entries.map((entry) {
+                  return GestureDetector(
+                    onTap: () => carouselController.animateToPage(entry.key),
+                    child: Container(
+                      width: currentIndex == entry.key ? 22 : 7,
+                      height: 7.0,
+                      margin: const EdgeInsets.symmetric(horizontal: 3.0),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: currentIndex == entry.key
+                              ? const Color(0xFF20236C)
+                              : const Color(0xFFDFE1E2)),
                     ),
-                  ],
-                ),
-                SizedBox(
-                  height: hauteur * 0.07,
-                ),
-                Column(
-                  children: [
-                    SimpleButton(
-                        backgroundcolor: const Color(0xFFFFA18E),
-                        size: Size(largeur * 0.77777777777, hauteur * 0.073),
-                        radius: 15,
-                        text: 'Sign Up',
-                        textcolor: const Color(0xFF20236C),
-                        weight: FontWeight.w700,
-                        fontsize: 18,
-                        fct: signup),
-                    SimpleButton(
-                        backgroundcolor: const Color(0x00F9F8FF),
-                        size: Size(largeur * 0.77777777777, hauteur * 0.073),
-                        radius: 15,
-                        text: 'Log In',
-                        textcolor: const Color(0xFF20236C),
-                        weight: FontWeight.w700,
-                        fontsize: 18,
-                        fct: login),
-                  ],
-                )
-              ],
-            ),
-          )),
+                  );
+                }).toList(),
+              ),
+              SizedBox(
+                height: hauteur * 0.07,
+              ),
+              SimpleButton(
+                  backgroundcolor: const Color(0xFFFFA18E),
+                  size: Size(largeur * 0.77777777777, hauteur * 0.073),
+                  radius: 15,
+                  text: 'Sign Up',
+                  textcolor: const Color(0xFF20236C),
+                  weight: FontWeight.w700,
+                  fontsize: 18,
+                  blur: null,
+                  fct: signup),
+              SimpleButton(
+                  backgroundcolor: const Color(0x00F9F8FF),
+                  size: Size(largeur * 0.77777777777, hauteur * 0.073),
+                  radius: 15,
+                  text: 'Log In',
+                  textcolor: const Color(0xFF20236C),
+                  weight: FontWeight.w700,
+                  fontsize: 18,
+                  blur: null,
+                  fct: login)
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

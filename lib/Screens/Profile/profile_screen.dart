@@ -133,7 +133,7 @@ class _ProfileState extends State<Profile> with UserValidation {
                     ),
                     Container(
                       child: Text(
-                        "${name} ${familyName} ",
+                        "${name} ${familyName}",
                         style: TextStyle(
                           color: bleu_bg,
                           fontFamily: "Montserrat",
@@ -143,7 +143,21 @@ class _ProfileState extends State<Profile> with UserValidation {
                       ),
                     ),
                     const SizedBox(
-                      height: 8.0,
+                      height: 2.0,
+                    ),
+                    Container(
+                      child: Text(
+                        "${FirebaseAuth.instance.currentUser!.email}",
+                        style: TextStyle(
+                          color: bleu_bg,
+                          fontFamily: "Montserrat",
+                          fontSize: 12.0,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 4.0,
                     ),
                     data["hasCar"] == true
                         ? RatingBarIndicator(

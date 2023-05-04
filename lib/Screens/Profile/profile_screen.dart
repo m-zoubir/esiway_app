@@ -14,7 +14,6 @@ import '../SignIn_Up/login_page.dart';
 import 'car_information_screen.dart';
 import 'edit_profile_screen.dart';
 import 'settings_screen.dart';
-import 'verification_screen.dart';
 
 class Profile extends StatefulWidget {
   const Profile({super.key});
@@ -208,23 +207,6 @@ class _ProfileState extends State<Profile> with UserValidation {
                       title: "My car",
                       iconName: "car",
                       scale: 0.7,
-                    ),
-                    Listbox(
-                      onPressed: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) {
-                              return Verification();
-                            },
-                          ),
-                        );
-                      },
-                      subtitle: "(Email,phone number)",
-                      title: "Verify my account",
-                      iconleading: const Icon(
-                        Iconsax.verify5,
-                        color: vert,
-                      ),
                     ),
                     Listbox(
                       onPressed: () {

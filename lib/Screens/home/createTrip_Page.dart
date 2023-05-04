@@ -3,6 +3,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:esiway/widgets/prefixe_icon_button.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:geocoding/geocoding.dart';
 import '../../../widgets/constant.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_google_places/flutter_google_places.dart';
@@ -44,7 +45,6 @@ class _CreateTripPageState extends State<CreateTripPage> {
   void initState() {
     // TODO: implement initState
 
-    date = "${selectedDate.day} / ${selectedDate.month} / ${selectedDate.year}";
     minute = TimeNow.minute >= 10 ? "${TimeNow.minute}" : "0${TimeNow.minute}";
     hour = TimeNow.hour >= 10 ? "${TimeNow.hour}" : "0${TimeNow.hour}";
     time = hour! + " : " + minute!;
@@ -74,6 +74,7 @@ class _CreateTripPageState extends State<CreateTripPage> {
   LatLng? location;
   String? locationName;
   String? locationNamea;
+  List<Placemark>? placemarks;
 
   String paimentMethode="";
   String methode = "";
@@ -86,7 +87,7 @@ class _CreateTripPageState extends State<CreateTripPage> {
   String? seats = "4";
 
 
-  String? date = "00/00/0000";
+  String? date =  DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day,).toString() ;
   String? time = "00:00";
   String? minute;
   String? hour;
@@ -101,13 +102,13 @@ class _CreateTripPageState extends State<CreateTripPage> {
   ///=============================| Map Functions|===================================//
 
   ///+++++++++++++++++++++++++++++< ajouter Markers >+++++++++++++++++++++++++++///
-  ajouterMarkers(PointLatLng point) async{
+  ajouterMarkers(PointLatLng point,String title,String snippet) async{
     widget.markers.add(Marker( //add start location marker
       markerId: MarkerId(LatLng(point.latitude,point.longitude).toString()),
       position: LatLng(point.latitude,point.longitude), //position of marker
-      infoWindow: const InfoWindow( //popup info
-        title: 'Starting Point ',
-        snippet: 'Staaaaaaaaaaaaaaaaaaaart Marker',
+      infoWindow:  InfoWindow( //popup info
+        title: title,
+        snippet: snippet,
       ),
       icon: BitmapDescriptor.defaultMarker, //Icon for Marker
     ));
@@ -131,11 +132,20 @@ class _CreateTripPageState extends State<CreateTripPage> {
     } else {
       print(result.errorMessage);
     }
-    /*print('lenght ==');
+    print("===========================================================================================");
+    print("===========================================================================================");
+    print("===========================================================================================");
+    print("===========================================================================================");
+    print('lenght ==');
     print({polylineCoordinates.length} );
-    for (var i = 0; i < polylineCoordinates.length - 1; i+10) {
+    print("===========================================================================================");
+    print("===========================================================================================");
+    print("===========================================================================================");
+    print("===========================================================================================");
+
+    /*for (var i = 0; i < polylineCoordinates.length - 1; i+10) {
       print('Test');
-      List<Placemark> placemarks = await placemarkFromCoordinates(polylineCoordinates[i].latitude,polylineCoordinates[i].longitude);
+      placemarks = await placemarkFromCoordinates(polylineCoordinates[i].latitude,polylineCoordinates[i].longitude);
       String? city = placemarks[0].locality;
       cities.add(city!);
     }*/
@@ -253,7 +263,6 @@ class _CreateTripPageState extends State<CreateTripPage> {
   void toHome(){setState(() { Navigator.push(context, MaterialPageRoute(builder: (context) => const HomePage()));});}
   
   Future<void> createTrip(String conducteur, PointLatLng one, PointLatLng two, String depart, String arrivee, String date, String heure, String price, String places, String methode) async {
-    print('ttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt');
     final json = {
       "Conducteur": conducteur,
       "Depart_LatLng": "$one",
@@ -277,12 +286,13 @@ class _CreateTripPageState extends State<CreateTripPage> {
       debut = PointLatLng(positione.latitude, positione.longitude);
     };
 
-    await docTrips.doc(auth.currentUser?.uid).set(json);
-    print('teeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeese');
+    await docTrips.doc("${auth.currentUser?.uid}_$date-$heure").set(json);
+
+
     setState(() {});
     getDirection(one,two);//fetch direction polylines from Google API
-    ajouterMarkers(one);
-    ajouterMarkers(two);
+    ajouterMarkers(one,"Starting Location",locationName!);
+    ajouterMarkers(two,"Arrival Location",locationNamea!);
      mapController?.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(target: LatLng(one.latitude,one.longitude), zoom: 17)));
   }
 

@@ -892,9 +892,7 @@ class _HomePageState extends State<HomePage> {
               ),
             );
           });
-    }
-
-    ;
+    };
 
     void createTrip() async {
       await showModalBottomSheet(
@@ -1754,9 +1752,7 @@ class _HomePageState extends State<HomePage> {
             );
           });
       setState(() {});
-    }
-
-    ;
+    };
 
     return Scaffold(
       bottomNavigationBar: BottomNavBar(currentindex: 3),
@@ -1820,6 +1816,7 @@ class _HomePageState extends State<HomePage> {
                   padding: const EdgeInsets.symmetric(horizontal: 10.0),
                   child: Column(
                     children: [
+                      /// Search and notification Buttons
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
@@ -1864,8 +1861,7 @@ class _HomePageState extends State<HomePage> {
               onPressed: () async {
                     Navigator.push(context, MaterialPageRoute(builder: (context) => CreateTripPage(markers: markers,mapController: mapController,polylinePoints: polylinePoints,polylines: polylines,distance: distance,)));
               }, // createTrip,
-              /*onPressed: (){     Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => CreateTripPage()));},*/
+
               style: ElevatedButton.styleFrom(
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(50)),

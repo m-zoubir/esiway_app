@@ -82,7 +82,6 @@ class _HomePageState extends State<HomePage> {
 //======================================================================================================//
 
   ///=============================| Map Functions|===================================//
-
   ///++++++++++++++++++++++++< get Direction(draw polylines) >++++++++++++++++++///
   getDirections() async {
     List<LatLng> polylineCoordinates = [];
@@ -128,7 +127,6 @@ class _HomePageState extends State<HomePage> {
   PointLatLng fin = const PointLatLng(36.64364699576445, 2.9943386163692787);
 
   ///+++++++++++++++++++++++++++++< ajouter Markers >+++++++++++++++++++++++++++///
-
   ajouterMarkers(PointLatLng point) async {
     markers.add(Marker(
       //add start location marker
@@ -144,7 +142,6 @@ class _HomePageState extends State<HomePage> {
   }
 
   ///-----------------------------< get Direction 2 >---------------------------///
-
   getDirection(PointLatLng depart, PointLatLng arrival) async {
     List<LatLng> polylineCoordinates = [];
     List<String> cities = [];
@@ -193,7 +190,6 @@ class _HomePageState extends State<HomePage> {
   }
 
   ///+++++++++++++++++++++++++++++< Add Polyline >++++++++++++++++++++++++++++++///
-
   addPolyLine(List<LatLng> polylineCoordinates) {
     PolylineId id = const PolylineId("poly");
     Polyline polyline = Polyline(
@@ -207,7 +203,6 @@ class _HomePageState extends State<HomePage> {
   }
 
   ///++++++++++++++++< Calculer la distance entre deux point >++++++++++++++++++///
-
   double calculateDistance(lat1, lon1, lat2, lon2) {
     var p = 0.017453292519943295;
     var a = 0.5 -
@@ -217,7 +212,6 @@ class _HomePageState extends State<HomePage> {
   }
 
   ///+++++++++++++++++++++++< Position actuel >+++++++++++++++++++++++++++++++++///
-
   Future<Position> determinePosition() async {
     bool serviceEnabled;
     LocationPermission permission;
@@ -246,7 +240,6 @@ class _HomePageState extends State<HomePage> {
   }
 
   /// test
-
 //==============================| Controllers |=============================//
   TextEditingController arrivalcontroller = TextEditingController();
 

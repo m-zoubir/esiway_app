@@ -408,7 +408,7 @@ class _HomePageState extends State<HomePage> {
           context: context,
           builder: (context) {
             return Scaffold(
-              bottomNavigationBar: BottomNavBar(currentindex: 3),
+              bottomNavigationBar: BottomNavBar(currentindex: 0),
               body: SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -892,14 +892,16 @@ class _HomePageState extends State<HomePage> {
               ),
             );
           });
-    };
+    }
+
+    ;
 
     void createTrip() async {
       await showModalBottomSheet(
           context: context,
           builder: (context) {
             return Scaffold(
-              bottomNavigationBar: BottomNavBar(currentindex: 3),
+              bottomNavigationBar: BottomNavBar(currentindex: 0),
               body: SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -1752,10 +1754,12 @@ class _HomePageState extends State<HomePage> {
             );
           });
       setState(() {});
-    };
+    }
+
+    ;
 
     return Scaffold(
-      bottomNavigationBar: BottomNavBar(currentindex: 3),
+      bottomNavigationBar: BottomNavBar(currentindex: 0),
       body: Stack(
         children: [
           GoogleMap(
@@ -1859,7 +1863,16 @@ class _HomePageState extends State<HomePage> {
             right: 20,
             child: ElevatedButton(
               onPressed: () async {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => CreateTripPage(markers: markers,mapController: mapController,polylinePoints: polylinePoints,polylines: polylines,distance: distance,)));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => CreateTripPage(
+                              markers: markers,
+                              mapController: mapController,
+                              polylinePoints: polylinePoints,
+                              polylines: polylines,
+                              distance: distance,
+                            )));
               }, // createTrip,
 
               style: ElevatedButton.styleFrom(

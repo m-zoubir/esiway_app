@@ -11,7 +11,6 @@ import '../../widgets/icons_ESIWay.dart';
 import '../../widgets/text_validation.dart';
 import '../../widgets/tile_list.dart';
 import '../SignIn_Up/login_page.dart';
-import '../home/rating.dart';
 import 'car_information_screen.dart';
 import 'edit_profile_screen.dart';
 import 'settings_screen.dart';

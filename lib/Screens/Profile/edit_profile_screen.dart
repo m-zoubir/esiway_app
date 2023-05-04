@@ -51,6 +51,7 @@ class EditProfileInfo extends StatelessWidget {
                 Lastname: data["FamilyName"],
                 Gender: data["Gender"],
                 Status: data["Status"],
+                Phone: data["Phone"],
                 ImageUrl: data.containsKey("ProfilePicture")
                     ? data["ProfilePicture"]
                     : null,
@@ -62,6 +63,7 @@ class EditProfileInfo extends StatelessWidget {
                 Lastname: "Family Name",
                 Gender: "Male",
                 Status: "Student",
+                Phone: "Phone",
               );
             }
           }
@@ -81,9 +83,11 @@ class EditProfile extends StatefulWidget {
       required this.Gender,
       required this.Status,
       required this.Lastname,
+      required this.Phone,
       this.ImageUrl});
 
   String Lastname;
+  String Phone;
   String Name;
   String? Birth;
   String Gender;
@@ -101,7 +105,6 @@ class _EditProfileState extends State<EditProfile> with UserValidation {
 
   bool namevalidate = true;
   bool lastNamevalidate = true;
-  bool emailvalidate = true;
   bool phonevalidate = true;
 
   bool? gender = false;
@@ -119,6 +122,8 @@ class _EditProfileState extends State<EditProfile> with UserValidation {
     super.initState();
     namecontroller.text = widget.Name;
     lastNamecontroller.text = widget.Lastname;
+    phonecontroller.text = widget.Phone;
+
     imageUrl = widget.ImageUrl;
     birth = widget.Birth;
     if (widget.Gender == "Male") gender = true;
@@ -151,7 +156,7 @@ class _EditProfileState extends State<EditProfile> with UserValidation {
 
   TextEditingController namecontroller = TextEditingController();
   TextEditingController lastNamecontroller = TextEditingController();
-
+  TextEditingController phonecontroller = TextEditingController();
   File? _image;
 
   // This is the image picker
@@ -189,6 +194,7 @@ class _EditProfileState extends State<EditProfile> with UserValidation {
       "FamilyName": lastNamecontroller.text,
       "Gender": genderget(),
       "Status": workget(),
+      "Phone": phonecontroller.text,
       "Birth":
           "${selectedDate.day} - ${selectedDate.month} - ${selectedDate.year}",
     }).then((value) => Navigator.of(context).push(
@@ -385,6 +391,17 @@ class _EditProfileState extends State<EditProfile> with UserValidation {
                 height: MediaQuery.of(context).size.height * 0.008,
               ),
 //*****************************************************************************/
+              Text_Field(
+                  title: "Phone Number",
+                  hinttext: "Phone Number",
+                  validate: phonevalidate,
+                  error: "VNot a phone number ",
+                  suffixicon: Icon(Icons.edit, color: color6),
+                  textfieldcontroller: phonecontroller),
+              SizedBox(
+                height: MediaQuery.of(context).size.height * 0.008,
+              ),
+//*****************************************************************************/
               TitleTextFeild(title: "Gender"),
               SizedBox(
                 height: 10.0,
@@ -560,6 +577,16 @@ class _EditProfileState extends State<EditProfile> with UserValidation {
                           lastNamevalidate = true;
                         });
                         print(lastNamecontroller.text);
+                      }
+                      if (isPhone(phonecontroller.text) == false)
+                        setState(() {
+                          phonevalidate = false;
+                        });
+                      else {
+                        setState(() {
+                          phonevalidate = true;
+                        });
+                        print(phonecontroller.text);
                       }
 
                       if (gender == true)

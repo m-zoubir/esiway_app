@@ -1,3 +1,4 @@
+import 'package:esiway/widgets/bottom_navbar.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import '../../widgets/button.dart';
@@ -94,50 +95,7 @@ class _CreateTripState extends State<CreateTrip> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: color3,
-      bottomNavigationBar: BottomNavigationBar(
-        fixedColor: Theme.of(context).scaffoldBackgroundColor,
-        type: BottomNavigationBarType.fixed,
-        currentIndex: _currentindex,
-        unselectedIconTheme: const IconThemeData(color: bleu_bg),
-        selectedIconTheme: const IconThemeData(color: vert),
-        items: const [
-          BottomNavigationBarItem(
-            label: "",
-            icon: Icon(
-              Iconsax.home_2,
-            ),
-          ),
-          BottomNavigationBarItem(
-            label: "",
-            icon: Icon(
-              Iconsax.home_2,
-            ),
-          ),
-          BottomNavigationBarItem(
-            label: "",
-            icon: Icon(
-              Iconsax.home_2,
-            ),
-          ),
-          BottomNavigationBarItem(
-            label: "",
-            icon: Icon(
-              Iconsax.user,
-            ),
-          ),
-        ],
-        onTap: (index) {
-          setState(() {
-            _selectedindex = index;
-          });
-          if (_selectedindex != _currentindex)
-            Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) {
-                return tab[_selectedindex];
-              }),
-            );
-        },
-      ),
+      bottomNavigationBar: BottomNavBar(currentindex: 0),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.white,
         onPressed: () {

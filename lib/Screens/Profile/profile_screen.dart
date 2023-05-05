@@ -11,11 +11,9 @@ import '../../widgets/icons_ESIWay.dart';
 import '../../widgets/text_validation.dart';
 import '../../widgets/tile_list.dart';
 import '../SignIn_Up/login_page.dart';
-import '../home/rating.dart';
 import 'car_information_screen.dart';
 import 'edit_profile_screen.dart';
 import 'settings_screen.dart';
-import 'verification_screen.dart';
 
 class Profile extends StatefulWidget {
   const Profile({super.key});
@@ -135,7 +133,7 @@ class _ProfileState extends State<Profile> with UserValidation {
                     ),
                     Container(
                       child: Text(
-                        "${name} ${familyName} ",
+                        "${name} ${familyName}",
                         style: TextStyle(
                           color: bleu_bg,
                           fontFamily: "Montserrat",
@@ -145,7 +143,21 @@ class _ProfileState extends State<Profile> with UserValidation {
                       ),
                     ),
                     const SizedBox(
-                      height: 8.0,
+                      height: 2.0,
+                    ),
+                    Container(
+                      child: Text(
+                        "${FirebaseAuth.instance.currentUser!.email}",
+                        style: TextStyle(
+                          color: bleu_bg,
+                          fontFamily: "Montserrat",
+                          fontSize: 12.0,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 4.0,
                     ),
                     data["hasCar"] == true
                         ? RatingBarIndicator(
@@ -209,23 +221,6 @@ class _ProfileState extends State<Profile> with UserValidation {
                       title: "My car",
                       iconName: "car",
                       scale: 0.7,
-                    ),
-                    Listbox(
-                      onPressed: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) {
-                              return Verification();
-                            },
-                          ),
-                        );
-                      },
-                      subtitle: "(Email,phone number)",
-                      title: "Verify my account",
-                      iconleading: const Icon(
-                        Iconsax.verify5,
-                        color: vert,
-                      ),
                     ),
                     Listbox(
                       onPressed: () {

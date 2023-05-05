@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:esiway/Screens/Profile/admin.dart';
+import 'package:esiway/Screens/Profile/admin_usertrip.dart';
 import 'package:esiway/Screens/Profile/user_car_info.dart';
 import 'package:esiway/widgets/alertdialog.dart';
 import 'package:esiway/widgets/icons_ESIWay.dart';
@@ -11,11 +11,19 @@ import 'package:iconsax/iconsax.dart';
 import '../../widgets/button.dart';
 import '../../widgets/constant.dart';
 import '../../widgets/prefixe_icon_button.dart';
-import '../../widgets/title_text_field.dart';
+import '../../widgets/rich_text.dart';
+import 'admin_users.dart';
 
 class UserProfile extends StatefulWidget {
-  UserProfile({Key? key, required this.uid}) : super(key: key);
+  UserProfile(
+      {Key? key,
+      required this.uid,
+      required this.email,
+      required this.password})
+      : super(key: key);
   String? uid;
+  String? email;
+  String? password;
 
   @override
   State<UserProfile> createState() => _UserProfileState();
@@ -23,22 +31,23 @@ class UserProfile extends StatefulWidget {
 
 class _UserProfileState extends State<UserProfile> {
   void back() {
-    Navigator.of(context).pop();
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (context) => AdminInfoUsers()));
   }
 
   void initState() {
     super.initState();
-
     _reference = FirebaseFirestore.instance.collection('Users').doc(widget.uid);
     _futureData = _reference.get();
+    FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: widget.email!, password: widget.password!);
   }
 
   late DocumentReference _reference;
 
-  //_reference.get()  --> returns Future<DocumentSnapshot>
-  //_reference.snapshots() --> Stream<DocumentSnapshot>
   late Future<DocumentSnapshot> _futureData;
   late Map data;
+  Timestamp? createdAt;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,6 +56,7 @@ class _UserProfileState extends State<UserProfile> {
           future: _futureData,
           builder: (BuildContext context, AsyncSnapshot snapshot) {
             if (snapshot.hasError) {
+              print('Error ${snapshot.error}');
               return Center(child: CircularProgressIndicator());
             }
 
@@ -54,8 +64,7 @@ class _UserProfileState extends State<UserProfile> {
               //Get the data
               DocumentSnapshot documentSnapshot = snapshot.data;
               data = documentSnapshot.data() as Map;
-
-              //display the data
+              createdAt = data["CreatedAt"];
               return SafeArea(
                 child: Column(
                   children: [
@@ -76,34 +85,29 @@ class _UserProfileState extends State<UserProfile> {
                                 )),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Container(
                             margin: EdgeInsets.only(top: 20, left: 20),
                             width: 80,
-                            height: 30,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                PrefixeIconButton(
-                                    size: const Size(73, 34),
-                                    color: Colors.white,
-                                    radius: 8,
-                                    text: "Back",
-                                    textcolor: Color(0xFF20236C),
-                                    weight: FontWeight.w600,
-                                    fontsize: 14,
-                                    icon: const Icon(
-                                      Icons.arrow_back_ios_new_rounded,
-                                      color: Color(0xFF72D2C2),
-                                      size: 18,
-                                    ),
-                                    espaceicontext: 5.0,
-                                    fct: back),
-                              ],
-                            ),
-                          ),
-                          SizedBox(
-                            height: MediaQuery.of(context).size.height * 0.183,
+                            height: 35,
+                            child: PrefixeIconButton(
+                                size: const Size(73, 34),
+                                color: Colors.white,
+                                radius: 8,
+                                text: "Back",
+                                textcolor: Color(0xFF20236C),
+                                weight: FontWeight.w600,
+                                fontsize: 14,
+                                icon: Transform.scale(
+                                  scale: 0.75,
+                                  child: Icons_ESIWay(
+                                      icon: "arrow_left",
+                                      largeur: 30,
+                                      hauteur: 30),
+                                ),
+                                espaceicontext: 5.0,
+                                fct: back),
                           ),
                           Container(
                             height: 50,
@@ -149,7 +153,7 @@ class _UserProfileState extends State<UserProfile> {
                                             data["hasCar"] == false
                                         ? SizedBox()
                                         : RatingBarIndicator(
-                                            rating: //data["Rating"],
+                                            rating: // data["Rating"],
                                                 2.5,
                                             itemBuilder: (context, index) =>
                                                 Icon(
@@ -235,11 +239,6 @@ class _UserProfileState extends State<UserProfile> {
                                                     try {
                                                       await Car.delete();
                                                       await Policy.delete();
-                                                      await FirebaseFirestore
-                                                          .instance
-                                                          .collection("Users")
-                                                          .doc("${widget.uid}")
-                                                          .delete();
                                                     } catch (e) {
                                                       print(
                                                           "The fle doesn't exists");
@@ -249,6 +248,15 @@ class _UserProfileState extends State<UserProfile> {
                                                     } catch (e) {
                                                       print(
                                                           "The fle doesn't exists");
+                                                    }
+                                                    try {
+                                                      await FirebaseFirestore
+                                                          .instance
+                                                          .collection("Users")
+                                                          .doc("${widget.uid}")
+                                                          .delete();
+                                                    } catch (e) {
+                                                      print(e);
                                                     }
 
                                                     try {
@@ -261,10 +269,18 @@ class _UserProfileState extends State<UserProfile> {
                                                       print(
                                                           "The file doesn't exists");
                                                     }
+                                                    try {
+                                                      FirebaseAuth
+                                                          .instance.currentUser!
+                                                          .delete();
+                                                    } catch (e) {
+                                                      print(e);
+                                                    }
+
                                                     Navigator.of(context).push(
                                                         MaterialPageRoute(
                                                             builder: (context) =>
-                                                                AdminScreen()));
+                                                                AdminInfoUsers()));
                                                   },
                                                 ),
                                               );
@@ -301,63 +317,35 @@ class _UserProfileState extends State<UserProfile> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          TitleTextFeild(title: "Email"),
-                          SizedBox(
-                            height: 5,
-                          ),
-                          Text(
-                            "${data["Email"]}",
-                            style: TextStyle(
-                                color: bleu_bg,
-                                fontSize: 12,
-                                fontWeight: FontWeight.normal,
-                                fontFamily: "Montserat"),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              CustomRichText(
+                                  title: "Email", value: "${data["Email"]}"),
+                              CustomRichText(
+                                  title: "Phone", value: "${data["Phone"]}"),
+                            ],
                           ),
                           SizedBox(
                             height: 20,
                           ),
-                          TitleTextFeild(title: "Phone"),
-                          SizedBox(
-                            height: 5,
-                          ),
-                          Text(
-                            "${data["Phone"]}",
-                            style: TextStyle(
-                                color: bleu_bg,
-                                fontSize: 12,
-                                fontWeight: FontWeight.normal,
-                                fontFamily: "Montserat"),
-                          ),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          TitleTextFeild(title: "Password"),
-                          SizedBox(
-                            height: 5,
-                          ),
-                          Text(
-                            "${data["Password"]}",
-                            style: TextStyle(
-                                color: bleu_bg,
-                                fontSize: 12,
-                                fontWeight: FontWeight.normal,
-                                fontFamily: "Montserat"),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              CustomRichText(
+                                  title: "Password",
+                                  value: "${data["Password"]}"),
+                              CustomRichText(
+                                  title: "Gender        ",
+                                  value: "${data["Gender"]}"),
+                            ],
                           ),
                           SizedBox(
                             height: 20,
                           ),
-                          TitleTextFeild(title: "Created at"),
-                          SizedBox(
-                            height: 5,
-                          ),
-                          Text(
-                            "${data["CreatedAt"]}",
-                            style: TextStyle(
-                                color: bleu_bg,
-                                fontSize: 12,
-                                fontWeight: FontWeight.normal,
-                                fontFamily: "Montserat"),
-                          ),
+                          CustomRichText(
+                              title: "Member since",
+                              value: "${createdAt!.toDate()}"),
                           SizedBox(
                             height: 25,
                           ),
@@ -380,7 +368,17 @@ class _UserProfileState extends State<UserProfile> {
                           SizedBox(
                             height: 20,
                           ),
-                          TitleTextFeild(title: "Review"),
+                          Container(
+                            child: Button(
+                                color: orange,
+                                title: "Trips",
+                                onPressed: () {
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (context) => UserTrips()));
+                                }),
+                            height: 37,
+                            width: double.infinity,
+                          ),
                         ],
                       ),
                     ),

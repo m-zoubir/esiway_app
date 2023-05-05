@@ -286,23 +286,6 @@ class _SearchTripPageState extends State<SearchTripPage> {
 
 
 
-  /*Future<Object?> getDataFromFirebase(String docId) async {
-    final docTrips = FirebaseFirestore.instance.collection("Trips");
-    final auth = FirebaseAuth.instance;
-
-    DocumentSnapshot snapshot = await docTrips.doc(docId).get();
-    if (snapshot.exists) {
-      return snapshot.data();
-    } else {
-      return null;
-    }
-  }Map<String, dynamic>? data = await getDataFromFirebase("${auth.currentUser?.uid}_$date-$heure");
-if (data != null) {
-  // Access the data from the Map object here
-} else {
-  // Handle the case where the document doesn't exist
-}*/
-
   @override
   Widget build(BuildContext context) {
 

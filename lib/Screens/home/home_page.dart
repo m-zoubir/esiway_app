@@ -1573,7 +1573,7 @@ class _HomePageState extends State<HomePage> {
                                     textcolor: bleu_bg,
                                     fontsize: 12,
                                     fct: () {
-                                      (talking = !talking)!;
+                                      (talking = !talking);
                                       setState(() {});
                                     },
                                     blur: 18),
@@ -1587,7 +1587,7 @@ class _HomePageState extends State<HomePage> {
                                     textcolor: bleu_bg,
                                     fontsize: 12,
                                     fct: () {
-                                      (animals = !animals)!;
+                                      (animals = !animals);
                                       setState(() {});
                                     },
                                     blur: 18),
@@ -1606,7 +1606,7 @@ class _HomePageState extends State<HomePage> {
                                     textcolor: bleu_bg,
                                     fontsize: 12,
                                     fct: () {
-                                      (smoking = !smoking)!;
+                                      (smoking = !smoking);
                                       setState(() {});
                                     },
                                     blur: 18),
@@ -1621,7 +1621,7 @@ class _HomePageState extends State<HomePage> {
                                     textcolor: bleu_bg,
                                     fontsize: 12,
                                     fct: () {
-                                      (others = !others)!;
+                                      (others = !others);
                                       setState(() {});
                                     },
                                     blur: 18),

@@ -17,7 +17,7 @@ class SimpleButton extends StatelessWidget {
     required this.radius,
     required this.text,
     required this.textcolor,
-    this.weight = FontWeight.w500,
+    this.weight = FontWeight.w600,
     required this.fontsize,
     required this.fct,
     this.blur = 0,
@@ -25,10 +25,7 @@ class SimpleButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration:  BoxDecoration(boxShadow: [
-        BoxShadow(blurRadius: blur, color: Color.fromRGBO(32, 35, 108, 0.15))
-      ]),
+    return SizedBox(
       child: ElevatedButton(
         onPressed: () async {
           fct();

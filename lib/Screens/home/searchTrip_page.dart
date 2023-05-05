@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:math';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -21,27 +22,27 @@ import 'home_page.dart';
 
 
 
-class CreateTripPage extends StatefulWidget {
+class SearchTripPage extends StatefulWidget {
   Set<Marker> markers = Set(); //markers for google map
   GoogleMapController? mapController; //controller for Google map
   PolylinePoints polylinePoints = PolylinePoints();
   Map<PolylineId, Polyline> polylines = {};//polylines to show direction
   double distance = 0.0;
 
-  CreateTripPage({
+  SearchTripPage({
     super.key,
     required this.markers,
     required this.mapController,
     required this.polylinePoints,
     required this.polylines,
     required this.distance,
-});
+  });
 
   @override
-  State<CreateTripPage> createState() => _CreateTripPageState();
+  State<SearchTripPage> createState() => _SearchTripPageState();
 }
 
-class _CreateTripPageState extends State<CreateTripPage> {
+class _SearchTripPageState extends State<SearchTripPage> {
 
 
   void initState() {
@@ -57,7 +58,6 @@ class _CreateTripPageState extends State<CreateTripPage> {
     Variables.fin = const PointLatLng(36.72376684085901,2.991892973393687);
     Variables.polylineCoordinates = [];
     Variables.created = false;
-
     super.initState();
   }
 
@@ -78,21 +78,13 @@ class _CreateTripPageState extends State<CreateTripPage> {
   Map<PolylineId, Polyline> polylines = {};//polylines to show direction
   double distance = 0.0;
   static LatLng startLocation = const LatLng(36.705219106281575, 3.173786850126649);
-  LatLng endLocation = const LatLng(36.687677024859354, 2.9965016961469324);
   LatLng? location;
   String? locationName;
   String? locationNamea;
   List<Placemark>? placemarks;
 
-  String paimentMethode="";
-  String methode = "";
   DateTime selectedDate = DateTime.now();
-  static bool bags =false;
-  static bool talking = false;
-  static bool animals =false ;
-  static bool smoking = false;
-  static bool others = false;
-  String? seats = "4";
+
   int i=0;
 
 
@@ -102,8 +94,6 @@ class _CreateTripPageState extends State<CreateTripPage> {
   String? minute;
   String? hour;
   TimeOfDay TimeNow = TimeOfDay(hour: DateTime.now().hour, minute: DateTime.now().minute);
-  TextEditingController pricecontroller = TextEditingController();
-
 
 //======================================================================================================//
 //=========================================| Functions |================================================//
@@ -245,7 +235,7 @@ class _CreateTripPageState extends State<CreateTripPage> {
       });
     }
   }
- ///+++++++++++++++++++++++< Date Picker >+++++++++++++++++++++++++++++++++///
+  ///+++++++++++++++++++++++< Date Picker >+++++++++++++++++++++++++++++++++///
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
         context: context,
@@ -265,21 +255,8 @@ class _CreateTripPageState extends State<CreateTripPage> {
   }
 
   void toHome(){setState(() { Navigator.push(context, MaterialPageRoute(builder: (context) => const HomePage()));});}
-  
-  Future<void> createTrip(String conducteur, PointLatLng one, PointLatLng two, String depart, String arrivee, String date, String heure, String price, String places, String methode) async {
-    final json = {
-      "Conducteur": conducteur,
-      "Depart_LatLng": "$one",
-      "Arrivee_LatLng": "$two",
-      "Depart": depart,
-      "Arrivee": arrivee,
-      "Date": "$date",
-      "Heure": "$heure",
-      "Price": price,
-      "Places": places,
-      "methode": methode,
-      //prefrences
-    };
+
+  Future<void> searchTrip(String conducteur, PointLatLng one, PointLatLng two, String depart, String arrivee, String date, String heure) async {
 
     if( depart == "Current Location"){
       Position positione = await determinePosition();
@@ -290,24 +267,47 @@ class _CreateTripPageState extends State<CreateTripPage> {
       Variables.debut = PointLatLng(positione.latitude, positione.longitude);
     };
 
-    await docTrips.doc("${auth.currentUser?.uid}_$date-$heure").set(json);
-
-
     setState(() {});
+    print('object1');
     getDirection(one,two);//fetch direction polylines from Google API
+    print('object2');
+
     ajouterMarkers(one,"Starting Location",depart);
+    print('object3');
+
     ajouterMarkers(two,"Arrival Location",arrivee);
-     mapController?.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(target: LatLng(one.latitude,one.longitude), zoom: 17)));
+    print('object4');
+
+    mapController?.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(target: LatLng(one.latitude,one.longitude), zoom: 17)));
   }
 
 
+
+
+
+
+  /*Future<Object?> getDataFromFirebase(String docId) async {
+    final docTrips = FirebaseFirestore.instance.collection("Trips");
+    final auth = FirebaseAuth.instance;
+
+    DocumentSnapshot snapshot = await docTrips.doc(docId).get();
+    if (snapshot.exists) {
+      return snapshot.data();
+    } else {
+      return null;
+    }
+  }Map<String, dynamic>? data = await getDataFromFirebase("${auth.currentUser?.uid}_$date-$heure");
+if (data != null) {
+  // Access the data from the Map object here
+} else {
+  // Handle the case where the document doesn't exist
+}*/
 
   @override
   Widget build(BuildContext context) {
 
     var largeur = MediaQuery.of(context).size.width;
     var hauteur = MediaQuery.of(context).size.height;
-    var dropdownValue = "-1"; // drop down value
 
     return Scaffold(
       body: Stack(
@@ -317,9 +317,9 @@ class _CreateTripPageState extends State<CreateTripPage> {
             zoomGesturesEnabled: true, //enable Zoom in, out on map
             initialCameraPosition: CameraPosition(//innital position in map
               target: startLocation, //initial position
-              zoom: 14.0, //initial zoom level
+              zoom: 12.0, //initial zoom level
             ),
-             markers:  widget.markers, //markers to show on map
+            markers:  widget.markers, //markers to show on map
             polylines: Set<Polyline>.of(polylines.values), //polylines
             mapType: MapType.normal, //map type
             onMapCreated: (controller) {
@@ -331,7 +331,7 @@ class _CreateTripPageState extends State<CreateTripPage> {
             bottom:0,
             child:  SizedBox(
               width: largeur,
-              height: hauteur*0.7125,
+              height: hauteur*0.43,
               child: SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -370,7 +370,7 @@ class _CreateTripPageState extends State<CreateTripPage> {
                                 children: [
                                   ///Search places
                                   InkWell(
-                                   onTap: () async {
+                                    onTap: () async {
                                       var place = await PlacesAutocomplete.show(
                                           context: context,
                                           apiKey: APIKEY,
@@ -378,51 +378,51 @@ class _CreateTripPageState extends State<CreateTripPage> {
                                           types: [],
                                           strictbounds: false,
                                           components: [Component(Component.country, 'dz')],
-                                         //google_map_webservice package
+                                          //google_map_webservice package
                                           onError: (err){
-                                          print(err);
+                                            print(err);
                                           }
-                                        );
-                                   if(place != null){
-                                    setState(() {
-                                    Variables.locationName = place.description.toString();
-                                    print( Variables.locationName);
-                                     });
+                                      );
+                                      if(place != null){
+                                        setState(() {
+                                          Variables.locationName = place.description.toString();
+                                          print( Variables.locationName);
+                                        });
 
-                    //form google_maps_webservice package
-                                    final plist = GoogleMapsPlaces(apiKey:APIKEY, apiHeaders: await const GoogleApiHeaders().getHeaders());
-                                    String placeid = place.placeId ?? "0";
-                                    final detail = await plist.getDetailsByPlaceId(placeid);
-                                    final geometry = detail.result.geometry!;
-                                    final lat = geometry.location.lat;
-                                    final lang = geometry.location.lng;
-                                    var newlatlang = LatLng(lat, lang);
-                                    location = newlatlang;
-                                    debut = PointLatLng(newlatlang.latitude, newlatlang.longitude);
-                                    //move map camera to selected place with animation
-                                     mapController?.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(target: newlatlang, zoom: 17)));
-                                     };
-                                    setState(() {});
-                                  },
+                                        //form google_maps_webservice package
+                                        final plist = GoogleMapsPlaces(apiKey:APIKEY, apiHeaders: await const GoogleApiHeaders().getHeaders());
+                                        String placeid = place.placeId ?? "0";
+                                        final detail = await plist.getDetailsByPlaceId(placeid);
+                                        final geometry = detail.result.geometry!;
+                                        final lat = geometry.location.lat;
+                                        final lang = geometry.location.lng;
+                                        var newlatlang = LatLng(lat, lang);
+                                        location = newlatlang;
+                                        debut = PointLatLng(newlatlang.latitude, newlatlang.longitude);
+                                        //move map camera to selected place with animation
+                                        mapController?.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(target: newlatlang, zoom: 17)));
+                                      };
+                                      setState(() {});
+                                    },
                                     child: Row(
-                                        children: [
-                                          SizedBox(width: largeur*0.02),
-                                          Icons_ESIWay(icon: 'search', largeur: largeur*0.08, hauteur: largeur*0.08),
-                                          SizedBox(width: largeur*0.02),
-                                          SizedBox(width:largeur*0.57,child: AutoSizeText(Variables.locationName, style: const TextStyle(fontFamily: 'Montserrat', fontWeight: FontWeight.w500, color: bleu_bg, fontSize: 12,),maxLines: 2,)),
-                                        ],
-                                      ),
+                                      children: [
+                                        SizedBox(width: largeur*0.02),
+                                        Icons_ESIWay(icon: 'search', largeur: largeur*0.08, hauteur: largeur*0.08),
+                                        SizedBox(width: largeur*0.02),
+                                        SizedBox(width:largeur*0.57,child: AutoSizeText(Variables.locationName, style: const TextStyle(fontFamily: 'Montserrat', fontWeight: FontWeight.w500, color: bleu_bg, fontSize: 12,),maxLines: 2,)),
+                                      ],
+                                    ),
 
 
                                   ),
                                   /// ESI
                                   InkWell(
                                       onTap: (){
-                                    setState(() {
-                                      Variables.locationName = "Ecole Nationale Supérieure d'Informatique (Ex. INI)";
-                                      debut = PointLatLng(LocationEsi.latitude, LocationEsi.longitude);
-                                    });
-                                  },
+                                        setState(() {
+                                          Variables.locationName = "Ecole Nationale Supérieure d'Informatique (Ex. INI)";
+                                          debut = PointLatLng(LocationEsi.latitude, LocationEsi.longitude);
+                                        });
+                                      },
                                       child: Image(image: const AssetImage("Assets/Images/esi_logo.png"),width: largeur*0.06,height: hauteur*0.06)),
                                   // Icon(Icons.my_location,color:bleu_bg,size: largeur*0.06,),
                                   SizedBox(width: largeur*0.015,),
@@ -440,11 +440,11 @@ class _CreateTripPageState extends State<CreateTripPage> {
                                 width: largeur * 0.139,
                                 height: hauteur * 0.025,
                                 child: MyText(
-                                    text: "Arrival",
-                                    weight: FontWeight.w700,
-                                    fontsize: 14,
-                                    color: const Color(0xff20236C),
-                                    largeur: largeur * 0.139,)),
+                                  text: "Arrival",
+                                  weight: FontWeight.w700,
+                                  fontsize: 14,
+                                  color: const Color(0xff20236C),
+                                  largeur: largeur * 0.139,)),
                             SizedBox(height: hauteur * 0.005),
 
                             /// +Arrival Filed
@@ -452,44 +452,44 @@ class _CreateTripPageState extends State<CreateTripPage> {
                               width: largeur * 0.9,
                               height: hauteur * 0.0625,
                               decoration: BoxDecoration(boxShadow: [BoxShadow(blurRadius: 20, color: bleu_bg.withOpacity(0.15),offset: const Offset(0,0), spreadRadius: 10)],color: Colors.white,borderRadius: const BorderRadius.all(Radius.circular(4))),
-                            child:Row(
-                              children: [
-                                ///Search places
-                                InkWell(
+                              child:Row(
+                                children: [
+                                  ///Search places
+                                  InkWell(
 
-                                  onTap: () async {
-                                    var place = await PlacesAutocomplete.show(
-                                        context: context,
-                                        apiKey: APIKEY,
-                                        mode: Mode.overlay,
-                                        types: [],
-                                        strictbounds: false,
-                                        components: [Component(Component.country, 'dz')],
-                                        //google_map_webservice package
-                                        onError: (err){print(err);}
-                                    );
-                                    if(place != null){
-                                      setState(() {
-                                        Variables.locationNamea = place.description.toString();
-                                        print( Variables.locationNamea);
-                                      });
+                                    onTap: () async {
+                                      var place = await PlacesAutocomplete.show(
+                                          context: context,
+                                          apiKey: APIKEY,
+                                          mode: Mode.overlay,
+                                          types: [],
+                                          strictbounds: false,
+                                          components: [Component(Component.country, 'dz')],
+                                          //google_map_webservice package
+                                          onError: (err){print(err);}
+                                      );
+                                      if(place != null){
+                                        setState(() {
+                                          Variables.locationNamea = place.description.toString();
+                                          print( Variables.locationNamea);
+                                        });
 
-                                      //form google_maps_webservice package
-                                      final plist = GoogleMapsPlaces(apiKey:APIKEY, apiHeaders: await const GoogleApiHeaders().getHeaders());
-                                      String placeid = place.placeId ?? "0";
-                                      final detail = await plist.getDetailsByPlaceId(placeid);
-                                      final geometry = detail.result.geometry!;
-                                      final lat = geometry.location.lat;
-                                      final lang = geometry.location.lng;
-                                      var newlatlang = LatLng(lat, lang);
-                                      location = newlatlang;
-                                      fin = PointLatLng(newlatlang.latitude, newlatlang.longitude);
-                                      //move map camera to selected place with animation
-                                     mapController?.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(target: newlatlang, zoom: 17)));
-                                    };
-                                    setState(() {});
-                                  },
-                                  child: Row(
+                                        //form google_maps_webservice package
+                                        final plist = GoogleMapsPlaces(apiKey:APIKEY, apiHeaders: await const GoogleApiHeaders().getHeaders());
+                                        String placeid = place.placeId ?? "0";
+                                        final detail = await plist.getDetailsByPlaceId(placeid);
+                                        final geometry = detail.result.geometry!;
+                                        final lat = geometry.location.lat;
+                                        final lang = geometry.location.lng;
+                                        var newlatlang = LatLng(lat, lang);
+                                        location = newlatlang;
+                                        fin = PointLatLng(newlatlang.latitude, newlatlang.longitude);
+                                        //move map camera to selected place with animation
+                                        mapController?.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(target: newlatlang, zoom: 17)));
+                                      };
+                                      setState(() {});
+                                    },
+                                    child: Row(
                                       children: [
                                         SizedBox(width: largeur*0.02),
                                         Icons_ESIWay(icon: 'search', largeur: largeur*0.08, hauteur: largeur*0.08),
@@ -499,25 +499,24 @@ class _CreateTripPageState extends State<CreateTripPage> {
                                     ),
 
 
-                                ),
-                                /// ESI
-                                InkWell(
-                                    onTap: (){
-                                    setState(() {
-                                      Variables.locationNamea = "Ecole Nationale Supérieure d'Informatique (Ex. INI)";
-                                      fin = PointLatLng(LocationEsi.latitude, LocationEsi.longitude);
-                                    });
-                                    },
-                                    child: Image(image: const AssetImage("Assets/Images/esi_logo.png"),width: largeur*0.06,height: hauteur*0.06)),
-                                SizedBox(width: largeur*0.015,),
-                                ///Current location
-                                InkWell(
-                                    onTap: (){setState((){Variables.locationNamea = "Current Location";});},
-                                    child: Icon(Icons.my_location,color:bleu_bg,size: largeur*0.06,)),
-                              ],
+                                  ),
+                                  /// ESI
+                                  InkWell(
+                                      onTap: (){
+                                        setState(() {
+                                          Variables.locationNamea = "Ecole Nationale Supérieure d'Informatique (Ex. INI)";
+                                          fin = PointLatLng(LocationEsi.latitude, LocationEsi.longitude);
+                                        });
+                                      },
+                                      child: Image(image: const AssetImage("Assets/Images/esi_logo.png"),width: largeur*0.06,height: hauteur*0.06)),
+                                  SizedBox(width: largeur*0.015,),
+                                  ///Current location
+                                  InkWell(
+                                      onTap: (){setState((){Variables.locationNamea = "Current Location";});},
+                                      child: Icon(Icons.my_location,color:bleu_bg,size: largeur*0.06,)),
+                                ],
+                              ),
                             ),
-                            ),
-
                             SizedBox(height: hauteur * 0.02),
 
                             /// +Date & Hour
@@ -571,12 +570,12 @@ class _CreateTripPageState extends State<CreateTripPage> {
                                         width: largeur * 0.13,
                                         height: hauteur * 0.025,
                                         child:  MyText(
-                                            text: "Heure",
-                                            weight: FontWeight.w700,
-                                            fontsize: 14,
-                                            color:
-                                            const Color(0xff20236C),
-                                        largeur:largeur * 0.13 ,)),
+                                          text: "Heure",
+                                          weight: FontWeight.w700,
+                                          fontsize: 14,
+                                          color:
+                                          const Color(0xff20236C),
+                                          largeur:largeur * 0.13 ,)),
                                     SizedBox(height: hauteur * 0.005),
 
                                     /// +Heure Filed
@@ -606,209 +605,30 @@ class _CreateTripPageState extends State<CreateTripPage> {
                                 SizedBox(height: hauteur * 0.02),
                               ],
                             ),
-                            SizedBox(height: hauteur * 0.02),
+                            SizedBox(height: hauteur * 0.03),
 
-
-                            ///  "Paiment"
-                            SizedBox(
-                                width: largeur * 0.2,
-                                height: hauteur * 0.025,
-                                child: MyText(
-                                    text: "Paiment",
-                                    weight: FontWeight.w700,
-                                    fontsize: 14,
-                                    color: const Color(0xff20236C),
-                                    largeur: largeur * 0.2,)),
-                            SizedBox(height: hauteur * 0.005),
-
-                            /// +Paiment Field
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Container(
-                                  width: largeur*0.3,
-                                  height: hauteur*0.0625,
-                                  decoration:  BoxDecoration(boxShadow: const [BoxShadow(blurRadius: 18, color: Color.fromRGBO(32, 35, 108, 0.15))],color: Colors.white,borderRadius:BorderRadius.circular(5) ),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      const SizedBox(width: 10),
-                                      Expanded(
-                                        child:TextField(
-                                          controller: pricecontroller,
-                                          decoration: const InputDecoration(hintText: "Price", hintStyle:  TextStyle(fontFamily: 'Montserrat', fontWeight: FontWeight.w500, color: Color(0xff20236C), fontSize: 14), focusedBorder: InputBorder.none, enabledBorder: InputBorder.none, disabledBorder:  InputBorder.none, filled: false,),
-                                        ),
-                                      ),
-                                      const AutoSizeText("Da",style: TextStyle(fontFamily: 'Montserrat', fontWeight: FontWeight.w500, color: const Color(0xff20236C), fontSize: 14)),
-                                      const SizedBox(width: 10),
-                                    ],
-                                  ),
-                                ),
-                                /// methode
-                                Container(
-                                  width: largeur*0.51,
-                                  height: hauteur*0.0625,
-                                  decoration:  BoxDecoration(boxShadow: const [BoxShadow(blurRadius: 18, color: Color.fromRGBO(32, 35, 108, 0.15))],color: Colors.white,borderRadius:BorderRadius.circular(5)),
-                                  child: DropdownButtonFormField(
-                                    value: dropdownValue,
-                                    icon: const Icon(Icons.arrow_drop_down_rounded,color: Color(0xFF72D2C2)),
-                                    decoration: const InputDecoration(
-                                      enabledBorder: OutlineInputBorder(
-                                          borderSide: BorderSide(
-                                              color: Colors.white)),
-                                      focusedBorder: InputBorder.none,
-                                      filled: true,
-                                      fillColor: Colors.white,
-                                    ),
-                                    items: const [
-                                      DropdownMenuItem(
-                                        value: "-1",
-                                        child: Text("choose a method ", style: TextStyle(fontFamily: 'Montserrat', fontWeight: FontWeight.w500, color: Color(0xff20236C), fontSize: 12),),
-                                      ),
-                                      DropdownMenuItem(
-                                        value: "1",
-                                        child: AutoSizeText("Negociable", style: TextStyle(fontFamily: 'Montserrat', fontWeight: FontWeight.w500, color: Color(0xff20236C), fontSize: 12),),
-
-                                      ),
-                                      DropdownMenuItem(
-                                        value: "2",
-                                        child:
-                                        AutoSizeText("Service", style: TextStyle(fontFamily: 'Montserrat', fontWeight: FontWeight.w500, color: Color(0xff20236C), fontSize: 12),),
-
-                                      ),
-
-                                    ],
-                                    onChanged: (value) {
-                                      if (value == "1") { methode = "Negociable";};
-                                      if (value == "2") {methode = "Service";};
-                                      print(methode);
-                                    },
-                                  ),
-                                ),
-
-
-                              ],
-                            ),
-                            SizedBox(height: hauteur * 0.02),
-
-                            ///Preferences
-                            SizedBox(
-                                width: largeur * 0.266,
-                                height: hauteur * 0.025,
-                                child: MyText(
-                                    text: "Preferences",
-                                    weight: FontWeight.w700,
-                                    fontsize: 14,
-                                    color: const Color(0xff20236C),
-                                    largeur: largeur * 0.266)),
-                            SizedBox(height: hauteur * 0.005),
-
-                            /// +Preferences Field
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween ,
-                              children: [
-                                SimpleButton(backgroundcolor: bags ?bleu_ciel :Colors.white , size: Size(largeur*0.2, hauteur*0.00875), radius: 3, text: "Bags", textcolor: bleu_bg, fontsize: 12, fct:(){bags=!bags;setState(() {});},blur: 18),
-                                SimpleButton(backgroundcolor: talking ?bleu_ciel :Colors.white  , size: Size(largeur*0.277, hauteur*0.00875), radius: 3, text: "Talking", textcolor: bleu_bg, fontsize: 12, fct:(){(talking=!talking);setState(() {});},blur: 18),
-                                SimpleButton(backgroundcolor: animals ?bleu_ciel :Colors.white  , size: Size(largeur*0.277, hauteur*0.00875), radius: 3, text: "Animals", textcolor: bleu_bg, fontsize: 12, fct:(){(animals=!animals);setState(() {});},blur: 18),
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                SimpleButton(backgroundcolor: smoking ?bleu_ciel :Colors.white  , size: Size(largeur*0.277, hauteur*0.00875), radius: 3, text: "Smoking", textcolor: bleu_bg, fontsize: 12, fct:(){(smoking=!smoking);setState(() {});},blur: 18),
-                                SizedBox(width: largeur*0.07),
-                                SimpleButton(backgroundcolor: others ?bleu_ciel :Colors.white , size: Size(largeur*0.277, hauteur*0.00875), radius: 3, text: "Other", textcolor: bleu_bg, fontsize: 12, fct:(){(others=!others);setState(() {});},blur: 18),
-                              ],
-                            ),
-                            SizedBox(height: hauteur * 0.01),
-
-                            ///Seats
-                            Row(
-                              children: [
-                                SizedBox(
-                                    width: largeur * 0.2,
-                                    height: hauteur * 0.025,
-                                    child:  MyText(
-                                        text: "Seats",
-                                        weight: FontWeight.w700,
-                                        fontsize: 14,
-                                        color: const Color(0xff20236C),
-                                        largeur: largeur * 0.2)),
-                                Container(
-                                  width: largeur*0.3,
-                                  height: hauteur*0.05,
-                                  decoration:  BoxDecoration(boxShadow: const [BoxShadow(blurRadius: 18, color: Color.fromRGBO(32, 35, 108, 0.15))],color: Colors.white,borderRadius:BorderRadius.circular(5)),
-                                  child: DropdownButtonFormField(
-                                    borderRadius: BorderRadius.circular(10),
-                                    value: dropdownValue,
-                                    icon: const Icon(Icons.arrow_drop_down_rounded,color: Color(0xFF72D2C2)),
-                                    decoration: const InputDecoration(
-                                      enabledBorder: OutlineInputBorder(
-                                          borderSide: BorderSide(
-                                              color: Colors.white)),
-                                      focusedBorder: InputBorder.none,
-                                      filled: true,
-                                      fillColor: Colors.white,
-                                    ),
-                                    items: const [
-                                      DropdownMenuItem(
-                                        value: "-1",
-                                        child: Text("4", style: TextStyle(fontFamily: 'Montserrat', fontWeight: FontWeight.w500, color: Color(0xff20236C), fontSize: 12),),
-                                      ),
-                                      DropdownMenuItem(
-                                        value: "1",
-                                        child: AutoSizeText("3", style: TextStyle(fontFamily: 'Montserrat', fontWeight: FontWeight.w500, color: Color(0xff20236C), fontSize: 12),),
-
-                                      ),
-                                      DropdownMenuItem(
-                                        value: "2",
-                                        child:
-                                        AutoSizeText("2", style: TextStyle(fontFamily: 'Montserrat', fontWeight: FontWeight.w500, color: Color(0xff20236C), fontSize: 12),),
-
-                                      ),
-                                      DropdownMenuItem(
-                                        value: "3",
-                                        child:
-                                        AutoSizeText("1", style: TextStyle(fontFamily: 'Montserrat', fontWeight: FontWeight.w500, color: Color(0xff20236C), fontSize: 12),),
-
-                                      ),
-
-                                    ],
-                                    onChanged: (value) {
-                                      if (value == "-1") {seats = "4";};
-                                      if (value == "1") {seats = "3";};
-                                      if (value == "2") {seats = "2";};
-                                      if (value == "3") {seats = "1";};
-                                    },
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: hauteur * 0.05),
-
-                            /// Create Button
+                            /// search Button
                             SimpleButton(
                                 backgroundcolor:
                                 const Color(0xffFFA18E),
                                 size: Size(largeur, hauteur * 0.06),
                                 radius: 10,
-                                text: "Create",
+                                text: "Search",
                                 textcolor: const Color(0xFF20236C),
                                 fontsize: 20,
                                 fct: (){
-                                  Variables.created = true;
-                                  createTrip(
+                                  //Variables.created = true;
+                                   // search trip
+                                  print('Testtttt');
+                                  searchTrip(
                                       auth.currentUser!.uid,
                                       debut,
                                       fin,
                                       Variables.locationName!,
                                       Variables.locationNamea!,
                                       date!,
-                                      time!,
-                                      pricecontroller.text.trim(),
-                                      seats!,
-                                      methode);
-                                  },
+                                      time!);
+                                },
                                 weight: FontWeight.w700),
                             SizedBox(height: hauteur * 0.05),
                           ],
@@ -819,24 +639,25 @@ class _CreateTripPageState extends State<CreateTripPage> {
                 ),
               ),
             ),),
+         ///Back Button
           Positioned(
             top: hauteur*0.05,
             left: largeur*0.05,
             child: SizedBox(
-            height: 35,
-            width: 80,
-            child: PrefixeIconButton(
-                size: const Size(73, 34),
-                color: Colors.white,
-                radius: 10,
-                text: "Back",
-                textcolor: const Color(0xFF20236C),
-                weight: FontWeight.w600,
-                fontsize: 14,
-                icon: Transform.scale(scale: 0.75, child: const Icons_ESIWay(icon: "arrow_left", largeur: 30, hauteur: 30),),
-                espaceicontext: 5.0,
-                fct: (){toHome();}),
-          ),)
+              height: 35,
+              width: 80,
+              child: PrefixeIconButton(
+                  size: const Size(73, 34),
+                  color: Colors.white,
+                  radius: 10,
+                  text: "Back",
+                  textcolor: const Color(0xFF20236C),
+                  weight: FontWeight.w600,
+                  fontsize: 14,
+                  icon: Transform.scale(scale: 0.75, child: const Icons_ESIWay(icon: "arrow_left", largeur: 30, hauteur: 30),),
+                  espaceicontext: 5.0,
+                  fct: (){toHome();}),
+            ),)
         ],
       ),
     );

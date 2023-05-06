@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:math';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:esiway/Screens/home/tripSuggestions.dart';
 import 'package:esiway/Screens/home/variables.dart';
 import 'package:esiway/widgets/prefixe_icon_button.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -382,7 +383,7 @@ class _SearchTripPageState extends State<SearchTripPage> {
             bottom: 0,
             child: SizedBox(
               width: largeur,
-              height: hauteur * 0.43,
+              height: hauteur * 0.5,
               child: SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -399,7 +400,7 @@ class _SearchTripPageState extends State<SearchTripPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            SizedBox(height: hauteur * 0.01),
+                            SizedBox(height: hauteur * 0.06),
 
                             /// "Depature"
                             SizedBox(
@@ -830,6 +831,7 @@ class _SearchTripPageState extends State<SearchTripPage> {
                                 textcolor: const Color(0xFF20236C),
                                 fontsize: 20,
                                 fct: () {
+                               /*if((locationName == "Search places") || (locationNamea == "Search places")){
                                   //Variables.created = true;
                                   // search trip
 
@@ -837,10 +839,13 @@ class _SearchTripPageState extends State<SearchTripPage> {
                                       auth.currentUser!.uid,
                                       debut,
                                       fin,
-                                      Variables.locationName!,
-                                      Variables.locationNamea!,
+                                      Variables.locationName,
+                                      Variables.locationNamea,
                                       date!,
                                       time!);
+                                  }else{/*message d'erreur*/}*/
+                                  Navigator.push(context, MaterialPageRoute(builder: (context) => TripSuggestPage(markers: markers,mapController: mapController,polylinePoints: polylinePoints,polylines: polylines,distance: distance,)));
+
                                 },
                                 weight: FontWeight.w700),
                             SizedBox(height: hauteur * 0.05),
@@ -856,30 +861,24 @@ class _SearchTripPageState extends State<SearchTripPage> {
 
           ///Back Button
           Positioned(
-            top: hauteur * 0.05,
-            left: largeur * 0.05,
+            top: hauteur*0.05,
+            left: largeur*0.05,
+            right: largeur*0.05,
             child: SizedBox(
-              height: 35,
-              width: 80,
+              height: hauteur*0.07,
+              width:largeur*0.8,
               child: PrefixeIconButton(
                   size: const Size(73, 34),
                   color: Colors.white,
                   radius: 10,
-                  text: "Back",
+                  text: "Ecole Nationale superieure d’informatique  ",
                   textcolor: const Color(0xFF20236C),
                   weight: FontWeight.w600,
-                  fontsize: 14,
-                  icon: Transform.scale(
-                    scale: 0.75,
-                    child: const Icons_ESIWay(
-                        icon: "arrow_left", largeur: 30, hauteur: 30),
-                  ),
+                  fontsize: 12,
+                  icon: Transform.scale(scale: 0.75, child: const Icons_ESIWay(icon: "arrow_left", largeur: 30, hauteur: 30),),
                   espaceicontext: 5.0,
-                  fct: () {
-                    toHome();
-                  }),
-            ),
-          )
+                  fct: (){Navigator.pop(context);}),
+            ),)
         ],
       ),
     );

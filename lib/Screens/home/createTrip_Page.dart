@@ -1163,25 +1163,28 @@ class _CreateTripPageState extends State<CreateTripPage> {
                                 text: "Create",
                                 textcolor: const Color(0xFF20236C),
                                 fontsize: 20,
+                                weight: FontWeight.w700,
                                 fct: () async {
+                                if((locationName == "Search places") || (locationNamea == "Search places")){
+
                                   Variables.created = true;
                                   print("date is :   $date");
                                   createTrip(
                                       auth.currentUser!.uid,
                                       debut,
                                       fin,
-                                      Variables.locationName!,
-                                      Variables.locationNamea!,
+                                      Variables.locationName,
+                                      Variables.locationNamea,
                                       date!,
                                       time!,
                                       pricecontroller.text.trim(),
                                       seats!,
                                       methode);
 
-                                  final FirebaseFirestore firestore =
-                                      FirebaseFirestore.instance;
-                                },
-                                weight: FontWeight.w700),
+                                  final FirebaseFirestore firestore =FirebaseFirestore.instance;
+                                }else{};
+                                }
+                               ),
 
                             SizedBox(height: hauteur * 0.05),
                           ],

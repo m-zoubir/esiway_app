@@ -386,6 +386,7 @@ class _Groupe_ChatState extends State<Groupe_Chat> {
                                   : null;
 
                               String senderProfilePicture = '';
+                              String sendername = '';
                               if (senderId != null) {
                                 FirebaseFirestore.instance
                                     .collection('Users')
@@ -395,6 +396,7 @@ class _Groupe_ChatState extends State<Groupe_Chat> {
                                   if (doc.exists) {
                                     senderProfilePicture =
                                         doc.data()?['ProfilePicture'] ?? '';
+                                    sendername = doc.data()?['Name'] ?? '';
                                   }
                                 });
                               }
@@ -481,16 +483,35 @@ class _Groupe_ChatState extends State<Groupe_Chat> {
                                                         elevation: 0,
                                                         child: message['text']
                                                                 .isNotEmpty
-                                                            ? AutoSizeText(
-                                                                message['text']
-                                                                    .toString(),
-                                                                style: TextStyle(
-                                                                    fontSize:
-                                                                        16,
-                                                                    color: Colors
-                                                                        .black),
-                                                                maxLines: 6,
-                                                              )
+                                                            ? Column(
+                                                                crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .start,
+                                                                children: [
+                                                                    AutoSizeText(
+                                                                      '$sendername :',
+                                                                      style:
+                                                                          TextStyle(
+                                                                        fontSize:
+                                                                            18,
+                                                                        color: Color(
+                                                                            0xFF20236C),
+                                                                      ),
+                                                                      maxLines:
+                                                                          6,
+                                                                    ),
+                                                                    AutoSizeText(
+                                                                      message['text']
+                                                                          .toString(),
+                                                                      style: TextStyle(
+                                                                          fontSize:
+                                                                              16,
+                                                                          color:
+                                                                              Colors.black),
+                                                                      maxLines:
+                                                                          6,
+                                                                    ),
+                                                                  ])
                                                             : message['ImageUrl']
                                                                     .isNotEmpty
                                                                 ? CachedNetworkImage(

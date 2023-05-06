@@ -60,6 +60,8 @@ Future<void> createChatRoomFirestore(String name, String creatorId) async {
       .doc(chatId)
       .collection('messages')
       .add(message);
+
+  joinChatRoomFirestore(chatId, 'He9ne8pNjuX7ixQB80X6gZmkjjw1');
 }
 
 // Join a chat room in Firestore
@@ -80,6 +82,7 @@ Future<void> joinChatRoomFirestore(String chatId, String userId) async {
 }
 
 /*
+we can do this after the conductor finished the trip 
 Future<void> deleteChatRoomFirestore(String chatId, String userId) async {
   // Get the chat room document from Firestore
   DocumentSnapshot chatDoc =

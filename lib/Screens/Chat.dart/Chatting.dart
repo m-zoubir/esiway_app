@@ -419,6 +419,8 @@ class _Groupe_ChatState extends State<Groupe_Chat> {
                                             //   var iamgeprofile = snapshot.data!
                                             //     .get('ProfilePicture');
                                             return Row(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.end,
                                               mainAxisAlignment: (message
                                                               as Map<String,
                                                                   dynamic>)[
@@ -524,8 +526,7 @@ class _Groupe_ChatState extends State<Groupe_Chat> {
                                                                         width *
                                                                             1,
                                                                     height:
-                                                                        height *
-                                                                            0.24,
+                                                                        null, //0;24
                                                                     placeholder: (context,
                                                                             url) =>
                                                                         Center(

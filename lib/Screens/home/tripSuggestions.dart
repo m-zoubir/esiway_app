@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:esiway/Screens/home/variables.dart';
 import 'package:esiway/widgets/icons_ESIWay.dart';
@@ -14,6 +15,8 @@ import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import '../../../widgets/login_text.dart';
+import '../../widgets/myTripsWidgets/tripsCards.dart';
+import 'horizentalList.dart';
 
 
 
@@ -38,6 +41,8 @@ class TripSuggestPage extends StatefulWidget {
 }
 
 class _TripSuggestPageState extends State<TripSuggestPage> {
+  var trips;
+
 
 
   void initState() {
@@ -185,6 +190,7 @@ class _TripSuggestPageState extends State<TripSuggestPage> {
   }
 
 
+  List<String> names = ['Alice', 'Bob', 'Charlie', 'David', 'Eve'];
 
 
   @override
@@ -214,31 +220,52 @@ class _TripSuggestPageState extends State<TripSuggestPage> {
             child:  Container(
               color:const Color(0xFFF9F8FF) ,
               width: largeur,
-              height: hauteur * 0.5,
+              height: hauteur * 0.575,
               child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Container(
-                      color: const Color(0xFFF9F8FF),
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: largeur * 0.075),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            SizedBox(height: hauteur * 0.05),
 
-                            SizedBox(height: hauteur * 0.05),
-                          ],
-                        ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          SizedBox(height: hauteur * 0.05),
+
+                          SizedBox(
+                            width: largeur*0.17,
+                            child: const AutoSizeText(
+                              "Hello",
+                              style: TextStyle(
+                                fontFamily: 'Montserrat',
+                                fontWeight: FontWeight.w700,
+                                fontSize: 22,
+                                color: bleu_bg,
+                              ),),
+                          ),
+                          SizedBox(
+                            width: largeur*0.71,
+                            child: const AutoSizeText(
+                              "We found drivers for your request",//nombre de drivers mazal
+                              style: TextStyle(
+                                fontFamily: 'Montserrat',
+                                fontWeight: FontWeight.w500,
+                                fontSize: 14,
+                                color: bleu_bg,
+                              ),),
+                          ),
+                          SizedBox(height: hauteur*0.02,),
+                          SizedBox(
+                            width: largeur*0.88,
+                            height:hauteur*0.43 ,
+                            child: ListOfTrips(names: names),
+                          )
+
+                        ],
                       ),
-                    ),
-                  ],
-                ),
+                    ],
+                  ),
               ),
             ),),
           ///Back Button

@@ -20,7 +20,7 @@ class SimpleButton extends StatelessWidget {
     this.weight = FontWeight.w600,
     required this.fontsize,
     required this.fct,
-    this.blur = 0,
+    this.blur = null,
   });
 
   @override

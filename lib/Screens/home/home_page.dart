@@ -906,9 +906,7 @@ class _HomePageState extends State<HomePage> {
               ),
             );
           });
-    }
-
-    ;
+    };
 
     return Scaffold(
       bottomNavigationBar: BottomNavBar(currentindex: 3),

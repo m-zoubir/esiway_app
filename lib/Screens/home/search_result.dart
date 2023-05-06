@@ -194,7 +194,7 @@ class _SearchResultState extends State<SearchResult> {
                                               familyname: "familyname",
                                               color: bleu_bg,
                                             ),
-                                            RatingBarIntujdicator(
+                                            RatingBarIndicator(
                                               rating: 2.5,
                                               itemCount: 5,
                                               itemSize: 15.0,

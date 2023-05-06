@@ -108,6 +108,7 @@ class _GroupMembersState extends State<GroupMembers> {
                                 fontWeight: FontWeight.w600,
                                 color: Color(0xFF20236C),
                               ),
+                              overflow: TextOverflow.ellipsis,
                             ),
                           ],
                         ),

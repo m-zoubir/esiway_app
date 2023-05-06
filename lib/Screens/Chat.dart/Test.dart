@@ -22,20 +22,17 @@ class _TestState extends State<Test> {
     _chatId = generateChatId();
   }
 
-  void _createChatRoom(BuildContext context) {
+//will be called when a Trip is Created
+  Future<void> _createChatRoom(BuildContext context) async {
     User? currentUser = FirebaseAuth.instance.currentUser;
-
-    // Create a new chat room in Firestore
-    createChatRoomFirestore("the name of the chat ", currentUser!.uid);
-    // Join the chat room as a member
-    //joinChatRoomFirestore(_chatId, currentUser.uid);
-    // Navigate to the chat room screen
-    /*  Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(
-        builder: (context) => Groupe_Chat(chatId: _chatId),
-      ),
-    );*/
+    String tripId =
+        '22 - 5 - 2023-11 : 03-ie6w7FN8PgXu9UUCZ9Xdnx0Xvdl2_'; // IDK how to get the trip Id
+    try {
+      String departArrivee = await getDepartArriveeString(tripId);
+      createChatRoomFirestore(departArrivee, currentUser!.uid);
+    } catch (e) {
+      print(e.toString());
+    }
   }
 
   @override

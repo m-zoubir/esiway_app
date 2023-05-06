@@ -8,7 +8,6 @@ import '/main.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/material.dart';
-import 'GettingTripLocation.dart';
 
 // ignore: unused_import
 import 'package:iconsax/iconsax.dart';
@@ -16,7 +15,6 @@ import 'package:iconsax/iconsax.dart';
 // ignore: unused_import
 // ignore: unused_import, depend_on_referenced_packages
 
-import 'GettingTripLocation.dart';
 import 'GroupeImage.dart';
 
 class GettingTripLocations extends StatelessWidget {

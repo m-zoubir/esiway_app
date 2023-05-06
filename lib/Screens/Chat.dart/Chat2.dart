@@ -1,4 +1,5 @@
-// ignore_for_file: file_names
+// ignore_for_file: file_names, camel_case_types, non_constant_identifier_names
+// ignore: depend_on_referenced_packages
 import 'package:intl/intl.dart';
 
 import 'package:cached_network_image/cached_network_image.dart';
@@ -12,7 +13,6 @@ import 'package:iconsax/iconsax.dart';
 // ignore: unused_import
 // ignore: unused_import, depend_on_referenced_packages
 
-import 'ChatAppBar.dart';
 import 'ChatServices.dart';
 import 'Chatting.dart';
 import 'GroupeImage.dart';
@@ -49,8 +49,8 @@ class _Chat_secreenState extends State<Chat_secreen> {
     final String currentUserId = currentUser!.uid;
     final String userImageUrl = await getMemberImageUrl(currentUserId);
     setState(() {
-      this.imageUrl = userImageUrl;
-      this.usrID = currentUserId;
+      imageUrl = userImageUrl;
+      usrID = currentUserId;
     });
   }
 
@@ -172,8 +172,8 @@ class _Chat_secreenState extends State<Chat_secreen> {
                       left: MediaQuery.of(context).size.width * 0.09),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
+                    children: const [
+                      Text(
                         "Chat",
                         style: TextStyle(
                           fontFamily: 'Montserrat',
@@ -193,7 +193,7 @@ class _Chat_secreenState extends State<Chat_secreen> {
                 // la pile
                 SingleChildScrollView(
                   child: Container(
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       color: Colors.transparent,
                     ),
                     margin: EdgeInsets.only(
@@ -213,7 +213,7 @@ class _Chat_secreenState extends State<Chat_secreen> {
       ),
       //just to test how it will look
       bottomNavigationBar: BottomNavigationBar(
-        items: [
+        items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
             label: 'Home',
@@ -244,142 +244,163 @@ class _nameState extends State<name> {
   Widget build(BuildContext context) {
     var largeur = MediaQuery.of(context).size.width;
     var hauteur = MediaQuery.of(context).size.height;
-
+    // ignore: unused_local_variable
+    String userId = widget.usedId ?? '';
     return StreamBuilder<QuerySnapshot>(
-        stream: FirebaseFirestore.instance
-            .collection('Users')
-            .doc(widget.usedId)
-            .collection('chat')
-            .snapshots(),
+        stream: widget.usedId != null && widget.usedId.isNotEmpty
+            ? FirebaseFirestore.instance
+                .collection('Users')
+                .doc(widget.usedId)
+                .collection('chat')
+                .snapshots()
+            : null,
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.hasError) {
-            return Text('Something went wrong');
+            return const Text('Something went wrong');
           }
 
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Text('Loading');
+            return const Text('Loading');
           }
-          final chatDocs = snapshot.data!.docs;
+          if (snapshot.hasData && snapshot.data != null) {
+            final chatDocs = snapshot.data!.docs;
 
-          return ListView.builder(
-              scrollDirection: Axis.vertical,
-              itemCount: chatDocs.length,
-              itemBuilder: (BuildContext context, int index) {
-                final chat = chatDocs[index];
-                String chatId = chat.id;
-                String ChatImage = "";
-                int number = 0;
-                final chatRef =
-                    FirebaseFirestore.instance.collection('chats').doc(chatId);
-                chatRef.get().then((doc) {
-                  if (doc.exists) {
-                    final chatData = doc.data();
-                    final nb = chatData!['NbUnseen'];
-                    final url = chatData['chatImage'];
-                    ChatImage = url;
-                    number = nb;
-                  } else {}
-                }).catchError((error) {
-                  print('Error getting document: $error');
-                });
+            return ListView.builder(
+                scrollDirection: Axis.vertical,
+                itemCount: chatDocs.length,
+                itemBuilder: (BuildContext context, int index) {
+                  final chat = chatDocs[index];
+                  String chatId = chat.id;
+                  // ignore: unused_local_variable
+                  String ChatImage = "";
+                  // ignore: unused_local_variable
+                  int number = 0;
+                  final chatRef = FirebaseFirestore.instance
+                      .collection('chats')
+                      .doc(chatId);
+                  chatRef.get().then((doc) {
+                    if (doc.exists) {
+                      final chatData = doc.data();
+                      final nb = chatData!['NbUnseen'];
+                      final url = chatData['chatImage'];
+                      ChatImage = url;
+                      number = nb;
+                    } else {}
+                  }).catchError((error) {
+                    const CircularProgressIndicator();
+                  });
 
-                final messagesRef = FirebaseFirestore.instance
-                    .collection('chats')
-                    .doc(chatId)
-                    .collection('messages');
+                  final messagesRef = FirebaseFirestore.instance
+                      .collection('chats')
+                      .doc(chatId)
+                      .collection('messages');
 
-                return GestureDetector(
-                  onLongPress: () {
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          title: Text(
-                              "Do you want to delete or leave the chat room?"),
-                          actions: <Widget>[
-                            TextButton(
-                              child: Text("Delete"),
-                              onPressed: () {
-                                deleteChatRoomFirestore(
-                                    chatId,
-                                    widget
-                                        .usedId); // Call your deleteChatRoomFirestore function here
-                                Navigator.of(context).pop(); // Close the dialog
-                              },
-                            ),
-                            TextButton(
-                              child: Text("Leave"),
-                              onPressed: () {
-                                leaveChatRoomFirestore(
-                                    chatId,
-                                    widget
-                                        .usedId); // Call your leaveChatRoomFirestore function here
-                                Navigator.of(context).pop(); // Close the dialog
-                              },
-                            ),
-                          ],
-                        );
-                      },
-                    );
-                  },
-                  onTap: () {
-                    var Name = "chat";
-                    final chatRef = FirebaseFirestore.instance
-                        .collection('chats')
-                        .doc(chatId);
-                    chatRef.get().then((doc) {
-                      if (doc.exists) {
-                        final chatData = doc.data();
-                        final chatName = chatData!['name'];
-                        Name = chatName;
-                      } else {}
-                    }).catchError((error) {
-                      print('Error getting document: $error');
-                    });
-                    markAllMessagesAsSeen(chatId);
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => Groupe_Chat(
-                                chatId: chatId,
-                                ChatName: Name,
-                              )), //there is a problem in this field
-                    );
-                  },
-                  child: Column(
-                    children: [
-                      Container(
-                        height: hauteur * 0.1,
-                        width: largeur * 0.94,
-                        margin: EdgeInsets.only(
-                            top: 0,
-                            bottom: hauteur * 0.015,
-                            left: largeur * 0.027,
-                            right: largeur * 0.027),
-                        padding: EdgeInsets.symmetric(
-                            horizontal: largeur * 0.03,
-                            vertical: hauteur * 0.012),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(16.0),
-                          color: Color.fromARGB(255, 255, 255, 255),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Color.fromARGB(156, 32, 35, 108)
-                                  .withOpacity(0.05),
-                              spreadRadius: 3,
-                              blurRadius: 5,
-                              offset: Offset(0, 0),
-                            ),
-                          ],
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Container(
-                                  child: StreamBuilder<DocumentSnapshot>(
+                  return GestureDetector(
+                    onLongPress: () {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            backgroundColor: const Color(0xFFF9F8FF),
+                            title:
+                                const Text("Do you want  leave the chat room?",
+                                    style: TextStyle(
+                                      color: Color(0xFF20236C),
+                                    )),
+                            actions: <Widget>[
+                              TextButton(
+                                child: const Text(
+                                  "Cancel",
+                                  style: TextStyle(
+                                    color: Colors.grey,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                onPressed: () {
+                                  // Call your leaveChatRoomFirestore function here
+                                  Navigator.of(context)
+                                      .pop(); // Close the dialog
+                                },
+                              ),
+                              TextButton(
+                                child: const Text(
+                                  "Leave",
+                                  style: TextStyle(
+                                    color: Color(0xFFF36043),
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                onPressed: () {
+                                  leaveChatRoomFirestore(
+                                      chatId,
+                                      widget
+                                          .usedId); // Call your leaveChatRoomFirestore function here
+                                  Navigator.of(context)
+                                      .pop(); // Close the dialog
+                                },
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    },
+                    onTap: () {
+                      var Name = "chat";
+                      final chatRef = FirebaseFirestore.instance
+                          .collection('chats')
+                          .doc(chatId);
+                      chatRef.get().then((doc) {
+                        if (doc.exists) {
+                          final chatData = doc.data();
+                          final chatName = chatData!['name'];
+                          Name = chatName;
+                        } else {}
+                      }).catchError((error) {
+                        const CircularProgressIndicator();
+                      });
+                      markAllMessagesAsSeen(chatId);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => Groupe_Chat(
+                                  chatId: chatId,
+                                  ChatName: Name,
+                                )), //there is a problem in this field
+                      );
+                    },
+                    child: Column(
+                      children: [
+                        Container(
+                          height: hauteur * 0.1,
+                          width: largeur * 0.94,
+                          margin: EdgeInsets.only(
+                              top: 0,
+                              bottom: hauteur * 0.015,
+                              left: largeur * 0.027,
+                              right: largeur * 0.027),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: largeur * 0.03,
+                              vertical: hauteur * 0.012),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(16.0),
+                            color: const Color.fromARGB(255, 255, 255, 255),
+                            boxShadow: [
+                              BoxShadow(
+                                color: const Color.fromARGB(156, 32, 35, 108)
+                                    .withOpacity(0.05),
+                                spreadRadius: 3,
+                                blurRadius: 5,
+                                offset: const Offset(0, 0),
+                              ),
+                            ],
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  StreamBuilder<DocumentSnapshot>(
                                       stream: FirebaseFirestore.instance
                                           .collection('chats')
                                           .doc(chatId)
@@ -388,205 +409,172 @@ class _nameState extends State<name> {
                                           AsyncSnapshot<DocumentSnapshot>
                                               snapshot) {
                                         if (!snapshot.hasData) {
-                                          return CircularProgressIndicator();
+                                          return const CircularProgressIndicator();
                                         }
                                         var nb = snapshot.data!.get('NbUnseen');
+                                        // ignore: unused_local_variable
                                         var ChatName =
                                             snapshot.data!.get('chatImage');
-                                        return Container(
-                                          child: StreamBuilder<QuerySnapshot>(
-                                              stream: messagesRef
-                                                  .orderBy('timestamp',
-                                                      descending: true)
-                                                  .limit(1)
-                                                  .snapshots(),
-                                              builder: (BuildContext context,
-                                                  AsyncSnapshot<QuerySnapshot>
-                                                      snapshot) {
-                                                if (snapshot.hasError) {
-                                                  return Text(
-                                                      'Something went wrong');
-                                                }
+                                        return StreamBuilder<QuerySnapshot>(
+                                            stream: messagesRef
+                                                .orderBy('timestamp',
+                                                    descending: true)
+                                                .limit(1)
+                                                .snapshots(),
+                                            builder: (BuildContext context,
+                                                AsyncSnapshot<QuerySnapshot>
+                                                    snapshot) {
+                                              if (snapshot.hasError) {
+                                                return const Text(
+                                                    'Something went wrong');
+                                              }
 
-                                                if (snapshot.connectionState ==
-                                                    ConnectionState.waiting) {
-                                                  return Text('Loading...');
-                                                }
+                                              if (snapshot.connectionState ==
+                                                  ConnectionState.waiting) {
+                                                return const Text('Loading...');
+                                              }
 
-                                                final messages =
-                                                    snapshot.data!.docs;
+                                              final messages =
+                                                  snapshot.data!.docs;
 
-                                                final message = messages.first;
-                                                final senderId =
-                                                    message.get('sender');
+                                              final message = messages.first;
+                                              final senderId =
+                                                  message.get('sender');
 
-                                                if (senderId == widget.usedId) {
-                                                  nb = 0;
-                                                }
+                                              if (senderId == widget.usedId) {
+                                                nb = 0;
+                                              }
 
-                                                return Stack(
-                                                  children: [
-                                                    SizedBox(
+                                              return Stack(
+                                                children: [
+                                                  SizedBox(
+                                                    width: largeur * 0.15, //98,
+                                                    height: hauteur * 0.08, //9,
+                                                    child: GroupChatImage(
+                                                      chatId: chatId,
                                                       width:
-                                                          largeur * 0.15, //98,
-                                                      height:
-                                                          hauteur * 0.08, //9,
-                                                      child: GroupChatImage(
-                                                        chatId: chatId,
-                                                        width: largeur *
-                                                            0.04, //98,
-                                                        height: hauteur * 0.030,
-                                                        n: 5,
-                                                      ),
+                                                          largeur * 0.04, //98,
+                                                      height: hauteur * 0.030,
+                                                      n: 5,
                                                     ),
-                                                    Positioned(
-                                                      top: 3,
-                                                      left: 27,
-                                                      child: Visibility(
-                                                        visible: nb != "0",
-                                                        child: Container(
-                                                          height: 20,
-                                                          width: 20,
-                                                          padding:
-                                                              EdgeInsets.all(2),
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            color: Color(
-                                                                0xFFFFA18E),
-                                                            shape:
-                                                                BoxShape.circle,
-                                                          ),
-                                                          child: Text(
-                                                            nb.toString(),
-                                                            textAlign: TextAlign
-                                                                .center,
-                                                            style: TextStyle(
-                                                              color: Color
-                                                                  .fromARGB(255,
-                                                                      0, 0, 0),
-                                                              fontSize:
-                                                                  hauteur *
-                                                                      0.02,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
-                                                            ),
+                                                  ),
+                                                  Positioned(
+                                                    top: 3,
+                                                    left: 27,
+                                                    child: Visibility(
+                                                      visible: nb != 0,
+                                                      child: Container(
+                                                        height: 20,
+                                                        width: 20,
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(2),
+                                                        decoration:
+                                                            const BoxDecoration(
+                                                          color:
+                                                              Color(0xFFFFA18E),
+                                                          shape:
+                                                              BoxShape.circle,
+                                                        ),
+                                                        child: Text(
+                                                          nb.toString(),
+                                                          textAlign:
+                                                              TextAlign.center,
+                                                          style: TextStyle(
+                                                            color: const Color
+                                                                    .fromARGB(
+                                                                255, 0, 0, 0),
+                                                            fontSize:
+                                                                hauteur * 0.02,
+                                                            fontWeight:
+                                                                FontWeight.bold,
                                                           ),
                                                         ),
                                                       ),
                                                     ),
-                                                  ],
-                                                );
-                                              }),
-                                        );
-                                      }),
-                                ),
-                                Column(
-                                  //**1 */
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    Container(
-                                        child: StreamBuilder<DocumentSnapshot>(
-                                            stream: FirebaseFirestore.instance
-                                                .collection('chats')
-                                                .doc(chatId)
-                                                .snapshots(),
-                                            builder: (BuildContext context,
-                                                AsyncSnapshot<DocumentSnapshot>
-                                                    snapshot) {
-                                              if (!snapshot.hasData) {
-                                                return CircularProgressIndicator();
-                                              }
-                                              var chatName =
-                                                  snapshot.data!.get('name');
-
-                                              return Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.start,
-                                                children: [
-                                                  Container(
-                                                    alignment:
-                                                        Alignment.topLeft,
-                                                    width: largeur * 0.4,
-                                                    child: Text(
-                                                      chatName, // the problem is in the field name
-                                                      //number,
-                                                      style: TextStyle(
-                                                        fontFamily:
-                                                            'Montserrat-Bold',
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        fontSize:
-                                                            hauteur * 0.018,
-                                                        color: const Color(
-                                                            0xFF20236C),
-                                                      ),
-                                                    ),
                                                   ),
-                                                  SizedBox(
-                                                      width: largeur * 0.08),
-                                                  Container(
-                                                    width: largeur * 0.15,
-                                                    child: StreamBuilder<
-                                                        QuerySnapshot>(
-                                                      stream: messagesRef
-                                                          .orderBy('timestamp',
-                                                              descending: true)
-                                                          .limit(1)
-                                                          .snapshots(),
-                                                      builder: (BuildContext
-                                                              context,
-                                                          AsyncSnapshot<
-                                                                  QuerySnapshot>
-                                                              snapshot) {
-                                                        if (snapshot.hasError) {
-                                                          return Text(
-                                                              'Something went wrong');
-                                                        }
+                                                ],
+                                              );
+                                            });
+                                      }),
+                                  Column(
+                                    //**1 */
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      StreamBuilder<DocumentSnapshot>(
+                                          stream: FirebaseFirestore.instance
+                                              .collection('chats')
+                                              .doc(chatId)
+                                              .snapshots(),
+                                          builder: (BuildContext context,
+                                              AsyncSnapshot<DocumentSnapshot>
+                                                  snapshot) {
+                                            if (!snapshot.hasData) {
+                                              return const CircularProgressIndicator();
+                                            }
+                                            var chatName =
+                                                snapshot.data!.get('name');
 
-                                                        if (snapshot
-                                                                .connectionState ==
-                                                            ConnectionState
-                                                                .waiting) {
-                                                          return Text(
-                                                              'Loading...');
-                                                        }
+                                            return Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              children: [
+                                                Container(
+                                                  alignment: Alignment.topLeft,
+                                                  width: largeur * 0.4,
+                                                  child: Text(
+                                                    chatName, // the problem is in the field name
+                                                    //number,
+                                                    style: TextStyle(
+                                                      fontFamily:
+                                                          'Montserrat-Bold',
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: hauteur * 0.018,
+                                                      color: const Color(
+                                                          0xFF20236C),
+                                                    ),
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                  ),
+                                                ),
+                                                SizedBox(width: largeur * 0.08),
+                                                // ignore: sized_box_for_whitespace
+                                                Container(
+                                                  width: largeur * 0.15,
+                                                  child: StreamBuilder<
+                                                      QuerySnapshot>(
+                                                    stream: messagesRef
+                                                        .orderBy('timestamp',
+                                                            descending: true)
+                                                        .limit(1)
+                                                        .snapshots(),
+                                                    builder: (BuildContext
+                                                            context,
+                                                        AsyncSnapshot<
+                                                                QuerySnapshot>
+                                                            snapshot) {
+                                                      if (snapshot.hasError) {
+                                                        return const Text(
+                                                            'Something went wrong');
+                                                      }
 
-                                                        final messages =
-                                                            snapshot.data!.docs;
+                                                      if (snapshot
+                                                              .connectionState ==
+                                                          ConnectionState
+                                                              .waiting) {
+                                                        return const Text(
+                                                            'Loading...');
+                                                      }
 
-                                                        if (messages.isEmpty) {
-                                                          return Text(
-                                                            '00:00',
-                                                            style: TextStyle(
-                                                              fontFamily:
-                                                                  'Montserrat-Bold',
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
-                                                              fontSize:
-                                                                  hauteur *
-                                                                      0.018,
-                                                              color: const Color(
-                                                                  0xFF20236C),
-                                                            ),
-                                                            overflow:
-                                                                TextOverflow
-                                                                    .ellipsis,
-                                                          );
-                                                        }
+                                                      final messages =
+                                                          snapshot.data!.docs;
 
-                                                        final message =
-                                                            messages.first;
-                                                        final time = DateFormat(
-                                                                'HH:mm')
-                                                            .format(message
-                                                                .get(
-                                                                    'timestamp')
-                                                                .toDate());
+                                                      if (messages.isEmpty) {
                                                         return Text(
-                                                          time,
+                                                          '00:00',
                                                           style: TextStyle(
                                                             fontFamily:
                                                                 'Montserrat-Bold',
@@ -600,78 +588,69 @@ class _nameState extends State<name> {
                                                           overflow: TextOverflow
                                                               .ellipsis,
                                                         );
-                                                      },
-                                                    ),
-                                                  ),
-                                                ],
-                                              );
-                                            })),
-                                    SizedBox(height: hauteur * 0.00875),
-                                    // add a row and add the button
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Container(
-                                          width: largeur * 0.4,
-                                          child: StreamBuilder<QuerySnapshot>(
-                                            stream: messagesRef
-                                                .orderBy('timestamp',
-                                                    descending: true)
-                                                .limit(1)
-                                                .snapshots(),
-                                            builder: (BuildContext context,
-                                                AsyncSnapshot<QuerySnapshot>
-                                                    snapshot) {
-                                              if (snapshot.hasError) {
-                                                return Text(
-                                                  'Something went wrong',
-                                                );
-                                              }
+                                                      }
 
-                                              final messages =
-                                                  snapshot.data!.docs;
-
-                                              if (messages.isEmpty) {
-                                                return Text(
-                                                  'No messages yet',
-                                                  style: TextStyle(
-                                                    fontFamily: 'Montserrat',
-                                                    fontWeight: FontWeight.w500,
-                                                    fontSize: hauteur * 0.015,
-                                                    color:
-                                                        const Color(0xFF20236C),
-                                                  ),
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                );
-                                              } else {
-                                                final message = messages.first;
-                                                final senderId =
-                                                    message.get('sender');
-                                                return StreamBuilder<
-                                                    DocumentSnapshot>(
-                                                  stream: FirebaseFirestore
-                                                      .instance
-                                                      .collection('Users')
-                                                      .doc(senderId)
-                                                      .snapshots(),
-                                                  builder: (BuildContext
-                                                          context,
-                                                      AsyncSnapshot<
-                                                              DocumentSnapshot>
-                                                          userSnapshot) {
-                                                    if (userSnapshot.hasError) {
+                                                      final message =
+                                                          messages.first;
+                                                      final time = DateFormat(
+                                                              'HH:mm')
+                                                          .format(message
+                                                              .get('timestamp')
+                                                              .toDate());
                                                       return Text(
-                                                        'Something went wrong',
+                                                        time,
+                                                        style: TextStyle(
+                                                          fontFamily:
+                                                              'Montserrat-Bold',
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontSize:
+                                                              hauteur * 0.018,
+                                                          color: const Color(
+                                                              0xFF20236C),
+                                                        ),
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
                                                       );
-                                                    }
-                                                    if (userSnapshot
-                                                            .connectionState ==
-                                                        ConnectionState
-                                                            .waiting) {
+                                                    },
+                                                  ),
+                                                ),
+                                              ],
+                                            );
+                                          }),
+                                      SizedBox(height: hauteur * 0.00875),
+                                      // add a row and add the button
+                                      Expanded(
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            // ignore: sized_box_for_whitespace
+                                            Container(
+                                              width: largeur * 0.4,
+                                              child:
+                                                  StreamBuilder<QuerySnapshot>(
+                                                stream: messagesRef
+                                                    .orderBy('timestamp',
+                                                        descending: true)
+                                                    .limit(1)
+                                                    .snapshots(),
+                                                builder: (BuildContext context,
+                                                    AsyncSnapshot<QuerySnapshot>
+                                                        snapshot) {
+                                                  if (snapshot.hasError) {
+                                                    return const Text(
+                                                        'Something went wrong');
+                                                  }
+
+                                                  if (snapshot.hasData &&
+                                                      snapshot.data != null) {
+                                                    final messages =
+                                                        snapshot.data!.docs;
+
+                                                    if (messages.isEmpty) {
                                                       return Text(
-                                                        'Loading...',
+                                                        'No messages yet',
                                                         style: TextStyle(
                                                           fontFamily:
                                                               'Montserrat',
@@ -686,97 +665,153 @@ class _nameState extends State<name> {
                                                             .ellipsis,
                                                       );
                                                     } else {
-                                                      final user = userSnapshot
-                                                          .data!
-                                                          .get('Name');
-                                                      return Expanded(
-                                                        child: Row(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .spaceBetween,
-                                                          children: [
-                                                            Text(
-                                                              '$user:',
+                                                      final message =
+                                                          messages.first;
+                                                      final senderId =
+                                                          message.get('sender');
+                                                      return StreamBuilder<
+                                                          DocumentSnapshot>(
+                                                        stream:
+                                                            FirebaseFirestore
+                                                                .instance
+                                                                .collection(
+                                                                    'Users')
+                                                                .doc(senderId)
+                                                                .snapshots(),
+                                                        builder: (BuildContext
+                                                                context,
+                                                            AsyncSnapshot<
+                                                                    DocumentSnapshot>
+                                                                userSnapshot) {
+                                                          if (userSnapshot
+                                                              .hasError) {
+                                                            return const Text(
+                                                                'Something went wrong');
+                                                          }
+                                                          if (userSnapshot
+                                                                  .connectionState ==
+                                                              ConnectionState
+                                                                  .waiting) {
+                                                            return Text(
+                                                              'Loading...',
                                                               style: TextStyle(
                                                                 fontFamily:
                                                                     'Montserrat',
                                                                 fontWeight:
                                                                     FontWeight
-                                                                        .w600,
+                                                                        .w500,
                                                                 fontSize:
                                                                     hauteur *
-                                                                        0.017,
+                                                                        0.015,
                                                                 color: const Color(
                                                                     0xFF20236C),
                                                               ),
                                                               overflow:
                                                                   TextOverflow
                                                                       .ellipsis,
-                                                            ),
-                                                            Expanded(
-                                                              child: Text(
-                                                                message.get('text') !=
-                                                                        ""
-                                                                    ? message.get(
-                                                                        'text')
-                                                                    : "An Image",
-                                                                style:
-                                                                    TextStyle(
-                                                                  fontFamily:
-                                                                      'Montserrat',
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w500,
-                                                                  fontSize:
-                                                                      hauteur *
-                                                                          0.015,
-                                                                  color: const Color(
-                                                                      0xFF20236C),
-                                                                ),
-                                                                overflow:
-                                                                    TextOverflow
-                                                                        .ellipsis,
+                                                            );
+                                                          } else {
+                                                            final user =
+                                                                userSnapshot
+                                                                    .data!
+                                                                    .get(
+                                                                        'Name');
+                                                            return Expanded(
+                                                              child: Row(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .spaceBetween,
+                                                                children: [
+                                                                  Text(
+                                                                    '$user:',
+                                                                    style:
+                                                                        TextStyle(
+                                                                      fontFamily:
+                                                                          'Montserrat',
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w600,
+                                                                      fontSize:
+                                                                          hauteur *
+                                                                              0.017,
+                                                                      color: const Color(
+                                                                          0xFF20236C),
+                                                                    ),
+                                                                    overflow:
+                                                                        TextOverflow
+                                                                            .ellipsis,
+                                                                  ),
+                                                                  Expanded(
+                                                                    child: Text(
+                                                                      message.get('text') !=
+                                                                              ""
+                                                                          ? message
+                                                                              .get('text')
+                                                                          : "An Image",
+                                                                      style:
+                                                                          TextStyle(
+                                                                        fontFamily:
+                                                                            'Montserrat',
+                                                                        fontWeight:
+                                                                            FontWeight.w500,
+                                                                        fontSize:
+                                                                            hauteur *
+                                                                                0.015,
+                                                                        color: const Color(
+                                                                            0xFF20236C),
+                                                                      ),
+                                                                      overflow:
+                                                                          TextOverflow
+                                                                              .ellipsis,
+                                                                    ),
+                                                                  ),
+                                                                ],
                                                               ),
-                                                            ),
-                                                          ],
-                                                        ),
+                                                            );
+                                                          }
+                                                        },
                                                       );
                                                     }
-                                                  },
-                                                );
-                                              }
-                                            },
-                                          ),
-                                        ),
-                                        SizedBox(width: largeur * 0.09),
-                                        Row(
-                                          children: [
-                                            SvgPicture.asset(
-                                              'Assets/Images/Icon.svg',
-                                              width: 24,
-                                              height: 24,
+                                                  } else {
+                                                    return const CircularProgressIndicator(); // or any other loading indicator
+                                                  }
+                                                },
+                                              ),
                                             ),
-                                            SizedBox(
-                                              width: largeur * 0.04,
-                                            )
+
+                                            SizedBox(width: largeur * 0.09),
+                                            Row(
+                                              children: [
+                                                SvgPicture.asset(
+                                                  'Assets/Images/Icon.svg',
+                                                  width: 24,
+                                                  height: 24,
+                                                ),
+                                                SizedBox(
+                                                  width: largeur * 0.04,
+                                                )
+                                              ],
+                                            ),
                                           ],
                                         ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ],
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                      SizedBox(height: hauteur * 0.0025),
-                      SvgPicture.asset("Assets/Images/Line.svg"),
-                      SizedBox(height: hauteur * 0.015),
-                    ],
-                  ),
-                );
-              });
+                        SizedBox(height: hauteur * 0.0025),
+                        SvgPicture.asset("Assets/Images/Line.svg"),
+                        SizedBox(height: hauteur * 0.015),
+                      ],
+                    ),
+                  );
+                });
+          } else {
+            return const CircularProgressIndicator();
+          }
         });
   }
 }

@@ -79,6 +79,7 @@ Future<void> joinChatRoomFirestore(String chatId, String userId) async {
       .set({});
 }
 
+/*
 Future<void> deleteChatRoomFirestore(String chatId, String userId) async {
   // Get the chat room document from Firestore
   DocumentSnapshot chatDoc =
@@ -109,7 +110,7 @@ Future<void> deleteChatRoomFirestore(String chatId, String userId) async {
         .delete();
   }
 }
-
+*/
 Future<void> leaveChatRoomFirestore(String chatId, String userId) async {
   // Remove the user from the chat room's list of members
   await firestore
@@ -175,4 +176,19 @@ Future<void> markAllMessagesAsSeen(String chatId) async {
 
   // Commit the batched write operation
   await batch.commit();
+}
+
+Future<String> getDepartArriveeString(String tripId) async {
+  // Reference to the specific document in the "Trips" collection
+  DocumentSnapshot tripSnapshot =
+      await FirebaseFirestore.instance.collection('Trips').doc(tripId).get();
+
+  if (tripSnapshot.exists) {
+    Map<String, dynamic> tripData = tripSnapshot.data() as Map<String, dynamic>;
+    String depart = tripData['Depart'];
+    String arrivee = tripData['Arrivee'];
+    return '$depart-$arrivee';
+  } else {
+    throw Exception('Trip document does not exist!');
+  }
 }

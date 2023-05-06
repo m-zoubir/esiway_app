@@ -19,7 +19,6 @@ import 'package:image_picker/image_picker.dart';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'GettingTripLocation.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/material.dart';
 // ignore: unused_import
@@ -31,7 +30,6 @@ import 'package:iconsax/iconsax.dart';
 import 'ChatAppBar.dart';
 import 'GroupeMembers.dart';
 //import 'Modeles/usermodele.dart';
-import 'GettingTripLocation.dart';
 
 class Groupe_Chat extends StatefulWidget {
   const Groupe_Chat({super.key, required this.chatId, required this.ChatName});
@@ -233,21 +231,23 @@ class _Groupe_ChatState extends State<Groupe_Chat> {
               ),
             ),
             IconButton(
-              icon: Icon(
+              icon: const Icon(
                 Icons.image_outlined,
-                color: const Color(0xFF72D2C2),
+                color: Color(0xFF72D2C2),
               ),
               onPressed: () {
                 showModalBottomSheet(
-                  context: context as BuildContext,
-                  shape: RoundedRectangleBorder(
+                  context: context,
+                  shape: const RoundedRectangleBorder(
                     borderRadius:
                         BorderRadius.vertical(top: Radius.circular(30)),
                   ),
                   builder: (context) {
                     return MyImagePickerBottomSheet(onUploadTapped: () {
+                      // ignore: unused_local_variable
                       final imageFile = pickImage(context);
                     }, onTakePhotoTapped: () {
+                      // ignore: unused_local_variable
                       final imageFile = openCamera(context);
                     });
                   },
@@ -558,6 +558,7 @@ class _Groupe_ChatState extends State<Groupe_Chat> {
     if (pickedFile != null) {
       final imageFile = File(pickedFile.path);
 
+      // ignore: use_build_context_synchronously
       showModalBottomSheet(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
@@ -567,6 +568,10 @@ class _Groupe_ChatState extends State<Groupe_Chat> {
           imagePath: imageFile.path,
           onUploadTapped: () {
             onSendMessagePressed2(imageFile);
+
+            Navigator.pop(context);
+            Navigator.pop(context);
+
             //     Navigator.pop(context); // close the bottom sheet
           },
 
@@ -586,8 +591,9 @@ class _Groupe_ChatState extends State<Groupe_Chat> {
     if (pickedFile != null) {
       final imageFile = File(pickedFile.path);
 
+      // ignore: use_build_context_synchronously
       showModalBottomSheet(
-        shape: RoundedRectangleBorder(
+        shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
         ),
         context: context,
@@ -595,7 +601,8 @@ class _Groupe_ChatState extends State<Groupe_Chat> {
             imagePath: imageFile.path,
             onUploadTapped: () {
               onSendMessagePressed2(imageFile);
-              // Navigator.pop(context); // close the bottom sheet
+              Navigator.pop(context);
+              Navigator.pop(context);
             }),
       );
       return imageFile;

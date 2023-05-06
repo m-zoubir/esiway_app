@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:esiway/Screens/home/notif_page.dart';
 import 'package:esiway/Screens/home/variables.dart';
 import 'package:esiway/widgets/our_prefixeIconButton.dart';
 import 'package:flutter/material.dart';
@@ -34,14 +35,18 @@ class _HomePageState extends State<HomePage> {
   String? date;
   void initState() {
     // TODO: implement initState
-   // date = "${selectedDate.day} - ${selectedDate.month} - ${selectedDate.year}";
-    if(Variables.created == true){
-    if((Variables.locationName != "Search places")&& (Variables.locationNamea !="Search places")){
-      getDirection(Variables.debut, Variables.fin);
-      distance = Variables.distance;
-      mapController?.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(target: LatLng(debut.latitude,debut.longitude), zoom: 17)));
-
-    }else{markers.clear();}
+    // date = "${selectedDate.day} - ${selectedDate.month} - ${selectedDate.year}";
+    if (Variables.created == true) {
+      if ((Variables.locationName != "Search places") &&
+          (Variables.locationNamea != "Search places")) {
+        getDirection(Variables.debut, Variables.fin);
+        distance = Variables.distance;
+        mapController?.animateCamera(CameraUpdate.newCameraPosition(
+            CameraPosition(
+                target: LatLng(debut.latitude, debut.longitude), zoom: 17)));
+      } else {
+        markers.clear();
+      }
     }
     super.initState();
   }
@@ -59,7 +64,8 @@ class _HomePageState extends State<HomePage> {
 
   Map<PolylineId, Polyline> polylines = {}; //polylines to show direction
 
-  static LatLng startLocation = const LatLng(36.705219106281575, 3.173786850126649);
+  static LatLng startLocation =
+      const LatLng(36.705219106281575, 3.173786850126649);
 
   LatLng endLocation = const LatLng(36.687677024859354, 2.9965016961469324);
 
@@ -133,7 +139,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   PointLatLng debut = Variables.debut;
-  PointLatLng fin =  Variables.fin;
+  PointLatLng fin = Variables.fin;
 
   ///+++++++++++++++++++++++++++++< ajouter Markers >+++++++++++++++++++++++++++///
 
@@ -156,9 +162,15 @@ class _HomePageState extends State<HomePage> {
   getDirection(PointLatLng depart, PointLatLng arrival) async {
     List<LatLng> polylineCoordinates = [];
     List<String> cities = [];
-    List<String> latLngStrings = polylineCoordinates.map((latLng) => '${latLng.latitude},${latLng.longitude}').toList();
+    List<String> latLngStrings = polylineCoordinates
+        .map((latLng) => '${latLng.latitude},${latLng.longitude}')
+        .toList();
 
-    PolylineResult result = await  polylinePoints.getRouteBetweenCoordinates(APIKEY, depart, arrival,);
+    PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
+      APIKEY,
+      depart,
+      arrival,
+    );
     if (result.points.isNotEmpty) {
       result.points.forEach((PointLatLng point) async {
         polylineCoordinates.add(LatLng(point.latitude, point.longitude));
@@ -167,7 +179,6 @@ class _HomePageState extends State<HomePage> {
       print(result.errorMessage);
     }
 
-
     /*for (LatLng coordinate in polylineCoordinates) {
       List<Placemark> placemarks = await placemarkFromCoordinates(coordinate.latitude, coordinate.longitude);
       if (placemarks.isNotEmpty) {
@@ -175,10 +186,6 @@ class _HomePageState extends State<HomePage> {
         print(locality);
       }
     }*/
-
-
-
-
 
     double totalDistance = 0;
     for (var i = 0; i < polylineCoordinates.length - 1; i++) {
@@ -189,11 +196,13 @@ class _HomePageState extends State<HomePage> {
           polylineCoordinates[i + 1].longitude);
     }
 
-   /* for (var i = 0; i < polylineCoordinates.length - 1; i++) {
+    /* for (var i = 0; i < polylineCoordinates.length - 1; i++) {
       print("points : ${i} = ${polylineCoordinates[i]}");
     }*/
 
-    setState(() {Variables.distance = totalDistance;});
+    setState(() {
+      Variables.distance = totalDistance;
+    });
     addPolyLine(Variables.polylineCoordinates);
   }
 
@@ -897,8 +906,9 @@ class _HomePageState extends State<HomePage> {
               ),
             );
           });
-    };
+    }
 
+    ;
 
     return Scaffold(
       bottomNavigationBar: BottomNavBar(currentindex: 3),
@@ -908,9 +918,11 @@ class _HomePageState extends State<HomePage> {
             //Map widget from google_maps_flutter package
             zoomGesturesEnabled: true, //enable Zoom in, out on map
             zoomControlsEnabled: false,
-            initialCameraPosition:
-            CameraPosition(//innital position in map
-              target: Variables.created  ?LatLng(Variables.debut.latitude,Variables.debut.longitude) :startLocation , //initial position
+            initialCameraPosition: CameraPosition(
+              //innital position in map
+              target: Variables.created
+                  ? LatLng(Variables.debut.latitude, Variables.debut.longitude)
+                  : startLocation, //initial position
               zoom: 10.0, //initial zoom level
             ),
             markers: markers, //markers to show on map
@@ -977,12 +989,27 @@ class _HomePageState extends State<HomePage> {
                               fontsize: 12,
                               iconName: "search",
                               espaceicontext: largeur * 0.05,
-                              fct: (){ Navigator.push(context, MaterialPageRoute(builder: (context) => SearchTripPage(markers: markers,mapController: mapController,polylinePoints: polylinePoints,polylines: polylines,distance: distance,)));}
-                              ),
+                              fct: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => SearchTripPage(
+                                              markers: markers,
+                                              mapController: mapController,
+                                              polylinePoints: polylinePoints,
+                                              polylines: polylines,
+                                              distance: distance,
+                                            )));
+                              }),
 
                           ///Notification Button
                           ElevatedButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => Notifpage()));
+                            },
                             style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.white,
                                 elevation: 0.0,
@@ -1001,949 +1028,24 @@ class _HomePageState extends State<HomePage> {
               ),
             ],
           ),
+
           ///Create Trip Button
           Positioned(
             bottom: 20,
             right: 20,
             child: ElevatedButton(
               onPressed: () async {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => CreateTripPage(markers: markers,mapController: mapController,polylinePoints: polylinePoints,polylines: polylines,distance: distance,)));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => CreateTripPage(
+                              markers: markers,
+                              mapController: mapController,
+                              polylinePoints: polylinePoints,
+                              polylines: polylines,
+                              distance: distance,
+                            )));
               }, // createTrip,
-
-
-                            /// +Departure Filed
-                            Container(
-                              width: largeur * 0.9,
-                              height: hauteur * 0.0625,
-                              decoration: const BoxDecoration(boxShadow: [
-                                BoxShadow(
-                                    blurRadius: 18,
-                                    color: Color.fromRGBO(32, 35, 108, 0.15),
-                                    spreadRadius: 10)
-                              ]),
-                              child: DropdownButtonFormField(
-                                value: dropdownValue,
-                                icon: const Icon(Icons.arrow_drop_down_rounded,
-                                    color: Color(0xFF72D2C2)),
-                                decoration: const InputDecoration(
-                                  enabledBorder: OutlineInputBorder(
-                                      borderSide:
-                                          BorderSide(color: Colors.white)),
-                                  focusedBorder: InputBorder.none,
-                                  filled: true,
-                                  fillColor: Colors.white,
-                                ),
-                                items: [
-                                  const DropdownMenuItem(
-                                    value: "-1",
-                                    child: AutoSizeText(
-                                      " select your address of departure ",
-                                      style: TextStyle(
-                                          fontFamily: 'Montserrat',
-                                          fontWeight: FontWeight.w500,
-                                          color: Color(0xff20236C),
-                                          fontSize: 12),
-                                    ),
-                                  ),
-                                  DropdownMenuItem(
-                                    value: "1",
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: const [
-                                        AutoSizeText(
-                                          " Your current location",
-                                          style: TextStyle(
-                                              fontFamily: 'Montserrat',
-                                              fontWeight: FontWeight.w500,
-                                              color: Color(0xff20236C),
-                                              fontSize: 12),
-                                        ),
-                                        Icon(Icons.my_location_outlined,
-                                            color: Color(0xFF72D2C2)),
-                                      ],
-                                    ),
-                                  ),
-                                  DropdownMenuItem(
-                                    value: "2",
-                                    child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: const [
-                                          AutoSizeText(
-                                            " ESI ",
-                                            style: TextStyle(
-                                                fontFamily: 'Montserrat',
-                                                fontWeight: FontWeight.w500,
-                                                color: Color(0xff20236C),
-                                                fontSize: 12),
-                                          ),
-                                          Icon(Icons.account_circle,
-                                              color: Color(0xFF72D2C2)),
-                                        ]),
-                                  ),
-                                  DropdownMenuItem(
-                                    value: "3",
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text(
-                                          locationName ?? "search places",
-                                          style: const TextStyle(
-                                              fontFamily: 'Montserrat',
-                                              fontWeight: FontWeight.w500,
-                                              color: Color(0xff20236C),
-                                              fontSize: 12),
-                                        ),
-                                        InkWell(
-                                          onTap: () async {
-                                            var place =
-                                                await PlacesAutocomplete.show(
-                                                    context: context,
-                                                    apiKey: googleAPiKey,
-                                                    mode: Mode.overlay,
-                                                    types: [],
-                                                    strictbounds: false,
-                                                    components: [
-                                                      Component(
-                                                          Component.country,
-                                                          'dz')
-                                                    ],
-                                                    //google_map_webservice package
-                                                    onError: (err) {
-                                                      print(err);
-                                                    });
-                                            if (place != null) {
-                                              setState(() {
-                                                locationName = place.description
-                                                    .toString();
-                                                print(locationName);
-                                              });
-
-                                              //form google_maps_webservice package
-                                              final plist = GoogleMapsPlaces(
-                                                  apiKey: googleAPiKey,
-                                                  apiHeaders:
-                                                      await const GoogleApiHeaders()
-                                                          .getHeaders());
-                                              String placeid =
-                                                  place.placeId ?? "0";
-                                              final detail = await plist
-                                                  .getDetailsByPlaceId(placeid);
-                                              final geometry =
-                                                  detail.result.geometry!;
-                                              final lat = geometry.location.lat;
-                                              final lang =
-                                                  geometry.location.lng;
-                                              var newlatlang =
-                                                  LatLng(lat, lang);
-                                              location = newlatlang;
-                                              debut = PointLatLng(
-                                                  newlatlang.latitude,
-                                                  newlatlang.longitude);
-                                              //move map camera to selected place with animation
-                                              mapController?.animateCamera(
-                                                  CameraUpdate
-                                                      .newCameraPosition(
-                                                          CameraPosition(
-                                                              target:
-                                                                  newlatlang,
-                                                              zoom: 17)));
-                                            }
-                                            ;
-                                            setState(() {});
-                                          },
-                                          child: const Icon(
-                                              Icons.search_rounded,
-                                              color: Color(0xFF72D2C2)),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                                onChanged: (value) =>
-                                    depart(value, debut, locationName!),
-                              ),
-                            ),
-
-                            SizedBox(height: hauteur * 0.02),
-
-                            ///  "Arival"
-                            SizedBox(
-                                width: largeur * 0.139,
-                                height: hauteur * 0.025,
-                                child: MyText(
-                                  text: "Arrival",
-                                  weight: FontWeight.w700,
-                                  fontsize: 14,
-                                  color: Color(0xff20236C),
-                                  largeur: largeur * 0.139,
-                                )),
-
-                            SizedBox(height: hauteur * 0.005),
-
-                            /// +Arrival Filed
-                            Container(
-                              width: largeur * 0.9,
-                              height: hauteur * 0.0625,
-                              decoration: const BoxDecoration(boxShadow: [
-                                BoxShadow(
-                                    blurRadius: 18,
-                                    color: Color.fromRGBO(32, 35, 108, 0.15),
-                                    spreadRadius: 10)
-                              ]),
-                              child: DropdownButtonFormField(
-                                icon: const Icon(Icons.arrow_drop_down_rounded,
-                                    color: Color(0xFF72D2C2)),
-                                value: dropdownValue,
-                                decoration: const InputDecoration(
-                                  enabledBorder: OutlineInputBorder(
-                                      borderSide:
-                                          BorderSide(color: Colors.white)),
-                                  focusedBorder: InputBorder.none,
-                                  filled: true,
-                                  fillColor: Colors.white,
-                                ),
-                                items: [
-                                  const DropdownMenuItem(
-                                    value: "-1",
-                                    child: Text(
-                                      "select your address of Arrival ",
-                                      style: TextStyle(
-                                          fontFamily: 'Montserrat',
-                                          fontWeight: FontWeight.w500,
-                                          color: Color(0xff20236C),
-                                          fontSize: 12),
-                                    ),
-                                  ),
-                                  DropdownMenuItem(
-                                    value: "1",
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: const [
-                                        AutoSizeText(
-                                          " Your current location",
-                                          style: TextStyle(
-                                              fontFamily: 'Montserrat',
-                                              fontWeight: FontWeight.w500,
-                                              color: Color(0xff20236C),
-                                              fontSize: 12),
-                                        ),
-                                        Icon(Icons.my_location_outlined,
-                                            color: Color(0xFF72D2C2)),
-                                      ],
-                                    ),
-                                  ),
-                                  DropdownMenuItem(
-                                    value: "2",
-                                    child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: const [
-                                          AutoSizeText(
-                                            " ESI ",
-                                            style: TextStyle(
-                                                fontFamily: 'Montserrat',
-                                                fontWeight: FontWeight.w500,
-                                                color: Color(0xff20236C),
-                                                fontSize: 12),
-                                          ),
-                                          Icon(Icons.account_circle,
-                                              color: Color(0xFF72D2C2)),
-                                        ]),
-                                  ),
-                                  DropdownMenuItem(
-                                    value: "3",
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text(
-                                          locationNamea ?? "search places",
-                                          style: const TextStyle(
-                                              fontFamily: 'Montserrat',
-                                              fontWeight: FontWeight.w500,
-                                              color: Color(0xff20236C),
-                                              fontSize: 12),
-                                        ),
-                                        InkWell(
-                                          onTap: () async {
-                                            var place =
-                                                await PlacesAutocomplete.show(
-                                                    context: context,
-                                                    apiKey: googleAPiKey,
-                                                    mode: Mode.overlay,
-                                                    types: [],
-                                                    strictbounds: false,
-                                                    components: [
-                                                      Component(
-                                                          Component.country,
-                                                          'dz')
-                                                    ],
-                                                    //google_map_webservice package
-                                                    onError: (err) {
-                                                      print(err);
-                                                    });
-                                            if (place != null) {
-                                              setState(() {
-                                                locationNamea = place
-                                                    .description
-                                                    .toString();
-                                                print(locationNamea);
-                                              });
-
-                                              //form google_maps_webservice package
-                                              final plist = GoogleMapsPlaces(
-                                                  apiKey: googleAPiKey,
-                                                  apiHeaders:
-                                                      await const GoogleApiHeaders()
-                                                          .getHeaders());
-                                              String placeid =
-                                                  place.placeId ?? "0";
-                                              final detail = await plist
-                                                  .getDetailsByPlaceId(placeid);
-                                              final geometry =
-                                                  detail.result.geometry!;
-                                              final lat = geometry.location.lat;
-                                              final lang =
-                                                  geometry.location.lng;
-                                              var newlatlang =
-                                                  LatLng(lat, lang);
-                                              location = newlatlang;
-                                              fin = PointLatLng(
-                                                  newlatlang.latitude,
-                                                  newlatlang.longitude);
-                                              //move map camera to selected place with animation
-                                              mapController?.animateCamera(
-                                                  CameraUpdate
-                                                      .newCameraPosition(
-                                                          CameraPosition(
-                                                              target:
-                                                                  newlatlang,
-                                                              zoom: 17)));
-                                            }
-                                            ;
-                                            setState(() {});
-                                          },
-                                          child: const Icon(
-                                              Icons.search_rounded,
-                                              color: Color(0xFF72D2C2)),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                                onChanged: (value) =>
-                                    arrival(value, fin, locationNamea!),
-                              ),
-                            ),
-
-                            SizedBox(height: hauteur * 0.02),
-
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    /// "Date"
-                                    SizedBox(
-                                        width: largeur * 0.11,
-                                        height: hauteur * 0.025,
-                                        child: MyText(
-                                          text: "Date",
-                                          weight: FontWeight.w700,
-                                          fontsize: 14,
-                                          color: Color(0xff20236C),
-                                          largeur: largeur * 0.11,
-                                        )),
-
-                                    SizedBox(height: hauteur * 0.005),
-
-                                    /// +Date Filed
-                                    GestureDetector(
-                                      onTap: () async {
-                                        _selectDate(context);
-                                      },
-                                      child: SizedBox(
-                                        height: hauteur * 0.0625,
-                                        width: largeur * 0.5,
-                                        child: Container(
-                                            decoration: BoxDecoration(
-                                                boxShadow: const [
-                                                  BoxShadow(
-                                                      blurRadius: 18,
-                                                      color: Color.fromRGBO(
-                                                          32, 35, 108, 0.15))
-                                                ],
-                                                color: Colors.white,
-                                                borderRadius:
-                                                    BorderRadius.circular(5)),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.spaceEvenly,
-                                              children: [
-                                                SizedBox(
-                                                  width: 5,
-                                                ),
-                                                Transform.scale(
-                                                  scale:
-                                                      1.5, // to make the icon smaller or larger
-                                                  child: const Icons_ESIWay(
-                                                      icon: "calendar",
-                                                      largeur: 20,
-                                                      hauteur: 20),
-                                                ),
-                                                MyText(
-                                                  text: date!,
-                                                  weight: FontWeight.w500,
-                                                  fontsize: 14,
-                                                  color:
-                                                      const Color(0xFF20236C),
-                                                  largeur: largeur * 0.2,
-                                                ),
-                                                SizedBox(
-                                                  width: 5,
-                                                ),
-                                              ],
-                                            )),
-
-                                        /* SizedBox(
-                                      height: hauteur * 0.0625,
-                                      width: largeur * 0.5,
-                                      child: OurTextField(controller: datecontroller, text: "DD/MM/YY", iconName: "calendar", borderColor: Colors.white, size: 0.7,),
-                                    ),*/
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    /// "Heure"
-                                    SizedBox(
-                                        width: largeur * 0.13,
-                                        height: hauteur * 0.025,
-                                        child: MyText(
-                                          text: "Heure",
-                                          weight: FontWeight.w700,
-                                          fontsize: 14,
-                                          color: Color(0xff20236C),
-                                          largeur: largeur * 0.13,
-                                        )),
-
-                                    SizedBox(height: hauteur * 0.005),
-
-                                    /// +Heure Filed
-                                    SizedBox(
-                                        height: hauteur * 0.0625,
-                                        width: largeur * 0.3,
-                                        child: OurTextField(
-                                          controller: heurecontroller,
-                                          text: "HH:MM",
-                                          iconName: "email",
-                                          borderColor: Colors.white,
-                                          size: 0.7,
-                                        )),
-                                  ],
-                                ),
-                                SizedBox(height: hauteur * 0.02),
-                              ],
-                            ),
-
-                            SizedBox(height: hauteur * 0.02),
-
-                            ///  "Paiment"
-                            SizedBox(
-                                width: largeur * 0.2,
-                                height: hauteur * 0.025,
-                                child: MyText(
-                                  text: "Paiment",
-                                  weight: FontWeight.w700,
-                                  fontsize: 14,
-                                  color: Color(0xff20236C),
-                                  largeur: largeur * 0.2,
-                                )),
-
-                            /// +Paiment Field
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Container(
-                                  width: largeur * 0.3,
-                                  height: hauteur * 0.0625,
-                                  decoration: BoxDecoration(
-                                      boxShadow: const [
-                                        BoxShadow(
-                                            blurRadius: 18,
-                                            color: Color.fromRGBO(
-                                                32, 35, 108, 0.15))
-                                      ],
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(5)),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      const SizedBox(width: 10),
-                                      Expanded(
-                                        child: TextField(
-                                          controller: pricecontroller,
-                                          decoration: const InputDecoration(
-                                            hintText: "Price",
-                                            hintStyle: TextStyle(
-                                                fontFamily: 'Montserrat',
-                                                fontWeight: FontWeight.w500,
-                                                color: Color(0xff20236C),
-                                                fontSize: 14),
-                                            focusedBorder: InputBorder.none,
-                                            enabledBorder: InputBorder.none,
-                                            disabledBorder: InputBorder.none,
-                                            filled: false,
-                                          ),
-                                        ),
-                                      ),
-                                      const AutoSizeText("Da",
-                                          style: TextStyle(
-                                              fontFamily: 'Montserrat',
-                                              fontWeight: FontWeight.w500,
-                                              color: const Color(0xff20236C),
-                                              fontSize: 14)),
-                                      const SizedBox(width: 10),
-                                    ],
-                                  ),
-                                ),
-
-                                /// methode
-                                Container(
-                                  width: largeur * 0.51,
-                                  height: hauteur * 0.0625,
-                                  decoration: BoxDecoration(
-                                      boxShadow: const [
-                                        BoxShadow(
-                                            blurRadius: 18,
-                                            color: Color.fromRGBO(
-                                                32, 35, 108, 0.15))
-                                      ],
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(5)),
-                                  child: DropdownButtonFormField(
-                                    value: dropdownValue,
-                                    icon: const Icon(
-                                        Icons.arrow_drop_down_rounded,
-                                        color: Color(0xFF72D2C2)),
-                                    decoration: const InputDecoration(
-                                      enabledBorder: OutlineInputBorder(
-                                          borderSide:
-                                              BorderSide(color: Colors.white)),
-                                      focusedBorder: InputBorder.none,
-                                      filled: true,
-                                      fillColor: Colors.white,
-                                    ),
-                                    items: const [
-                                      DropdownMenuItem(
-                                        value: "-1",
-                                        child: Text(
-                                          "choose a method ",
-                                          style: TextStyle(
-                                              fontFamily: 'Montserrat',
-                                              fontWeight: FontWeight.w500,
-                                              color: Color(0xff20236C),
-                                              fontSize: 12),
-                                        ),
-                                      ),
-                                      DropdownMenuItem(
-                                        value: "1",
-                                        child: AutoSizeText(
-                                          "Negociable",
-                                          style: TextStyle(
-                                              fontFamily: 'Montserrat',
-                                              fontWeight: FontWeight.w500,
-                                              color: Color(0xff20236C),
-                                              fontSize: 12),
-                                        ),
-                                      ),
-                                      DropdownMenuItem(
-                                        value: "2",
-                                        child: AutoSizeText(
-                                          "Service",
-                                          style: TextStyle(
-                                              fontFamily: 'Montserrat',
-                                              fontWeight: FontWeight.w500,
-                                              color: Color(0xff20236C),
-                                              fontSize: 12),
-                                        ),
-                                      ),
-                                      DropdownMenuItem(
-                                        value: "3",
-                                        child: AutoSizeText(
-                                          "Rien",
-                                          style: TextStyle(
-                                              fontFamily: 'Montserrat',
-                                              fontWeight: FontWeight.w500,
-                                              color: Color(0xff20236C),
-                                              fontSize: 12),
-                                        ),
-                                      ),
-                                    ],
-                                    onChanged: (value) {
-                                      if (value == "1") {
-                                        methode = "Negociable";
-                                      }
-                                      ;
-                                      if (value == "2") {
-                                        methode = "Service";
-                                      }
-                                      ;
-                                      if (value == "3") {
-                                        methode = "Rien";
-                                      }
-                                      ;
-                                      print(methode);
-                                    },
-                                  ),
-                                ),
-                              ],
-                            ),
-
-                            SizedBox(height: hauteur * 0.02),
-
-                            ///Preferences
-                            SizedBox(
-                                width: largeur * 0.266,
-                                height: hauteur * 0.025,
-                                child: MyText(
-                                  text: "Preferences",
-                                  weight: FontWeight.w700,
-                                  fontsize: 14,
-                                  color: Color(0xff20236C),
-                                  largeur: largeur * 0.266,
-                                )),
-
-                            /// +Preferences Field
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                SimpleButton(
-                                    backgroundcolor:
-                                        bags ? bleu_ciel : Colors.white,
-                                    size:
-                                        Size(largeur * 0.2, hauteur * 0.00875),
-                                    radius: 3,
-                                    text: "Bags",
-                                    textcolor: bleu_bg,
-                                    fontsize: 12,
-                                    fct: () {
-                                      bags = !bags;
-                                      setState(() {});
-                                    },
-                                    blur: 18),
-                                SimpleButton(
-                                    backgroundcolor:
-                                        talking ? bleu_ciel : Colors.white,
-                                    size: Size(
-                                        largeur * 0.277, hauteur * 0.00875),
-                                    radius: 3,
-                                    text: "Talking",
-                                    textcolor: bleu_bg,
-                                    fontsize: 12,
-                                    fct: () {
-                                      (talking = !talking);
-                                      setState(() {});
-                                    },
-                                    blur: 18),
-                                SimpleButton(
-                                    backgroundcolor:
-                                        animals ? bleu_ciel : Colors.white,
-                                    size: Size(
-                                        largeur * 0.277, hauteur * 0.00875),
-                                    radius: 3,
-                                    text: "Animals",
-                                    textcolor: bleu_bg,
-                                    fontsize: 12,
-                                    fct: () {
-                                      (animals = !animals);
-                                      setState(() {});
-                                    },
-                                    blur: 18),
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                SimpleButton(
-                                    backgroundcolor:
-                                        smoking ? bleu_ciel : Colors.white,
-                                    size: Size(
-                                        largeur * 0.277, hauteur * 0.00875),
-                                    radius: 3,
-                                    text: "Smoking",
-                                    textcolor: bleu_bg,
-                                    fontsize: 12,
-                                    fct: () {
-                                      (smoking = !smoking);
-                                      setState(() {});
-                                    },
-                                    blur: 18),
-                                SizedBox(width: largeur * 0.07),
-                                SimpleButton(
-                                    backgroundcolor:
-                                        others ? bleu_ciel : Colors.white,
-                                    size: Size(
-                                        largeur * 0.277, hauteur * 0.00875),
-                                    radius: 3,
-                                    text: "Other",
-                                    textcolor: bleu_bg,
-                                    fontsize: 12,
-                                    fct: () {
-                                      (others = !others);
-                                      setState(() {});
-                                    },
-                                    blur: 18),
-                              ],
-                            ),
-
-                            SizedBox(height: hauteur * 0.01),
-
-                            ///Places
-                            Row(
-                              children: [
-                                SizedBox(
-                                    width: largeur * 0.2,
-                                    height: hauteur * 0.025,
-                                    child: MyText(
-                                        text: "Places",
-                                        weight: FontWeight.w700,
-                                        fontsize: 14,
-                                        color: Color(0xff20236C),
-                                        largeur: largeur * 0.2)),
-                                SizedBox(width: 10),
-                                Container(
-                                  width: largeur * 0.4,
-                                  height: hauteur * 0.0625,
-                                  decoration: BoxDecoration(
-                                      boxShadow: const [
-                                        BoxShadow(
-                                            blurRadius: 18,
-                                            color: Color.fromRGBO(
-                                                32, 35, 108, 0.15))
-                                      ],
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(5)),
-                                  child: DropdownButtonFormField(
-                                    value: dropdownValue,
-                                    icon: const Icon(
-                                        Icons.arrow_drop_down_rounded,
-                                        color: Color(0xFF72D2C2)),
-                                    decoration: const InputDecoration(
-                                      enabledBorder: OutlineInputBorder(
-                                          borderSide:
-                                              BorderSide(color: Colors.white)),
-                                      focusedBorder: InputBorder.none,
-                                      filled: true,
-                                      fillColor: Colors.white,
-                                    ),
-                                    items: const [
-                                      DropdownMenuItem(
-                                        value: "-1",
-                                        child: Text(
-                                          "4",
-                                          style: TextStyle(
-                                              fontFamily: 'Montserrat',
-                                              fontWeight: FontWeight.w500,
-                                              color: Color(0xff20236C),
-                                              fontSize: 12),
-                                        ),
-                                      ),
-                                      DropdownMenuItem(
-                                        value: "1",
-                                        child: AutoSizeText(
-                                          "3",
-                                          style: TextStyle(
-                                              fontFamily: 'Montserrat',
-                                              fontWeight: FontWeight.w500,
-                                              color: Color(0xff20236C),
-                                              fontSize: 12),
-                                        ),
-                                      ),
-                                      DropdownMenuItem(
-                                        value: "2",
-                                        child: AutoSizeText(
-                                          "2",
-                                          style: TextStyle(
-                                              fontFamily: 'Montserrat',
-                                              fontWeight: FontWeight.w500,
-                                              color: Color(0xff20236C),
-                                              fontSize: 12),
-                                        ),
-                                      ),
-                                      DropdownMenuItem(
-                                        value: "3",
-                                        child: AutoSizeText(
-                                          "1",
-                                          style: TextStyle(
-                                              fontFamily: 'Montserrat',
-                                              fontWeight: FontWeight.w500,
-                                              color: Color(0xff20236C),
-                                              fontSize: 12),
-                                        ),
-                                      ),
-                                    ],
-                                    onChanged: (value) {
-                                      if (value == "1") {
-                                        methode = "Negociable";
-                                      }
-                                      ;
-                                      if (value == "2") {
-                                        methode = "Service";
-                                      }
-                                      ;
-                                      print(methode);
-                                    },
-                                  ),
-                                ),
-                              ],
-                            ),
-
-                            SizedBox(height: hauteur * 0.05),
-
-                            SimpleButton(
-                                backgroundcolor: const Color(0xffFFA18E),
-                                size: Size(largeur, hauteur * 0.06),
-                                radius: 10,
-                                text: "Create",
-                                textcolor: const Color(0xFF20236C),
-                                fontsize: 20,
-                                fct: () {
-                                  next(debut, fin);
-                                },
-                                weight: FontWeight.w700),
-                            SizedBox(height: hauteur * 0.05),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            );
-          });
-      setState(() {});
-    }
-
-    ;
-
-    return Scaffold(
-      bottomNavigationBar: BottomNavBar(currentindex: 3),
-      body: Stack(
-        children: [
-          GoogleMap(
-            //Map widget from google_maps_flutter package
-            zoomGesturesEnabled: true, //enable Zoom in, out on map
-            zoomControlsEnabled: false,
-            initialCameraPosition: CameraPosition(
-              //innital position in map
-              target: startLocation, //initial position
-              zoom: 14.0, //initial zoom level
-            ),
-            markers: markers, //markers to show on map
-            polylines: Set<Polyline>.of(polylines.values), //polylines
-            mapType: MapType.normal, //map type
-            onMapCreated: (controller) {
-              //method called when map is created
-              setState(() {
-                mapController = controller;
-              });
-            },
-          ),
-
-          ///Total Distance
-          Positioned(
-            bottom: 25,
-            left: 10,
-            child: Container(
-                decoration: BoxDecoration(
-                    boxShadow: const [
-                      BoxShadow(
-                          blurRadius: 18,
-                          color: Color.fromRGBO(32, 35, 108, 0.15),
-                          spreadRadius: 10)
-                    ],
-                    color: Colors.grey.shade50,
-                    borderRadius: BorderRadius.circular(20)),
-                padding: const EdgeInsets.all(20),
-                child: Text(
-                  "Total Distance: ${distance.toStringAsFixed(2)} KM",
-                  style: const TextStyle(
-                    fontFamily: 'Montserrat',
-                    fontWeight: FontWeight.w700,
-                    color: Color(0xFF20236C),
-                    fontSize: 18,
-                  ),
-                )),
-          ),
-          Column(
-            children: [
-              Container(
-                  height: hauteur * 0.035,
-                  width: largeur,
-                  color: Colors.transparent), // pour laisser l'espace ctt
-              SizedBox(
-                width: largeur,
-                height: hauteur * 0.5,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                  child: Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          OurPrefixeIconButton(
-                              sizebutton: 2,
-                              size: Size(largeur * 0.723, hauteur * 0.0625),
-                              color: Colors.white,
-                              radius: 10,
-                              text: "Search a trip",
-                              textcolor: const Color(0xff20236C),
-                              weight: FontWeight.w500,
-                              fontsize: 12,
-                              iconName: "search",
-                              espaceicontext: largeur * 0.05,
-                              fct: searchTrip),
-
-                          ///Notification Button
-                          ElevatedButton(
-                            onPressed: () {},
-                            style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.white,
-                                elevation: 0.0,
-                                fixedSize:
-                                    Size(largeur * 0.13, hauteur * 0.0625)),
-                            child: const Icons_ESIWay(
-                                icon: "notification_on",
-                                largeur: 100,
-                                hauteur: 100),
-                          ), // child: const Icons_ESIWay(icon: "notification_off", largeur: 100, hauteur: 100),),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-          Positioned(
-            bottom: 20,
-            right: 20,
-            child: ElevatedButton(
-              onPressed: () async {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => CreateTripPage()));
-              }, // createTrip,
-              /*onPressed: (){     Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => CreateTripPage()));},*/
 
               style: ElevatedButton.styleFrom(
                 shape: RoundedRectangleBorder(

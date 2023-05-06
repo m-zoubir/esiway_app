@@ -18,6 +18,7 @@ import '../../../widgets/constant.dart';
 
 import '../../widgets/bottom_navbar.dart';
 import '../../widgets/our_text_field.dart';
+import '../Chat.dart/Test.dart';
 import 'createTrip_Page.dart';
 
 class HomePage extends StatefulWidget {
@@ -1862,8 +1863,8 @@ class _HomePageState extends State<HomePage> {
             right: 20,
             child: ElevatedButton(
               onPressed: () async {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => CreateTripPage()));
+                Navigator.push(
+                    context, MaterialPageRoute(builder: (context) => Test()));
               }, // createTrip,
               /*onPressed: (){     Navigator.push(
                   context, MaterialPageRoute(builder: (context) => CreateTripPage()));},*/

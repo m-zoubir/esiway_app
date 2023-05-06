@@ -71,6 +71,9 @@ dependencies:
   dropdown_search: ^5.0.6
   auto_size_text: ^3.0.0
   flutter_native_splash: ^2.2.19
+  bubble: ^1.2.1
+  image_gallery_saver: ^1.7.1
+  flutter_local_notifications: ^9.1.4  
 
 
 
@@ -104,6 +107,7 @@ flutter:
   assets:
     - Assets/Images/
     - Assets/Icons/
+    - Assets/
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
@@ -131,5 +135,6 @@ flutter:
            weight: 600
          - asset: Assets/Fonts/Montserrat-Thin.ttf
            weight: 400
+    
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages

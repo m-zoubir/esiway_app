@@ -5,6 +5,7 @@ import 'package:esiway/widgets/login_text.dart';
 import 'package:esiway/widgets/notif.dart';
 import 'package:esiway/widgets/notif_list.dart';
 import 'package:esiway/widgets/our_prefixeIconButton.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class Notifpage extends StatefulWidget {
@@ -14,46 +15,33 @@ class Notifpage extends StatefulWidget {
   State<Notifpage> createState() => _NotifpageState();
 }
 
-/* void getDocumentsFromTwoCollections(String collection1, String collection2) {
-  final CollectionReference collectionRef1 = firestore.collection(collection1);
-  final CollectionReference collectionRef2 = firestore.collection(collection2);
-
-  final List<Future<QuerySnapshot>> futures = [
-    collectionRef1.get(),
-    collectionRef2.get(),
-  ];
-
-  Future.wait(futures).then((snapshots) {
-    final List<DocumentSnapshot> documents1 = snapshots[0].docs;
-    final List<DocumentSnapshot> documents2 = snapshots[1].docs;
-
-    // Do something with the documents from both collections
-  }).catchError((error) {
-    print('Failed to get documents from collections: $error');
-  });
-} */
-
-final FirebaseFirestore firestore = FirebaseFirestore.instance;
-
-// stocker les notifications du conducteur
-/* void addToEndOfArray(dynamic newElement) {
-  final auth = FirebaseAuth.instance;
-  final DocumentReference docRef = firestore
-      .collection('Notifications')
-      .doc('${firestore.collection('Users').doc('${auth.currentUser?.uid}')}');
-
-  final Timestamp now = Timestamp.now();
-  docRef.update({
-    'n': FieldValue.arrayUnion([newElement]),
-    'last_modified': now,
-  }).then((value) {
-    print('New element added to the end of array successfully');
-  }).catchError((error) {
-    print('Failed to add new element to the end of array: $error');
-  });
-}
- */
 class _NotifpageState extends State<Notifpage> {
+/*   Future<List<Map<String, String>>> getStackItems() async {
+    List<Map<String, String>> stackItems = [];
+
+    // Get a reference to your document
+    DocumentReference documentReference = FirebaseFirestore.instance
+        .collection('Notifications')
+        .doc(FirebaseAuth.instance.currentUser!.uid);
+
+    // Get the 'stack' array field and reverse it
+
+    List<dynamic> stack = (await documentReference.get()).data()!["array"];
+    stack = stack.reversed.toList();
+
+    // Add each item in the 'stack' array to the list of stack items
+    stack.forEach((item) {
+      stackItems.add({
+        'title': item[0],
+        'description': item[1],
+        'author': item[2],
+        'date': item[3],
+      });
+    });
+
+    return stackItems;
+  } */
+
   initState() {
     super.initState();
 
@@ -145,9 +133,8 @@ class _NotifpageState extends State<Notifpage> {
                 //       color: BLUE,
                 //       fontFamily: 'mont'),
               ),
-              MyWidget(
-                notiflist: notifList,
-              ),
+
+              /////////////////////////////////////////////////////////////////
             ],
           ),
         ),

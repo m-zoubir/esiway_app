@@ -20,13 +20,11 @@ import '../../../widgets/login_text.dart';
 import '../../../widgets/simple_button.dart';
 import 'home_page.dart';
 
-
-
 class SearchTripPage extends StatefulWidget {
   Set<Marker> markers = Set(); //markers for google map
   GoogleMapController? mapController; //controller for Google map
   PolylinePoints polylinePoints = PolylinePoints();
-  Map<PolylineId, Polyline> polylines = {};//polylines to show direction
+  Map<PolylineId, Polyline> polylines = {}; //polylines to show direction
   double distance = 0.0;
 
   SearchTripPage({
@@ -43,8 +41,6 @@ class SearchTripPage extends StatefulWidget {
 }
 
 class _SearchTripPageState extends State<SearchTripPage> {
-
-
   void initState() {
     // TODO: implement initState
 
@@ -54,8 +50,8 @@ class _SearchTripPageState extends State<SearchTripPage> {
 
     Variables.locationName = "Search places";
     Variables.locationNamea = "Search places";
-    Variables.debut = const PointLatLng(36.72376684085901,2.991892973393687);
-    Variables.fin = const PointLatLng(36.72376684085901,2.991892973393687);
+    Variables.debut = const PointLatLng(36.72376684085901, 2.991892973393687);
+    Variables.fin = const PointLatLng(36.72376684085901, 2.991892973393687);
     Variables.polylineCoordinates = [];
     Variables.created = false;
     super.initState();
@@ -68,16 +64,19 @@ class _SearchTripPageState extends State<SearchTripPage> {
   /// +Fire base (pour stocker dans firebase on choisit la collection Trips)
   final docTrips = FirebaseFirestore.instance.collection("Trips");
   final auth = FirebaseAuth.instance; // pour l'utilisateur
-  DocumentReference DocRef = FirebaseFirestore.instance.collection("Trips").doc("Prefrences");
+  DocumentReference DocRef =
+      FirebaseFirestore.instance.collection("Trips").doc("Prefrences");
+
   /// +Map variables
   Set<Marker> markers = Set(); //markers for google map
   GoogleMapController? mapController; //controller for Google map
   PolylinePoints polylinePoints = PolylinePoints();
-  PointLatLng debut =const PointLatLng(36.72376684085901,2.991892973393687);
-  PointLatLng fin =const PointLatLng(36.64364699576445, 2.9943386163692787);
-  Map<PolylineId, Polyline> polylines = {};//polylines to show direction
+  PointLatLng debut = const PointLatLng(36.72376684085901, 2.991892973393687);
+  PointLatLng fin = const PointLatLng(36.64364699576445, 2.9943386163692787);
+  Map<PolylineId, Polyline> polylines = {}; //polylines to show direction
   double distance = 0.0;
-  static LatLng startLocation = const LatLng(36.705219106281575, 3.173786850126649);
+  static LatLng startLocation =
+      const LatLng(36.705219106281575, 3.173786850126649);
   LatLng? location;
   String? locationName;
   String? locationNamea;
@@ -85,15 +84,18 @@ class _SearchTripPageState extends State<SearchTripPage> {
 
   DateTime selectedDate = DateTime.now();
 
-  int i=0;
+  int i = 0;
 
-
-
-  String? date =  DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day,).toString() ;
+  String? date = DateTime(
+    DateTime.now().year,
+    DateTime.now().month,
+    DateTime.now().day,
+  ).toString();
   String? time = "00:00";
   String? minute;
   String? hour;
-  TimeOfDay TimeNow = TimeOfDay(hour: DateTime.now().hour, minute: DateTime.now().minute);
+  TimeOfDay TimeNow =
+      TimeOfDay(hour: DateTime.now().hour, minute: DateTime.now().minute);
 
 //======================================================================================================//
 //=========================================| Functions |================================================//
@@ -102,25 +104,39 @@ class _SearchTripPageState extends State<SearchTripPage> {
   ///=============================| Map Functions|===================================//
 
   ///+++++++++++++++++++++++++++++< ajouter Markers >+++++++++++++++++++++++++++///
-  ajouterMarkers(PointLatLng point,String title,String snippet) async{
-    widget.markers.add(Marker( //add start location marker
-      markerId: MarkerId(LatLng(point.latitude,point.longitude).toString()),
-      position: LatLng(point.latitude,point.longitude), //position of marker
-      infoWindow:  InfoWindow( //popup info
+
+  final FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+  void getAllDocs() {}
+  List<String> polylineCoordinatesToString(List<LatLng> polylineCoordinates) {
+    return polylineCoordinates
+        .map((LatLng latLng) => '${latLng.latitude},${latLng.longitude}')
+        .toList();
+  }
+
+  ajouterMarkers(PointLatLng point, String title, String snippet) async {
+    widget.markers.add(Marker(
+      //add start location marker
+      markerId: MarkerId(LatLng(point.latitude, point.longitude).toString()),
+      position: LatLng(point.latitude, point.longitude), //position of marker
+      infoWindow: InfoWindow(
+        //popup info
         title: title,
         snippet: snippet,
       ),
       icon: BitmapDescriptor.defaultMarker, //Icon for Marker
     ));
   }
+
   ///-----------------------------< get Direction (draw polyline between two point and put markers) >---------------------------///
   getDirection(PointLatLng depart, PointLatLng arrival) async {
     List<LatLng> polylineCoordinates = [];
     List<String> cities = [];
-    List<String> latLngStrings = polylineCoordinates.map((latLng) => '${latLng.latitude},${latLng.longitude}').toList();
+    List<String> latLngStrings = polylineCoordinates
+        .map((latLng) => '${latLng.latitude},${latLng.longitude}')
+        .toList();
 
-
-    PolylineResult result = await  polylinePoints.getRouteBetweenCoordinates(
+    PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
       APIKEY,
       depart,
       arrival,
@@ -128,12 +144,12 @@ class _SearchTripPageState extends State<SearchTripPage> {
 
     if (result.points.isNotEmpty) {
       result.points.forEach((PointLatLng point) async {
-        Variables.polylineCoordinates.add(LatLng(point.latitude, point.longitude));
+        Variables.polylineCoordinates
+            .add(LatLng(point.latitude, point.longitude));
       });
     } else {
       print(result.errorMessage);
     }
-
 
     /*for (LatLng coordinate in polylineCoordinates) {
       List<Placemark> placemarks = await placemarkFromCoordinates(coordinate.latitude, coordinate.longitude);
@@ -142,9 +158,6 @@ class _SearchTripPageState extends State<SearchTripPage> {
         print(locality);
       }
     }*/
-
-
-
 
     //polulineCoordinates is the List of longitute and latidtude.
     double totalDistance = 0;
@@ -156,14 +169,12 @@ class _SearchTripPageState extends State<SearchTripPage> {
           Variables.polylineCoordinates[i + 1].longitude);
     }
 
-    for (var i = 0; i < Variables.polylineCoordinates.length - 1; i++) {
-      print("points : ${i} = ${Variables.polylineCoordinates[i]}");
-    }
     setState(() {
       Variables.distance = totalDistance;
     });
     addPolyLine(Variables.polylineCoordinates);
   }
+
   ///+++++++++++++++++++++++++++++< Add Polyline >++++++++++++++++++++++++++++++///
   addPolyLine(List<LatLng> polylineCoordinates) {
     PolylineId id = const PolylineId("poly");
@@ -176,6 +187,7 @@ class _SearchTripPageState extends State<SearchTripPage> {
     polylines[id] = polyline;
     setState(() {});
   }
+
   ///++++++++++++++++< Calculer la distance entre deux point >++++++++++++++++++///
   double calculateDistance(lat1, lon1, lat2, lon2) {
     var p = 0.017453292519943295;
@@ -184,6 +196,7 @@ class _SearchTripPageState extends State<SearchTripPage> {
         cos(lat1 * p) * cos(lat2 * p) * (1 - cos((lon2 - lon1) * p)) / 2;
     return 12742 * asin(sqrt(a));
   }
+
   ///+++++++++++++++++++++++< Position actuel >+++++++++++++++++++++++++++++++++///
   Future<Position> determinePosition() async {
     bool serviceEnabled;
@@ -211,13 +224,11 @@ class _SearchTripPageState extends State<SearchTripPage> {
 
     return position;
   }
-  Future<void> currentLocation(PointLatLng point)async{
 
+  Future<void> currentLocation(PointLatLng point) async {
     Position positione = await determinePosition();
     point = PointLatLng(positione.latitude, positione.longitude);
   }
-
-
 
   ///+++++++++++++++++++++++< Time Picker >+++++++++++++++++++++++++++++++++///
   Future<void> _selectTime(BuildContext context) async {
@@ -229,12 +240,13 @@ class _SearchTripPageState extends State<SearchTripPage> {
       setState(() {
         TimeNow = picked;
         minute =
-        TimeNow.minute >= 10 ? "${TimeNow.minute}" : "0${TimeNow.minute}";
+            TimeNow.minute >= 10 ? "${TimeNow.minute}" : "0${TimeNow.minute}";
         hour = TimeNow.hour >= 10 ? "${TimeNow.hour}" : "0${TimeNow.hour}";
         time = hour! + " : " + minute!;
       });
     }
   }
+
   ///+++++++++++++++++++++++< Date Picker >+++++++++++++++++++++++++++++++++///
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
@@ -249,46 +261,99 @@ class _SearchTripPageState extends State<SearchTripPage> {
     if (picked != null) {
       setState(() {
         selectedDate = picked;
-        date = "${selectedDate.day} - ${selectedDate.month} - ${selectedDate.year}";
+        date =
+            "${selectedDate.day} - ${selectedDate.month} - ${selectedDate.year}";
       });
     }
   }
 
-  void toHome(){setState(() { Navigator.push(context, MaterialPageRoute(builder: (context) => const HomePage()));});}
-
-  Future<void> searchTrip(String conducteur, PointLatLng one, PointLatLng two, String depart, String arrivee, String date, String heure) async {
-
-    if( depart == "Current Location"){
-      Position positione = await determinePosition();
-      Variables.fin = PointLatLng(positione.latitude, positione.longitude);
-    };
-    if( arrivee == "Current Location"){
-      Position positione = await determinePosition();
-      Variables.debut = PointLatLng(positione.latitude, positione.longitude);
-    };
-
-    setState(() {});
-    print('object1');
-    getDirection(one,two);//fetch direction polylines from Google API
-    print('object2');
-
-    ajouterMarkers(one,"Starting Location",depart);
-    print('object3');
-
-    ajouterMarkers(two,"Arrival Location",arrivee);
-    print('object4');
-
-    mapController?.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(target: LatLng(one.latitude,one.longitude), zoom: 17)));
+  void toHome() {
+    setState(() {
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => const HomePage()));
+    });
   }
 
+  Future<void> searchTrip(String conducteur, PointLatLng one, PointLatLng two,
+      String depart, String arrivee, String date, String heure) async {
+    if (depart == "Current Location") {
+      Position positione = await determinePosition();
+      Variables.fin = PointLatLng(positione.latitude, positione.longitude);
+    }
+    ;
+    if (arrivee == "Current Location") {
+      Position positione = await determinePosition();
+      Variables.debut = PointLatLng(positione.latitude, positione.longitude);
+    }
+    ;
 
+    setState(() {});
+    getDirection(one, two); //fetch direction polylines from Google API
 
+    ajouterMarkers(one, "Starting Location", depart);
 
+    ajouterMarkers(two, "Arrival Location", arrivee);
 
+    mapController?.animateCamera(CameraUpdate.newCameraPosition(
+        CameraPosition(target: LatLng(one.latitude, one.longitude), zoom: 17)));
+
+    firestore.collection('Trips').get().then((QuerySnapshot querySnapshot) {
+      querySnapshot.docs.forEach((DocumentSnapshot documentSnapshot) {
+        if (date == documentSnapshot.get('Date')) {
+          var polylineCoordinate = documentSnapshot.get('polyline');
+          var i = 0;
+          bool trv = false;
+          print("length ===  ${polylineCoordinate.length}");
+          int count = 0;
+
+          List<String> rechercheArray =
+              polylineCoordinatesToString(Variables.polylineCoordinates);
+
+          //        if (polylineCoordinate.contains(rechercheArray[0])) {
+          for (String point1 in rechercheArray) {
+            if (polylineCoordinate.contains(point1)) {
+              count++;
+            }
+          }
+
+          double percent = count / Variables.polylineCoordinates.length;
+          print("percent = $percent");
+          print("count  = $count");
+
+          if (percent >= 0.4) {
+            print('Yes =======================');
+          } else {
+            print('No=====================');
+          }
+          //       }
+
+          /* while ((i < polylineCoordinate.length) && (trv == false)) {
+            // confirmer que le derpart de la recherche est inclut dans dans le trajet du conducteur
+            print("i = $i");
+            print('depart  == ${Variables.polylineCoordinates[0].toString()}');
+            if (polylineCoordinate[i] ==
+                Variables.polylineCoordinates[0].toString()) {
+              trv = true;
+              print(
+                  'CONDUCTEUR ==  ${polylineCoordinate[i]} , recherche == ${Variables.polylineCoordinates[0]}');
+              // print('Field 1: ${documentSnapshot.get('polyline')}');
+            }
+            i++;
+            //  print('${Variables.polylineCoordinates[0]}');
+          } */
+        }
+
+        //je parcours tous les documents de ma collection 'Trips'
+
+        // print('Document data: ${documentSnapshot.data()}');
+      });
+    }).catchError((error) {
+      print('Failed to retrieve documents: $error');
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-
     var largeur = MediaQuery.of(context).size.width;
     var hauteur = MediaQuery.of(context).size.height;
 
@@ -298,23 +363,26 @@ class _SearchTripPageState extends State<SearchTripPage> {
           GoogleMap(
             //Map widget from google_maps_flutter package
             zoomGesturesEnabled: true, //enable Zoom in, out on map
-            initialCameraPosition: CameraPosition(//innital position in map
+            initialCameraPosition: CameraPosition(
+              //innital position in map
               target: startLocation, //initial position
               zoom: 12.0, //initial zoom level
             ),
-            markers:  widget.markers, //markers to show on map
+            markers: widget.markers, //markers to show on map
             polylines: Set<Polyline>.of(polylines.values), //polylines
             mapType: MapType.normal, //map type
             onMapCreated: (controller) {
               //method called when map is created
-              setState(() {mapController = controller;});
+              setState(() {
+                mapController = controller;
+              });
             },
           ),
           Positioned(
-            bottom:0,
-            child:  SizedBox(
+            bottom: 0,
+            child: SizedBox(
               width: largeur,
-              height: hauteur*0.43,
+              height: hauteur * 0.43,
               child: SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -324,7 +392,8 @@ class _SearchTripPageState extends State<SearchTripPage> {
                     Container(
                       color: const Color(0xFFF9F8FF),
                       child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: largeur * 0.075),
+                        padding:
+                            EdgeInsets.symmetric(horizontal: largeur * 0.075),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -336,7 +405,7 @@ class _SearchTripPageState extends State<SearchTripPage> {
                             SizedBox(
                                 width: largeur * 0.55,
                                 height: hauteur * 0.025,
-                                child:  MyText(
+                                child: MyText(
                                     text: "Departure",
                                     weight: FontWeight.w700,
                                     fontsize: 14,
@@ -348,8 +417,18 @@ class _SearchTripPageState extends State<SearchTripPage> {
                             Container(
                               width: largeur * 0.9,
                               height: hauteur * 0.0625,
-                              decoration:  BoxDecoration(boxShadow: [BoxShadow(blurRadius: 20, color: bleu_bg.withOpacity(0.15),offset: const Offset(0,0), spreadRadius: 10)],color: Colors.white,borderRadius: const BorderRadius.all(Radius.circular(4))),
-                              child:Row(
+                              decoration: BoxDecoration(
+                                  boxShadow: [
+                                    BoxShadow(
+                                        blurRadius: 20,
+                                        color: bleu_bg.withOpacity(0.15),
+                                        offset: const Offset(0, 0),
+                                        spreadRadius: 10)
+                                  ],
+                                  color: Colors.white,
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(4))),
+                              child: Row(
                                 children: [
                                   ///Search places
                                   InkWell(
@@ -360,59 +439,105 @@ class _SearchTripPageState extends State<SearchTripPage> {
                                           mode: Mode.overlay,
                                           types: [],
                                           strictbounds: false,
-                                          components: [Component(Component.country, 'dz')],
+                                          components: [
+                                            Component(Component.country, 'dz')
+                                          ],
                                           //google_map_webservice package
-                                          onError: (err){
+                                          onError: (err) {
                                             print(err);
-                                          }
-                                      );
-                                      if(place != null){
+                                          });
+                                      if (place != null) {
                                         setState(() {
-                                          Variables.locationName = place.description.toString();
-                                          print( Variables.locationName);
+                                          Variables.locationName =
+                                              place.description.toString();
+                                          print(Variables.locationName);
                                         });
 
                                         //form google_maps_webservice package
-                                        final plist = GoogleMapsPlaces(apiKey:APIKEY, apiHeaders: await const GoogleApiHeaders().getHeaders());
+                                        final plist = GoogleMapsPlaces(
+                                            apiKey: APIKEY,
+                                            apiHeaders:
+                                                await const GoogleApiHeaders()
+                                                    .getHeaders());
                                         String placeid = place.placeId ?? "0";
-                                        final detail = await plist.getDetailsByPlaceId(placeid);
-                                        final geometry = detail.result.geometry!;
+                                        final detail = await plist
+                                            .getDetailsByPlaceId(placeid);
+                                        final geometry =
+                                            detail.result.geometry!;
                                         final lat = geometry.location.lat;
                                         final lang = geometry.location.lng;
                                         var newlatlang = LatLng(lat, lang);
                                         location = newlatlang;
-                                        debut = PointLatLng(newlatlang.latitude, newlatlang.longitude);
+                                        debut = PointLatLng(newlatlang.latitude,
+                                            newlatlang.longitude);
                                         //move map camera to selected place with animation
-                                        mapController?.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(target: newlatlang, zoom: 17)));
-                                      };
+                                        mapController?.animateCamera(
+                                            CameraUpdate.newCameraPosition(
+                                                CameraPosition(
+                                                    target: newlatlang,
+                                                    zoom: 17)));
+                                      }
+                                      ;
                                       setState(() {});
                                     },
                                     child: Row(
                                       children: [
-                                        SizedBox(width: largeur*0.02),
-                                        Icons_ESIWay(icon: 'search', largeur: largeur*0.08, hauteur: largeur*0.08),
-                                        SizedBox(width: largeur*0.02),
-                                        SizedBox(width:largeur*0.57,child: AutoSizeText(Variables.locationName, style: const TextStyle(fontFamily: 'Montserrat', fontWeight: FontWeight.w500, color: bleu_bg, fontSize: 12,),maxLines: 2,)),
+                                        SizedBox(width: largeur * 0.02),
+                                        Icons_ESIWay(
+                                            icon: 'search',
+                                            largeur: largeur * 0.08,
+                                            hauteur: largeur * 0.08),
+                                        SizedBox(width: largeur * 0.02),
+                                        SizedBox(
+                                            width: largeur * 0.57,
+                                            child: AutoSizeText(
+                                              Variables.locationName,
+                                              style: const TextStyle(
+                                                fontFamily: 'Montserrat',
+                                                fontWeight: FontWeight.w500,
+                                                color: bleu_bg,
+                                                fontSize: 12,
+                                              ),
+                                              maxLines: 2,
+                                            )),
                                       ],
                                     ),
-
-
                                   ),
+
                                   /// ESI
                                   InkWell(
-                                      onTap: (){
+                                      onTap: () {
                                         setState(() {
-                                          Variables.locationName = "Ecole Nationale Supérieure d'Informatique (Ex. INI)";
-                                          debut = PointLatLng(LocationEsi.latitude, LocationEsi.longitude);
+                                          Variables.locationName =
+                                              "Ecole Nationale Supérieure d'Informatique (Ex. INI)";
+                                          debut = PointLatLng(
+                                              LocationEsi.latitude,
+                                              LocationEsi.longitude);
                                         });
                                       },
-                                      child: Image(image: const AssetImage("Assets/Images/esi_logo.png"),width: largeur*0.06,height: hauteur*0.06)),
+                                      child: Image(
+                                          image: const AssetImage(
+                                              "Assets/Images/esi_logo.png"),
+                                          width: largeur * 0.06,
+                                          height: hauteur * 0.06)),
                                   // Icon(Icons.my_location,color:bleu_bg,size: largeur*0.06,),
-                                  SizedBox(width: largeur*0.015,),
+                                  SizedBox(
+                                    width: largeur * 0.015,
+                                  ),
+
                                   ///Current location
                                   InkWell(
-                                      onTap: (){setState(()  {Variables.locationName = "Current Location";});},
-                                      child: Icon(Icons.my_location,color:bleu_bg,size: largeur*0.06,)),
+                                      onTap: () {
+                                        setState(() {
+                                          Variables.locationName =
+                                              "Current Location";
+                                        });
+                                      },
+                                      child: Icon(
+                                        Icons.my_location,
+                                        color: bleu_bg,
+                                        size: largeur * 0.06,
+                                      )),
                                 ],
                               ),
                             ),
@@ -427,19 +552,29 @@ class _SearchTripPageState extends State<SearchTripPage> {
                                   weight: FontWeight.w700,
                                   fontsize: 14,
                                   color: const Color(0xff20236C),
-                                  largeur: largeur * 0.139,)),
+                                  largeur: largeur * 0.139,
+                                )),
                             SizedBox(height: hauteur * 0.005),
 
                             /// +Arrival Filed
                             Container(
                               width: largeur * 0.9,
                               height: hauteur * 0.0625,
-                              decoration: BoxDecoration(boxShadow: [BoxShadow(blurRadius: 20, color: bleu_bg.withOpacity(0.15),offset: const Offset(0,0), spreadRadius: 10)],color: Colors.white,borderRadius: const BorderRadius.all(Radius.circular(4))),
-                              child:Row(
+                              decoration: BoxDecoration(
+                                  boxShadow: [
+                                    BoxShadow(
+                                        blurRadius: 20,
+                                        color: bleu_bg.withOpacity(0.15),
+                                        offset: const Offset(0, 0),
+                                        spreadRadius: 10)
+                                  ],
+                                  color: Colors.white,
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(4))),
+                              child: Row(
                                 children: [
                                   ///Search places
                                   InkWell(
-
                                     onTap: () async {
                                       var place = await PlacesAutocomplete.show(
                                           context: context,
@@ -447,56 +582,104 @@ class _SearchTripPageState extends State<SearchTripPage> {
                                           mode: Mode.overlay,
                                           types: [],
                                           strictbounds: false,
-                                          components: [Component(Component.country, 'dz')],
+                                          components: [
+                                            Component(Component.country, 'dz')
+                                          ],
                                           //google_map_webservice package
-                                          onError: (err){print(err);}
-                                      );
-                                      if(place != null){
+                                          onError: (err) {
+                                            print(err);
+                                          });
+                                      if (place != null) {
                                         setState(() {
-                                          Variables.locationNamea = place.description.toString();
-                                          print( Variables.locationNamea);
+                                          Variables.locationNamea =
+                                              place.description.toString();
+                                          print(Variables.locationNamea);
                                         });
 
                                         //form google_maps_webservice package
-                                        final plist = GoogleMapsPlaces(apiKey:APIKEY, apiHeaders: await const GoogleApiHeaders().getHeaders());
+                                        final plist = GoogleMapsPlaces(
+                                            apiKey: APIKEY,
+                                            apiHeaders:
+                                                await const GoogleApiHeaders()
+                                                    .getHeaders());
                                         String placeid = place.placeId ?? "0";
-                                        final detail = await plist.getDetailsByPlaceId(placeid);
-                                        final geometry = detail.result.geometry!;
+                                        final detail = await plist
+                                            .getDetailsByPlaceId(placeid);
+                                        final geometry =
+                                            detail.result.geometry!;
                                         final lat = geometry.location.lat;
                                         final lang = geometry.location.lng;
                                         var newlatlang = LatLng(lat, lang);
                                         location = newlatlang;
-                                        fin = PointLatLng(newlatlang.latitude, newlatlang.longitude);
+                                        fin = PointLatLng(newlatlang.latitude,
+                                            newlatlang.longitude);
                                         //move map camera to selected place with animation
-                                        mapController?.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(target: newlatlang, zoom: 17)));
-                                      };
+                                        mapController?.animateCamera(
+                                            CameraUpdate.newCameraPosition(
+                                                CameraPosition(
+                                                    target: newlatlang,
+                                                    zoom: 17)));
+                                      }
+                                      ;
                                       setState(() {});
                                     },
                                     child: Row(
                                       children: [
-                                        SizedBox(width: largeur*0.02),
-                                        Icons_ESIWay(icon: 'search', largeur: largeur*0.08, hauteur: largeur*0.08),
-                                        SizedBox(width: largeur*0.02),
-                                        SizedBox(width:largeur*0.57,child: AutoSizeText(Variables.locationNamea, style: const TextStyle(fontFamily: 'Montserrat', fontWeight: FontWeight.w500, color: bleu_bg, fontSize: 12,),maxLines: 2,)),
+                                        SizedBox(width: largeur * 0.02),
+                                        Icons_ESIWay(
+                                            icon: 'search',
+                                            largeur: largeur * 0.08,
+                                            hauteur: largeur * 0.08),
+                                        SizedBox(width: largeur * 0.02),
+                                        SizedBox(
+                                            width: largeur * 0.57,
+                                            child: AutoSizeText(
+                                              Variables.locationNamea,
+                                              style: const TextStyle(
+                                                fontFamily: 'Montserrat',
+                                                fontWeight: FontWeight.w500,
+                                                color: bleu_bg,
+                                                fontSize: 12,
+                                              ),
+                                              maxLines: 2,
+                                            )),
                                       ],
                                     ),
-
-
                                   ),
+
                                   /// ESI
                                   InkWell(
-                                      onTap: (){
+                                      onTap: () {
                                         setState(() {
-                                          Variables.locationNamea = "Ecole Nationale Supérieure d'Informatique (Ex. INI)";
-                                          fin = PointLatLng(LocationEsi.latitude, LocationEsi.longitude);
+                                          Variables.locationNamea =
+                                              "Ecole Nationale Supérieure d'Informatique (Ex. INI)";
+                                          fin = PointLatLng(
+                                              LocationEsi.latitude,
+                                              LocationEsi.longitude);
                                         });
                                       },
-                                      child: Image(image: const AssetImage("Assets/Images/esi_logo.png"),width: largeur*0.06,height: hauteur*0.06)),
-                                  SizedBox(width: largeur*0.015,),
+                                      child: Image(
+                                          image: const AssetImage(
+                                              "Assets/Images/esi_logo.png"),
+                                          width: largeur * 0.06,
+                                          height: hauteur * 0.06)),
+                                  SizedBox(
+                                    width: largeur * 0.015,
+                                  ),
+
                                   ///Current location
                                   InkWell(
-                                      onTap: (){setState((){Variables.locationNamea = "Current Location";});},
-                                      child: Icon(Icons.my_location,color:bleu_bg,size: largeur*0.06,)),
+                                      onTap: () {
+                                        setState(() {
+                                          Variables.locationNamea =
+                                              "Current Location";
+                                        });
+                                      },
+                                      child: Icon(
+                                        Icons.my_location,
+                                        color: bleu_bg,
+                                        size: largeur * 0.06,
+                                      )),
                                 ],
                               ),
                             ),
@@ -504,43 +687,71 @@ class _SearchTripPageState extends State<SearchTripPage> {
 
                             /// +Date & Hour
                             Row(
-                              mainAxisAlignment:
-                              MainAxisAlignment.spaceBetween,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Column(
-                                  crossAxisAlignment:
-                                  CrossAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     /// "Date"
                                     SizedBox(
                                         width: largeur * 0.11,
                                         height: hauteur * 0.025,
-                                        child:  MyText(text: "Date", weight: FontWeight.w700, fontsize: 14, color: const Color(0xff20236C), largeur: largeur * 0.11,)),
+                                        child: MyText(
+                                          text: "Date",
+                                          weight: FontWeight.w700,
+                                          fontsize: 14,
+                                          color: const Color(0xff20236C),
+                                          largeur: largeur * 0.11,
+                                        )),
                                     SizedBox(height: hauteur * 0.005),
 
                                     /// +Date Filed
                                     GestureDetector(
-                                      onTap: ()async{_selectDate(context);},
-                                      child:  SizedBox(
+                                      onTap: () async {
+                                        _selectDate(context);
+                                      },
+                                      child: SizedBox(
                                         height: hauteur * 0.0625,
                                         width: largeur * 0.5,
                                         child: Container(
-                                            decoration:  BoxDecoration(boxShadow: const [BoxShadow(blurRadius: 18, color: Color.fromRGBO(32, 35, 108, 0.15))],color: Colors.white,borderRadius: BorderRadius.circular(5)),
+                                            decoration: BoxDecoration(
+                                                boxShadow: const [
+                                                  BoxShadow(
+                                                      blurRadius: 18,
+                                                      color: Color.fromRGBO(
+                                                          32, 35, 108, 0.15))
+                                                ],
+                                                color: Colors.white,
+                                                borderRadius:
+                                                    BorderRadius.circular(5)),
                                             child: Row(
-                                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.spaceEvenly,
                                               children: [
-                                                const SizedBox(width: 5,),
-                                                Transform.scale(
-                                                  scale:1.5,  // to make the icon smaller or larger
-                                                  child:  const Icons_ESIWay(icon: "calendar", largeur: 20, hauteur: 20),
+                                                const SizedBox(
+                                                  width: 5,
                                                 ),
-
-                                                MyText(text: date!, weight: FontWeight.w500, fontsize: 14, color: const Color(0xFF20236C), largeur: largeur*0.2,),
-                                                const SizedBox(width: 5,),
-
+                                                Transform.scale(
+                                                  scale:
+                                                      1.5, // to make the icon smaller or larger
+                                                  child: const Icons_ESIWay(
+                                                      icon: "calendar",
+                                                      largeur: 20,
+                                                      hauteur: 20),
+                                                ),
+                                                MyText(
+                                                  text: date!,
+                                                  weight: FontWeight.w500,
+                                                  fontsize: 14,
+                                                  color:
+                                                      const Color(0xFF20236C),
+                                                  largeur: largeur * 0.2,
+                                                ),
+                                                const SizedBox(
+                                                  width: 5,
+                                                ),
                                               ],
-                                            )
-                                        ),
+                                            )),
                                       ),
                                     ),
                                   ],
@@ -552,35 +763,55 @@ class _SearchTripPageState extends State<SearchTripPage> {
                                     SizedBox(
                                         width: largeur * 0.13,
                                         height: hauteur * 0.025,
-                                        child:  MyText(
+                                        child: MyText(
                                           text: "Heure",
                                           weight: FontWeight.w700,
                                           fontsize: 14,
-                                          color:
-                                          const Color(0xff20236C),
-                                          largeur:largeur * 0.13 ,)),
+                                          color: const Color(0xff20236C),
+                                          largeur: largeur * 0.13,
+                                        )),
                                     SizedBox(height: hauteur * 0.005),
 
                                     /// +Heure Filed
                                     GestureDetector(
-                                      onTap: ()async{_selectTime(context);},
-                                      child:  SizedBox(
+                                      onTap: () async {
+                                        _selectTime(context);
+                                      },
+                                      child: SizedBox(
                                         height: hauteur * 0.0625,
                                         width: largeur * 0.3,
                                         child: Container(
-                                            decoration:  BoxDecoration(boxShadow: const [BoxShadow(blurRadius: 18, color: Color.fromRGBO(32, 35, 108, 0.15))],color: Colors.white,borderRadius: BorderRadius.circular(5)),
+                                            decoration: BoxDecoration(
+                                                boxShadow: const [
+                                                  BoxShadow(
+                                                      blurRadius: 18,
+                                                      color: Color.fromRGBO(
+                                                          32, 35, 108, 0.15))
+                                                ],
+                                                color: Colors.white,
+                                                borderRadius:
+                                                    BorderRadius.circular(5)),
                                             child: Row(
-                                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.spaceEvenly,
                                               children: [
                                                 Transform.scale(
-                                                  scale:1.5,  // to make the icon smaller or larger
-                                                  child:  const Icons_ESIWay(icon: "timer", largeur: 20, hauteur: 20),
+                                                  scale:
+                                                      1.5, // to make the icon smaller or larger
+                                                  child: const Icons_ESIWay(
+                                                      icon: "timer",
+                                                      largeur: 20,
+                                                      hauteur: 20),
                                                 ),
-                                                MyText(text: time!, weight: FontWeight.w500, fontsize: 14, color: const Color(0xFF20236C), largeur: largeur*0.15),
-
+                                                MyText(
+                                                    text: time!,
+                                                    weight: FontWeight.w500,
+                                                    fontsize: 14,
+                                                    color:
+                                                        const Color(0xFF20236C),
+                                                    largeur: largeur * 0.15),
                                               ],
-                                            )
-                                        ),
+                                            )),
                                       ),
                                     ),
                                   ],
@@ -592,17 +823,16 @@ class _SearchTripPageState extends State<SearchTripPage> {
 
                             /// search Button
                             SimpleButton(
-                                backgroundcolor:
-                                const Color(0xffFFA18E),
+                                backgroundcolor: const Color(0xffFFA18E),
                                 size: Size(largeur, hauteur * 0.06),
                                 radius: 10,
                                 text: "Search",
                                 textcolor: const Color(0xFF20236C),
                                 fontsize: 20,
-                                fct: (){
+                                fct: () {
                                   //Variables.created = true;
-                                   // search trip
-                                  print('Testtttt');
+                                  // search trip
+
                                   searchTrip(
                                       auth.currentUser!.uid,
                                       debut,
@@ -621,11 +851,13 @@ class _SearchTripPageState extends State<SearchTripPage> {
                   ],
                 ),
               ),
-            ),),
-         ///Back Button
+            ),
+          ),
+
+          ///Back Button
           Positioned(
-            top: hauteur*0.05,
-            left: largeur*0.05,
+            top: hauteur * 0.05,
+            left: largeur * 0.05,
             child: SizedBox(
               height: 35,
               width: 80,
@@ -637,10 +869,17 @@ class _SearchTripPageState extends State<SearchTripPage> {
                   textcolor: const Color(0xFF20236C),
                   weight: FontWeight.w600,
                   fontsize: 14,
-                  icon: Transform.scale(scale: 0.75, child: const Icons_ESIWay(icon: "arrow_left", largeur: 30, hauteur: 30),),
+                  icon: Transform.scale(
+                    scale: 0.75,
+                    child: const Icons_ESIWay(
+                        icon: "arrow_left", largeur: 30, hauteur: 30),
+                  ),
                   espaceicontext: 5.0,
-                  fct: (){toHome();}),
-            ),)
+                  fct: () {
+                    toHome();
+                  }),
+            ),
+          )
         ],
       ),
     );

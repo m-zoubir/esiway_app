@@ -71,6 +71,7 @@ dependencies:
   dropdown_search: ^5.0.6
   auto_size_text: ^3.0.0
   flutter_native_splash: ^2.2.19
+  intl: ^0.17.0
 
 
 

@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:esiway/Screens/home/variables.dart';
 import 'package:esiway/widgets/our_prefixeIconButton.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_google_places/flutter_google_places.dart';
@@ -19,6 +20,7 @@ import '../../../widgets/constant.dart';
 import '../../widgets/bottom_navbar.dart';
 import '../../widgets/our_text_field.dart';
 import 'createTrip_Page.dart';
+import 'searchTrip_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -32,8 +34,15 @@ class _HomePageState extends State<HomePage> {
   String? date;
   void initState() {
     // TODO: implement initState
-    date = "${selectedDate.day} - ${selectedDate.month} - ${selectedDate.year}";
+   // date = "${selectedDate.day} - ${selectedDate.month} - ${selectedDate.year}";
+    if(Variables.created == true){
+    if((Variables.locationName != "Search places")&& (Variables.locationNamea !="Search places")){
+      getDirection(Variables.debut, Variables.fin);
+      distance = Variables.distance;
+      mapController?.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(target: LatLng(debut.latitude,debut.longitude), zoom: 17)));
 
+    }else{markers.clear();}
+    }
     super.initState();
   }
 //======================================================================================================//
@@ -50,8 +59,7 @@ class _HomePageState extends State<HomePage> {
 
   Map<PolylineId, Polyline> polylines = {}; //polylines to show direction
 
-  static LatLng startLocation =
-      const LatLng(36.705219106281575, 3.173786850126649);
+  static LatLng startLocation = const LatLng(36.705219106281575, 3.173786850126649);
 
   LatLng endLocation = const LatLng(36.687677024859354, 2.9965016961469324);
 
@@ -124,8 +132,8 @@ class _HomePageState extends State<HomePage> {
     addPolyLine(polylineCoordinates);
   }
 
-  PointLatLng debut = const PointLatLng(36.72376684085901, 2.991892973393687);
-  PointLatLng fin = const PointLatLng(36.64364699576445, 2.9943386163692787);
+  PointLatLng debut = Variables.debut;
+  PointLatLng fin =  Variables.fin;
 
   ///+++++++++++++++++++++++++++++< ajouter Markers >+++++++++++++++++++++++++++///
 
@@ -148,14 +156,9 @@ class _HomePageState extends State<HomePage> {
   getDirection(PointLatLng depart, PointLatLng arrival) async {
     List<LatLng> polylineCoordinates = [];
     List<String> cities = [];
+    List<String> latLngStrings = polylineCoordinates.map((latLng) => '${latLng.latitude},${latLng.longitude}').toList();
 
-    PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
-      googleAPiKey,
-      depart,
-      arrival,
-      //  travelMode: TravelMode.driving,
-    );
-
+    PolylineResult result = await  polylinePoints.getRouteBetweenCoordinates(APIKEY, depart, arrival,);
     if (result.points.isNotEmpty) {
       result.points.forEach((PointLatLng point) async {
         polylineCoordinates.add(LatLng(point.latitude, point.longitude));
@@ -163,16 +166,20 @@ class _HomePageState extends State<HomePage> {
     } else {
       print(result.errorMessage);
     }
-    /* print('lenght ==');
-    print({polylineCoordinates.length} );
-    for (var i = 0; i < polylineCoordinates.length - 1; i+10) {
-      print('Test');
-      List<Placemark> placemarks = await placemarkFromCoordinates(polylineCoordinates[i].latitude,polylineCoordinates[i].longitude);
-      String? city = placemarks[0].locality;
-      cities.add(city!);
+
+
+    /*for (LatLng coordinate in polylineCoordinates) {
+      List<Placemark> placemarks = await placemarkFromCoordinates(coordinate.latitude, coordinate.longitude);
+      if (placemarks.isNotEmpty) {
+        String? locality = placemarks![0].locality;
+        print(locality);
+      }
     }*/
 
-    //polulineCoordinates is the List of longitute and latidtude.
+
+
+
+
     double totalDistance = 0;
     for (var i = 0; i < polylineCoordinates.length - 1; i++) {
       totalDistance += calculateDistance(
@@ -181,15 +188,13 @@ class _HomePageState extends State<HomePage> {
           polylineCoordinates[i + 1].latitude,
           polylineCoordinates[i + 1].longitude);
     }
-    print(totalDistance);
 
-    setState(() {
-      distance = totalDistance;
-    });
+   /* for (var i = 0; i < polylineCoordinates.length - 1; i++) {
+      print("points : ${i} = ${polylineCoordinates[i]}");
+    }*/
 
-    addPolyLine(polylineCoordinates);
-    print("cities = ");
-    print(cities);
+    setState(() {Variables.distance = totalDistance;});
+    addPolyLine(Variables.polylineCoordinates);
   }
 
   ///+++++++++++++++++++++++++++++< Add Polyline >++++++++++++++++++++++++++++++///
@@ -892,47 +897,119 @@ class _HomePageState extends State<HomePage> {
               ),
             );
           });
-    }
+    };
 
-    ;
 
-    void createTrip() async {
-      await showModalBottomSheet(
-          context: context,
-          builder: (context) {
-            return Scaffold(
-              bottomNavigationBar: BottomNavBar(currentindex: 3),
-              body: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Container(
-                      color: const Color(0xFFF9F8FF),
-                      child: Padding(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: largeur * 0.075),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            SizedBox(height: hauteur * 0.01),
+    return Scaffold(
+      bottomNavigationBar: BottomNavBar(currentindex: 3),
+      body: Stack(
+        children: [
+          GoogleMap(
+            //Map widget from google_maps_flutter package
+            zoomGesturesEnabled: true, //enable Zoom in, out on map
+            zoomControlsEnabled: false,
+            initialCameraPosition:
+            CameraPosition(//innital position in map
+              target: Variables.created  ?LatLng(Variables.debut.latitude,Variables.debut.longitude) :startLocation , //initial position
+              zoom: 10.0, //initial zoom level
+            ),
+            markers: markers, //markers to show on map
+            polylines: Set<Polyline>.of(polylines.values), //polylines
+            mapType: MapType.normal, //map type
+            onMapCreated: (controller) {
+              //method called when map is created
+              setState(() {
+                mapController = controller;
+              });
+            },
+          ),
 
-                            /// "Depature"
-                            SizedBox(
-                                width: largeur * 0.55,
-                                height: hauteur * 0.025,
-                                child: MyText(
-                                  text: "Departure",
-                                  weight: FontWeight.w700,
-                                  fontsize: 14,
-                                  color: Color(0xff20236C),
-                                  largeur: largeur * 0.55,
-                                )),
+          ///Total Distance
+          Positioned(
+            bottom: 25,
+            left: 10,
+            child: Container(
+                decoration: BoxDecoration(
+                    boxShadow: const [
+                      BoxShadow(
+                          blurRadius: 18,
+                          color: Color.fromRGBO(32, 35, 108, 0.15),
+                          spreadRadius: 10)
+                    ],
+                    color: Colors.grey.shade50,
+                    borderRadius: BorderRadius.circular(20)),
+                padding: const EdgeInsets.all(20),
+                child: Text(
+                  "Total Distance: ${distance.toStringAsFixed(2)} KM",
+                  style: const TextStyle(
+                    fontFamily: 'Montserrat',
+                    fontWeight: FontWeight.w700,
+                    color: Color(0xFF20236C),
+                    fontSize: 18,
+                  ),
+                )),
+          ),
+          Column(
+            children: [
+              Container(
+                  height: hauteur * 0.035,
+                  width: largeur,
+                  color: Colors.transparent), // pour laisser l'espace ctt
+              SizedBox(
+                width: largeur,
+                height: hauteur * 0.5,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                  child: Column(
+                    children: [
+                      /// Search and notification Buttons
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          OurPrefixeIconButton(
+                              sizebutton: 2,
+                              size: Size(largeur * 0.723, hauteur * 0.0625),
+                              color: Colors.white,
+                              radius: 10,
+                              text: "Search a trip",
+                              textcolor: const Color(0xff20236C),
+                              weight: FontWeight.w500,
+                              fontsize: 12,
+                              iconName: "search",
+                              espaceicontext: largeur * 0.05,
+                              fct: (){ Navigator.push(context, MaterialPageRoute(builder: (context) => SearchTripPage(markers: markers,mapController: mapController,polylinePoints: polylinePoints,polylines: polylines,distance: distance,)));}
+                              ),
 
-                            SizedBox(height: hauteur * 0.005),
+                          ///Notification Button
+                          ElevatedButton(
+                            onPressed: () {},
+                            style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.white,
+                                elevation: 0.0,
+                                fixedSize:
+                                    Size(largeur * 0.13, hauteur * 0.0625)),
+                            child: const Icons_ESIWay(
+                                icon: "notification_on",
+                                largeur: 100,
+                                hauteur: 100),
+                          ), // child: const Icons_ESIWay(icon: "notification_off", largeur: 100, hauteur: 100),),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+          ///Create Trip Button
+          Positioned(
+            bottom: 20,
+            right: 20,
+            child: ElevatedButton(
+              onPressed: () async {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => CreateTripPage(markers: markers,mapController: mapController,polylinePoints: polylinePoints,polylines: polylines,distance: distance,)));
+              }, // createTrip,
+
 
                             /// +Departure Filed
                             Container(
@@ -1867,6 +1944,7 @@ class _HomePageState extends State<HomePage> {
               }, // createTrip,
               /*onPressed: (){     Navigator.push(
                   context, MaterialPageRoute(builder: (context) => CreateTripPage()));},*/
+
               style: ElevatedButton.styleFrom(
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(50)),

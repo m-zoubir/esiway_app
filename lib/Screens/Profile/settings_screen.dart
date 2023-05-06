@@ -120,17 +120,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) => ChangePasswordInfo()));
                 }),
-            Listbox(
-                title: "Delete my account",
-                iconleading: Icon(
-                  Iconsax.trush_square,
-                  color: vert,
-                ),
-                onPressed: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => DeleteAccountPassword()));
-                }),
-            FirebaseAuth.instance.currentUser!.email == "lm_zoubir@esi.dz"
+            FirebaseAuth.instance.currentUser!.uid == adminuid
                 ? Listbox(
                     title: "Adminstrator",
                     iconleading: Icon(
@@ -140,8 +130,109 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     onPressed: () {
                       Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) => AdminScreen()));
+                      /*
+                      TextEditingController password = TextEditingController();
+                      bool validate = true;
+                      late Map data;
+                      showDialog(
+                          context: context,
+                          builder: (BuildContext context) =>
+                              SimpleDialog(children: [
+                                Container(
+                                  decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(50)),
+                                  height: 260,
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.8,
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 20, vertical: 20),
+                                  child: Center(
+                                    child: Column(children: [
+                                      Text(
+                                        "Please , enter your password to get administrator's permissions",
+                                        style: TextStyle(
+                                            color: bleu_bg,
+                                            fontFamily: 'Montserrat',
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      MyPasswordField(
+                                        controller: password,
+                                        validate: validate,
+                                        title: " ",
+                                        error: "Password incorrect",
+                                      ),
+                                      FutureBuilder(
+                                          future: FirebaseFirestore.instance
+                                              .collection("Users")
+                                              .doc(FirebaseAuth
+                                                  .instance.currentUser!.uid)
+                                              .get(),
+                                          builder: (context, snapshot) {
+                                            if (snapshot.hasError) {
+                                              return Center(
+                                                  child:
+                                                      CircularProgressIndicator());
+                                            }
+                                            if (snapshot.hasData) {
+                                              //Get the data
+                                              DocumentSnapshot<
+                                                      Map<String, dynamic>>?
+                                                  documentSnapshot =
+                                                  snapshot.data;
+                                              String confirm;
+                                              try {
+                                                data = documentSnapshot!.data()
+                                                    as Map;
+                                                confirm = data["Password"];
+                                              } catch (e) {
+                                                return Center(
+                                                    child:
+                                                        CircularProgressIndicator());
+                                              }
+
+                                              //display the data
+                                              return Container(
+                                                height: 40,
+                                                width: MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    0.3,
+                                                child: Button(
+                                                  color: orange,
+                                                  title: "Continue",
+                                                  onPressed: () {
+                                                    print(confirm);
+                                                    if (confirm == password) {
+                                                      Navigator.of(context).push(
+                                                          MaterialPageRoute(
+                                                              builder: (context) =>
+                                                                  AdminScreen()));
+                                                    }
+                                                  },
+                                                ),
+                                              );
+                                            }
+                                            return Center(
+                                                child:
+                                                    CircularProgressIndicator());
+                                          }),
+                                    ]),
+                                  ),
+                                ),
+                              ]));*/
                     })
-                : SizedBox(),
+                : Listbox(
+                    title: "Delete my account",
+                    iconleading: Icon(
+                      Iconsax.trush_square,
+                      color: vert,
+                    ),
+                    onPressed: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => DeleteAccountPassword()));
+                    }),
           ],
         ),
       ),

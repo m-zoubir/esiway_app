@@ -50,111 +50,113 @@ class _UserCarInfoState extends State<UserCarInfo> {
 
             //display the data
             return SafeArea(
-              child: Column(
-                children: [
-                  Container(
-                    width: MediaQuery.of(context).size.width,
-                    height: MediaQuery.of(context).size.height * 0.3,
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: NetworkImage(data["CarPicture"]),
-                        fit: BoxFit.cover,
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: MediaQuery.of(context).size.height * 0.3,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: NetworkImage(data["CarPicture"]),
+                          fit: BoxFit.cover,
+                        ),
                       ),
-                    ),
-                    child: Padding(
-                      padding: EdgeInsets.all(25.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          InkWell(
-                            onTap: () => back(),
-                            child: Container(
-                              height: 35,
-                              width: 35,
-                              decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(8)),
-                              child: Center(
-                                child: Icon(color: vert, Icons.close),
+                      child: Padding(
+                        padding: EdgeInsets.all(25.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            InkWell(
+                              onTap: () => back(),
+                              child: Container(
+                                height: 35,
+                                width: 35,
+                                decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(8)),
+                                child: Center(
+                                  child: Icon(color: vert, Icons.close),
+                                ),
                               ),
                             ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 20.0, horizontal: 25),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          TitleTextFeild(title: "Brand"),
+                          SizedBox(
+                            height: 5,
                           ),
+                          Text(
+                            "${data["brand"]}",
+                            style: TextStyle(
+                                color: bleu_bg,
+                                fontSize: 13,
+                                fontWeight: FontWeight.normal,
+                                fontFamily: "Montserat"),
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          TitleTextFeild(title: "Model"),
+                          SizedBox(
+                            height: 5,
+                          ),
+                          Text(
+                            "${data["model"]}",
+                            style: TextStyle(
+                                color: bleu_bg,
+                                fontSize: 13,
+                                fontWeight: FontWeight.normal,
+                                fontFamily: "Montserat"),
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          TitleTextFeild(title: "Registration number"),
+                          SizedBox(
+                            height: 5,
+                          ),
+                          Text(
+                            "${data["registrationNumber"]}",
+                            style: TextStyle(
+                                color: bleu_bg,
+                                fontSize: 13,
+                                fontWeight: FontWeight.normal,
+                                fontFamily: "Montserat"),
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          TitleTextFeild(title: "Insurance policy"),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          Container(
+                            width: MediaQuery.of(context).size.width,
+                            height: MediaQuery.of(context).size.height * 0.34,
+                            decoration: BoxDecoration(
+                              border: Border.all(color: vert, width: 2),
+                              borderRadius: BorderRadius.circular(8),
+                              image: DecorationImage(
+                                image: NetworkImage(data["Policy"]),
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          )
                         ],
                       ),
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 20.0, horizontal: 25),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        TitleTextFeild(title: "Brand"),
-                        SizedBox(
-                          height: 5,
-                        ),
-                        Text(
-                          "${data["brand"]}",
-                          style: TextStyle(
-                              color: bleu_bg,
-                              fontSize: 12,
-                              fontWeight: FontWeight.normal,
-                              fontFamily: "Montserat"),
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        TitleTextFeild(title: "Model"),
-                        SizedBox(
-                          height: 5,
-                        ),
-                        Text(
-                          "${data["model"]}",
-                          style: TextStyle(
-                              color: bleu_bg,
-                              fontSize: 12,
-                              fontWeight: FontWeight.normal,
-                              fontFamily: "Montserat"),
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        TitleTextFeild(title: "Registration number"),
-                        SizedBox(
-                          height: 5,
-                        ),
-                        Text(
-                          "${data["registrationNumber"]}",
-                          style: TextStyle(
-                              color: bleu_bg,
-                              fontSize: 12,
-                              fontWeight: FontWeight.normal,
-                              fontFamily: "Montserat"),
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        TitleTextFeild(title: "Insurance policy"),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        Container(
-                          width: MediaQuery.of(context).size.width,
-                          height: MediaQuery.of(context).size.height * 0.34,
-                          decoration: BoxDecoration(
-                            border: Border.all(color: vert, width: 2),
-                            borderRadius: BorderRadius.circular(8),
-                            image: DecorationImage(
-                              image: NetworkImage(data["Policy"]),
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             );
           }

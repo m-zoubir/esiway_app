@@ -10,7 +10,7 @@ class SimpleButton extends StatelessWidget {
   final Color textcolor;
   final double fontsize;
   final Function fct;
-  final double blur;
+  final double? blur;
   const SimpleButton({
     required this.backgroundcolor,
     required this.size,
@@ -25,7 +25,18 @@ class SimpleButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
+
+    return Container(
+      decoration: BoxDecoration(
+          boxShadow: blur != null
+              ? [
+                  BoxShadow(
+                    // blurRadius: blur,
+                    color: Color.fromRGBO(32, 35, 108, 0.15),
+                  ),
+                ]
+              : []),
+
       child: ElevatedButton(
         onPressed: () async {
           fct();

@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:math';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -5,6 +6,7 @@ import 'package:esiway/Screens/home/variables.dart';
 import 'package:esiway/widgets/prefixe_icon_button.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:geocoding/geocoding.dart';
+import 'package:google_maps_webservice/geocoding.dart';
 import '../../../widgets/constant.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_google_places/flutter_google_places.dart';
@@ -18,14 +20,14 @@ import '../../../widgets/login_text.dart';
 import '../../../widgets/simple_button.dart';
 import 'home_page.dart';
 
-class CreateTripPage extends StatefulWidget {
+class SearchTripPage extends StatefulWidget {
   Set<Marker> markers = Set(); //markers for google map
   GoogleMapController? mapController; //controller for Google map
   PolylinePoints polylinePoints = PolylinePoints();
   Map<PolylineId, Polyline> polylines = {}; //polylines to show direction
   double distance = 0.0;
 
-  CreateTripPage({
+  SearchTripPage({
     super.key,
     required this.markers,
     required this.mapController,
@@ -35,23 +37,10 @@ class CreateTripPage extends StatefulWidget {
   });
 
   @override
-  State<CreateTripPage> createState() => _CreateTripPageState();
+  State<SearchTripPage> createState() => _SearchTripPageState();
 }
 
-class _CreateTripPageState extends State<CreateTripPage> {
-  List<String> addPolylineCoordinates(List<LatLng> polylineCoordinates) {
-    List<String> /*  List<Map<String, dynamic>>  */ serializedCoordinates =
-        polylineCoordinates.map((coordinate) {
-      return '${coordinate.latitude},${coordinate.longitude}';
-      /*  {
-          'latitude': coordinate.latitude,
-          'longitude': coordinate.longitude
-        }; */
-    }).toList();
-
-    return serializedCoordinates;
-  }
-
+class _SearchTripPageState extends State<SearchTripPage> {
   void initState() {
     // TODO: implement initState
 
@@ -75,7 +64,8 @@ class _CreateTripPageState extends State<CreateTripPage> {
   /// +Fire base (pour stocker dans firebase on choisit la collection Trips)
   final docTrips = FirebaseFirestore.instance.collection("Trips");
   final auth = FirebaseAuth.instance; // pour l'utilisateur
-  final FirebaseFirestore firestore = FirebaseFirestore.instance;
+  DocumentReference DocRef =
+      FirebaseFirestore.instance.collection("Trips").doc("Prefrences");
 
   /// +Map variables
   Set<Marker> markers = Set(); //markers for google map
@@ -87,21 +77,13 @@ class _CreateTripPageState extends State<CreateTripPage> {
   double distance = 0.0;
   static LatLng startLocation =
       const LatLng(36.705219106281575, 3.173786850126649);
-  LatLng endLocation = const LatLng(36.687677024859354, 2.9965016961469324);
   LatLng? location;
   String? locationName;
   String? locationNamea;
   List<Placemark>? placemarks;
 
-  String paimentMethode = "";
-  String methode = "";
   DateTime selectedDate = DateTime.now();
-  static bool bags = false;
-  static bool talking = false;
-  static bool animals = false;
-  static bool smoking = false;
-  static bool others = false;
-  String? seats = "4";
+
   int i = 0;
 
   String? date = DateTime(
@@ -114,7 +96,6 @@ class _CreateTripPageState extends State<CreateTripPage> {
   String? hour;
   TimeOfDay TimeNow =
       TimeOfDay(hour: DateTime.now().hour, minute: DateTime.now().minute);
-  TextEditingController pricecontroller = TextEditingController();
 
 //======================================================================================================//
 //=========================================| Functions |================================================//
@@ -123,6 +104,16 @@ class _CreateTripPageState extends State<CreateTripPage> {
   ///=============================| Map Functions|===================================//
 
   ///+++++++++++++++++++++++++++++< ajouter Markers >+++++++++++++++++++++++++++///
+
+  final FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+  void getAllDocs() {}
+  List<String> polylineCoordinatesToString(List<LatLng> polylineCoordinates) {
+    return polylineCoordinates
+        .map((LatLng latLng) => '${latLng.latitude},${latLng.longitude}')
+        .toList();
+  }
+
   ajouterMarkers(PointLatLng point, String title, String snippet) async {
     widget.markers.add(Marker(
       //add start location marker
@@ -138,17 +129,7 @@ class _CreateTripPageState extends State<CreateTripPage> {
   }
 
   ///-----------------------------< get Direction (draw polyline between two point and put markers) >---------------------------///
-  getDirection(
-      String conducteur,
-      PointLatLng one,
-      PointLatLng two,
-      String depart,
-      String arrivee,
-      String date,
-      String heure,
-      String price,
-      String places,
-      String methode) async {
+  getDirection(PointLatLng depart, PointLatLng arrival) async {
     List<LatLng> polylineCoordinates = [];
     List<String> cities = [];
     List<String> latLngStrings = polylineCoordinates
@@ -157,8 +138,8 @@ class _CreateTripPageState extends State<CreateTripPage> {
 
     PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
       APIKEY,
-      one,
-      two,
+      depart,
+      arrival,
     );
 
     if (result.points.isNotEmpty) {
@@ -188,26 +169,10 @@ class _CreateTripPageState extends State<CreateTripPage> {
           Variables.polylineCoordinates[i + 1].longitude);
     }
 
-    addPolylineCoordinates(Variables.polylineCoordinates);
-    final json = {
-      "Conducteur": conducteur,
-      "Depart_LatLng": "$one",
-      "Arrivee_LatLng": "$two",
-      "Depart": depart,
-      "Arrivee": arrivee,
-      "Date": "$date",
-      "Heure": "$heure",
-      "Price": price,
-      "Places": places,
-      "methode": methode,
-      "polyline": addPolylineCoordinates(Variables.polylineCoordinates),
-      //prefrences
-    };
-
-    await docTrips.doc("$date-$heure-${auth.currentUser?.uid}_").set(json);
     setState(() {
       Variables.distance = totalDistance;
     });
+    addPolyLine(Variables.polylineCoordinates);
   }
 
   ///+++++++++++++++++++++++++++++< Add Polyline >++++++++++++++++++++++++++++++///
@@ -309,17 +274,8 @@ class _CreateTripPageState extends State<CreateTripPage> {
     });
   }
 
-  Future<void> createTrip(
-      String conducteur,
-      PointLatLng one,
-      PointLatLng two,
-      String depart,
-      String arrivee,
-      String date,
-      String heure,
-      String price,
-      String places,
-      String methode) async {
+  Future<void> searchTrip(String conducteur, PointLatLng one, PointLatLng two,
+      String depart, String arrivee, String date, String heure) async {
     if (depart == "Current Location") {
       Position positione = await determinePosition();
       Variables.fin = PointLatLng(positione.latitude, positione.longitude);
@@ -332,19 +288,74 @@ class _CreateTripPageState extends State<CreateTripPage> {
     ;
 
     setState(() {});
-    getDirection(conducteur, one, two, depart, arrivee, date, heure, price,
-        places, methode); //fetch direction polylines from Google API
+    getDirection(one, two); //fetch direction polylines from Google API
+
     ajouterMarkers(one, "Starting Location", depart);
+
     ajouterMarkers(two, "Arrival Location", arrivee);
+
     mapController?.animateCamera(CameraUpdate.newCameraPosition(
         CameraPosition(target: LatLng(one.latitude, one.longitude), zoom: 17)));
+
+    firestore.collection('Trips').get().then((QuerySnapshot querySnapshot) {
+      querySnapshot.docs.forEach((DocumentSnapshot documentSnapshot) {
+        if (date == documentSnapshot.get('Date')) {
+          var polylineCoordinate = documentSnapshot.get('polyline');
+          var i = 0;
+          bool trv = false;
+          print("length ===  ${polylineCoordinate.length}");
+          int count = 0;
+
+          List<String> rechercheArray =
+              polylineCoordinatesToString(Variables.polylineCoordinates);
+
+          //        if (polylineCoordinate.contains(rechercheArray[0])) {
+          for (String point1 in rechercheArray) {
+            if (polylineCoordinate.contains(point1)) {
+              count++;
+            }
+          }
+
+          double percent = count / Variables.polylineCoordinates.length;
+          print("percent = $percent");
+          print("count  = $count");
+
+          if (percent >= 0.4) {
+            print('Yes =======================');
+          } else {
+            print('No=====================');
+          }
+          //       }
+
+          /* while ((i < polylineCoordinate.length) && (trv == false)) {
+            // confirmer que le derpart de la recherche est inclut dans dans le trajet du conducteur
+            print("i = $i");
+            print('depart  == ${Variables.polylineCoordinates[0].toString()}');
+            if (polylineCoordinate[i] ==
+                Variables.polylineCoordinates[0].toString()) {
+              trv = true;
+              print(
+                  'CONDUCTEUR ==  ${polylineCoordinate[i]} , recherche == ${Variables.polylineCoordinates[0]}');
+              // print('Field 1: ${documentSnapshot.get('polyline')}');
+            }
+            i++;
+            //  print('${Variables.polylineCoordinates[0]}');
+          } */
+        }
+
+        //je parcours tous les documents de ma collection 'Trips'
+
+        // print('Document data: ${documentSnapshot.data()}');
+      });
+    }).catchError((error) {
+      print('Failed to retrieve documents: $error');
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     var largeur = MediaQuery.of(context).size.width;
     var hauteur = MediaQuery.of(context).size.height;
-    var dropdownValue = "-1"; // drop down value
 
     return Scaffold(
       body: Stack(
@@ -355,7 +366,7 @@ class _CreateTripPageState extends State<CreateTripPage> {
             initialCameraPosition: CameraPosition(
               //innital position in map
               target: startLocation, //initial position
-              zoom: 14.0, //initial zoom level
+              zoom: 12.0, //initial zoom level
             ),
             markers: widget.markers, //markers to show on map
             polylines: Set<Polyline>.of(polylines.values), //polylines
@@ -371,7 +382,7 @@ class _CreateTripPageState extends State<CreateTripPage> {
             bottom: 0,
             child: SizedBox(
               width: largeur,
-              height: hauteur * 0.7125,
+              height: hauteur * 0.43,
               child: SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -672,7 +683,6 @@ class _CreateTripPageState extends State<CreateTripPage> {
                                 ],
                               ),
                             ),
-
                             SizedBox(height: hauteur * 0.02),
 
                             /// +Date & Hour
@@ -809,380 +819,30 @@ class _CreateTripPageState extends State<CreateTripPage> {
                                 SizedBox(height: hauteur * 0.02),
                               ],
                             ),
-                            SizedBox(height: hauteur * 0.02),
+                            SizedBox(height: hauteur * 0.03),
 
-                            ///  "Paiment"
-                            SizedBox(
-                                width: largeur * 0.2,
-                                height: hauteur * 0.025,
-                                child: MyText(
-                                  text: "Paiment",
-                                  weight: FontWeight.w700,
-                                  fontsize: 14,
-                                  color: const Color(0xff20236C),
-                                  largeur: largeur * 0.2,
-                                )),
-                            SizedBox(height: hauteur * 0.005),
-
-                            /// +Paiment Field
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Container(
-                                  width: largeur * 0.3,
-                                  height: hauteur * 0.0625,
-                                  decoration: BoxDecoration(
-                                      boxShadow: const [
-                                        BoxShadow(
-                                            blurRadius: 18,
-                                            color: Color.fromRGBO(
-                                                32, 35, 108, 0.15))
-                                      ],
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(5)),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      const SizedBox(width: 10),
-                                      Expanded(
-                                        child: TextField(
-                                          controller: pricecontroller,
-                                          decoration: const InputDecoration(
-                                            hintText: "Price",
-                                            hintStyle: TextStyle(
-                                                fontFamily: 'Montserrat',
-                                                fontWeight: FontWeight.w500,
-                                                color: Color(0xff20236C),
-                                                fontSize: 14),
-                                            focusedBorder: InputBorder.none,
-                                            enabledBorder: InputBorder.none,
-                                            disabledBorder: InputBorder.none,
-                                            filled: false,
-                                          ),
-                                        ),
-                                      ),
-                                      const AutoSizeText("Da",
-                                          style: TextStyle(
-                                              fontFamily: 'Montserrat',
-                                              fontWeight: FontWeight.w500,
-                                              color: const Color(0xff20236C),
-                                              fontSize: 14)),
-                                      const SizedBox(width: 10),
-                                    ],
-                                  ),
-                                ),
-
-                                /// methode
-                                Container(
-                                  width: largeur * 0.51,
-                                  height: hauteur * 0.0625,
-                                  decoration: BoxDecoration(
-                                      boxShadow: const [
-                                        BoxShadow(
-                                            blurRadius: 18,
-                                            color: Color.fromRGBO(
-                                                32, 35, 108, 0.15))
-                                      ],
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(5)),
-                                  child: DropdownButtonFormField(
-                                    value: dropdownValue,
-                                    icon: const Icon(
-                                        Icons.arrow_drop_down_rounded,
-                                        color: Color(0xFF72D2C2)),
-                                    decoration: const InputDecoration(
-                                      enabledBorder: OutlineInputBorder(
-                                          borderSide:
-                                              BorderSide(color: Colors.white)),
-                                      focusedBorder: InputBorder.none,
-                                      filled: true,
-                                      fillColor: Colors.white,
-                                    ),
-                                    items: const [
-                                      DropdownMenuItem(
-                                        value: "-1",
-                                        child: Text(
-                                          "choose a method ",
-                                          style: TextStyle(
-                                              fontFamily: 'Montserrat',
-                                              fontWeight: FontWeight.w500,
-                                              color: Color(0xff20236C),
-                                              fontSize: 12),
-                                        ),
-                                      ),
-                                      DropdownMenuItem(
-                                        value: "1",
-                                        child: AutoSizeText(
-                                          "Negociable",
-                                          style: TextStyle(
-                                              fontFamily: 'Montserrat',
-                                              fontWeight: FontWeight.w500,
-                                              color: Color(0xff20236C),
-                                              fontSize: 12),
-                                        ),
-                                      ),
-                                      DropdownMenuItem(
-                                        value: "2",
-                                        child: AutoSizeText(
-                                          "Service",
-                                          style: TextStyle(
-                                              fontFamily: 'Montserrat',
-                                              fontWeight: FontWeight.w500,
-                                              color: Color(0xff20236C),
-                                              fontSize: 12),
-                                        ),
-                                      ),
-                                    ],
-                                    onChanged: (value) {
-                                      if (value == "1") {
-                                        methode = "Negociable";
-                                      }
-                                      ;
-                                      if (value == "2") {
-                                        methode = "Service";
-                                      }
-                                      ;
-                                      print(methode);
-                                    },
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: hauteur * 0.02),
-
-                            ///Preferences
-                            SizedBox(
-                                width: largeur * 0.266,
-                                height: hauteur * 0.025,
-                                child: MyText(
-                                    text: "Preferences",
-                                    weight: FontWeight.w700,
-                                    fontsize: 14,
-                                    color: const Color(0xff20236C),
-                                    largeur: largeur * 0.266)),
-                            SizedBox(height: hauteur * 0.005),
-
-                            /// +Preferences Field
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                SimpleButton(
-                                    backgroundcolor:
-                                        bags ? bleu_ciel : Colors.white,
-                                    size:
-                                        Size(largeur * 0.2, hauteur * 0.00875),
-                                    radius: 3,
-                                    text: "Bags",
-                                    textcolor: bleu_bg,
-                                    fontsize: 12,
-                                    fct: () {
-                                      bags = !bags;
-                                      setState(() {});
-                                    },
-                                    blur: 18),
-                                SimpleButton(
-                                    backgroundcolor:
-                                        talking ? bleu_ciel : Colors.white,
-                                    size: Size(
-                                        largeur * 0.277, hauteur * 0.00875),
-                                    radius: 3,
-                                    text: "Talking",
-                                    textcolor: bleu_bg,
-                                    fontsize: 12,
-                                    fct: () {
-                                      (talking = !talking);
-                                      setState(() {});
-                                    },
-                                    blur: 18),
-                                SimpleButton(
-                                    backgroundcolor:
-                                        animals ? bleu_ciel : Colors.white,
-                                    size: Size(
-                                        largeur * 0.277, hauteur * 0.00875),
-                                    radius: 3,
-                                    text: "Animals",
-                                    textcolor: bleu_bg,
-                                    fontsize: 12,
-                                    fct: () {
-                                      (animals = !animals);
-                                      setState(() {});
-                                    },
-                                    blur: 18),
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                SimpleButton(
-                                    backgroundcolor:
-                                        smoking ? bleu_ciel : Colors.white,
-                                    size: Size(
-                                        largeur * 0.277, hauteur * 0.00875),
-                                    radius: 3,
-                                    text: "Smoking",
-                                    textcolor: bleu_bg,
-                                    fontsize: 12,
-                                    fct: () {
-                                      (smoking = !smoking);
-                                      setState(() {});
-                                    },
-                                    blur: 18),
-                                SizedBox(width: largeur * 0.07),
-                                SimpleButton(
-                                    backgroundcolor:
-                                        others ? bleu_ciel : Colors.white,
-                                    size: Size(
-                                        largeur * 0.277, hauteur * 0.00875),
-                                    radius: 3,
-                                    text: "Other",
-                                    textcolor: bleu_bg,
-                                    fontsize: 12,
-                                    fct: () {
-                                      (others = !others);
-                                      setState(() {});
-                                    },
-                                    blur: 18),
-                              ],
-                            ),
-                            SizedBox(height: hauteur * 0.01),
-
-                            ///Seats
-                            Row(
-                              children: [
-                                SizedBox(
-                                    width: largeur * 0.2,
-                                    height: hauteur * 0.025,
-                                    child: MyText(
-                                        text: "Seats",
-                                        weight: FontWeight.w700,
-                                        fontsize: 14,
-                                        color: const Color(0xff20236C),
-                                        largeur: largeur * 0.2)),
-                                Container(
-                                  width: largeur * 0.3,
-                                  height: hauteur * 0.05,
-                                  decoration: BoxDecoration(
-                                      boxShadow: const [
-                                        BoxShadow(
-                                            blurRadius: 18,
-                                            color: Color.fromRGBO(
-                                                32, 35, 108, 0.15))
-                                      ],
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(5)),
-                                  child: DropdownButtonFormField(
-                                    borderRadius: BorderRadius.circular(10),
-                                    value: dropdownValue,
-                                    icon: const Icon(
-                                        Icons.arrow_drop_down_rounded,
-                                        color: Color(0xFF72D2C2)),
-                                    decoration: const InputDecoration(
-                                      enabledBorder: OutlineInputBorder(
-                                          borderSide:
-                                              BorderSide(color: Colors.white)),
-                                      focusedBorder: InputBorder.none,
-                                      filled: true,
-                                      fillColor: Colors.white,
-                                    ),
-                                    items: const [
-                                      DropdownMenuItem(
-                                        value: "-1",
-                                        child: Text(
-                                          "4",
-                                          style: TextStyle(
-                                              fontFamily: 'Montserrat',
-                                              fontWeight: FontWeight.w500,
-                                              color: Color(0xff20236C),
-                                              fontSize: 12),
-                                        ),
-                                      ),
-                                      DropdownMenuItem(
-                                        value: "1",
-                                        child: AutoSizeText(
-                                          "3",
-                                          style: TextStyle(
-                                              fontFamily: 'Montserrat',
-                                              fontWeight: FontWeight.w500,
-                                              color: Color(0xff20236C),
-                                              fontSize: 12),
-                                        ),
-                                      ),
-                                      DropdownMenuItem(
-                                        value: "2",
-                                        child: AutoSizeText(
-                                          "2",
-                                          style: TextStyle(
-                                              fontFamily: 'Montserrat',
-                                              fontWeight: FontWeight.w500,
-                                              color: Color(0xff20236C),
-                                              fontSize: 12),
-                                        ),
-                                      ),
-                                      DropdownMenuItem(
-                                        value: "3",
-                                        child: AutoSizeText(
-                                          "1",
-                                          style: TextStyle(
-                                              fontFamily: 'Montserrat',
-                                              fontWeight: FontWeight.w500,
-                                              color: Color(0xff20236C),
-                                              fontSize: 12),
-                                        ),
-                                      ),
-                                    ],
-                                    onChanged: (value) {
-                                      if (value == "-1") {
-                                        seats = "4";
-                                      }
-                                      ;
-                                      if (value == "1") {
-                                        seats = "3";
-                                      }
-                                      ;
-                                      if (value == "2") {
-                                        seats = "2";
-                                      }
-                                      ;
-                                      if (value == "3") {
-                                        seats = "1";
-                                      }
-                                      ;
-                                    },
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: hauteur * 0.05),
-
-                            /// Create Button
+                            /// search Button
                             SimpleButton(
                                 backgroundcolor: const Color(0xffFFA18E),
                                 size: Size(largeur, hauteur * 0.06),
                                 radius: 10,
-                                text: "Create",
+                                text: "Search",
                                 textcolor: const Color(0xFF20236C),
                                 fontsize: 20,
-                                fct: () async {
-                                  Variables.created = true;
-                                  print("date is :   $date");
-                                  createTrip(
+                                fct: () {
+                                  //Variables.created = true;
+                                  // search trip
+
+                                  searchTrip(
                                       auth.currentUser!.uid,
                                       debut,
                                       fin,
                                       Variables.locationName!,
                                       Variables.locationNamea!,
                                       date!,
-                                      time!,
-                                      pricecontroller.text.trim(),
-                                      seats!,
-                                      methode);
-
-                                  final FirebaseFirestore firestore =
-                                      FirebaseFirestore.instance;
+                                      time!);
                                 },
                                 weight: FontWeight.w700),
-
                             SizedBox(height: hauteur * 0.05),
                           ],
                         ),
@@ -1193,6 +853,8 @@ class _CreateTripPageState extends State<CreateTripPage> {
               ),
             ),
           ),
+
+          ///Back Button
           Positioned(
             top: hauteur * 0.05,
             left: largeur * 0.05,

@@ -1,25 +1,22 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:esiway/Screens/Profile/profile_screen.dart';
-import 'package:esiway/widgets/bottom_navbar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../../widgets/constant.dart';
 import '../../widgets/icons_ESIWay.dart';
 import '../../widgets/trip_resume.dart';
 
-class HistoryScreen extends StatefulWidget {
-  const HistoryScreen({super.key});
+class UserTrips extends StatefulWidget {
+  const UserTrips({super.key});
 
   @override
-  State<HistoryScreen> createState() => _HistoryScreenState();
+  State<UserTrips> createState() => _UserTripsState();
 }
 
-class _HistoryScreenState extends State<HistoryScreen> {
+class _UserTripsState extends State<UserTrips> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: color3,
-        bottomNavigationBar: BottomNavBar(currentindex: 3),
         appBar: AppBar(
           elevation: 2,
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -30,18 +27,12 @@ class _HistoryScreenState extends State<HistoryScreen> {
               child: Icons_ESIWay(icon: "arrow_left", largeur: 50, hauteur: 50),
             ),
             onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) {
-                    return Profile();
-                  },
-                ),
-              );
+              Navigator.of(context).pop();
             },
             color: vert,
           ),
           title: Text(
-            "History",
+            "Administrator",
             style: TextStyle(
               color: bleu_bg,
               fontSize: 20.0,
@@ -116,41 +107,43 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                             snapshot2.data;
 
                                         try {
-                                          if (documentSnapshot2.data() !=
-                                              null) {
+                                          if (documentSnapshot2.data() != null)
                                             data2 =
                                                 documentSnapshot2.data() as Map;
-                                            return GestureDetector(
-                                                child: TripInfoResume(
-                                                  familyName: documentSnapshot2
-                                                              .data() ==
-                                                          null
-                                                      ? "Null"
-                                                      : data2["FamilyName"],
-                                                  arrival: data["Arrivee"],
-                                                  departure:
-                                                      data["Arrivee"], //*** */
-                                                  color: FirebaseAuth
-                                                              .instance
-                                                              .currentUser!
-                                                              .uid ==
-                                                          data["Conducteur"]
-                                                      ? orange.withOpacity(0.5)
-                                                      : bleu_ciel
-                                                          .withOpacity(0.4),
-                                                  date: data["Arrivee"], //** */
-                                                  name: documentSnapshot2
-                                                              .data() ==
-                                                          null
-                                                      ? "Null"
-                                                      : data2["Name"], //** */
-                                                  price:
-                                                      data["Arrivee"], //** */
-                                                  time: data["Arrivee"], //** */
-                                                ),
-                                                onTap: () {});
-                                          } else
-                                            return SizedBox();
+                                          return GestureDetector(
+                                              child: TripInfoResume(
+                                                familyName:
+                                                    documentSnapshot2.data() ==
+                                                            null
+                                                        ? "Null"
+                                                        : data2["FamilyName"],
+                                                arrival: data["Arrivee"],
+                                                departure:
+                                                    data["Arrivee"], //*** */
+                                                color: documentSnapshot2
+                                                            .data() ==
+                                                        null
+                                                    ? Colors.red
+                                                        .withOpacity(0.6)
+                                                    : FirebaseAuth
+                                                                .instance
+                                                                .currentUser!
+                                                                .uid ==
+                                                            data["Conducteur"]
+                                                        ? orange
+                                                            .withOpacity(0.5)
+                                                        : bleu_ciel
+                                                            .withOpacity(0.4),
+                                                date: data["Arrivee"], //** */
+                                                name:
+                                                    documentSnapshot2.data() ==
+                                                            null
+                                                        ? "Null"
+                                                        : data2["Name"], //** */
+                                                price: data["Arrivee"], //** */
+                                                time: data["Arrivee"], //** */
+                                              ),
+                                              onTap: () {});
                                         } catch (e) {
                                           print(e);
                                           return Center(

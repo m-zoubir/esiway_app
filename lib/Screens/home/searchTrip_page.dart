@@ -19,6 +19,7 @@ import 'package:google_maps_webservice/places.dart';
 import '../../../widgets/icons_ESIWay.dart';
 import '../../../widgets/login_text.dart';
 import '../../../widgets/simple_button.dart';
+import 'findingTrip_page.dart';
 import 'home_page.dart';
 import 'search_result.dart';
 
@@ -859,7 +860,7 @@ class _SearchTripPageState extends State<SearchTripPage> {
                                        ],
                                      );
                                    });}*/
-                                 Navigator.push(context, MaterialPageRoute(builder: (context) => /*SearchResult() */TripSuggestPage(markers: markers,mapController: mapController,polylinePoints: polylinePoints,polylines: polylines,distance: distance,)));
+                                 Navigator.push(context, MaterialPageRoute(builder: (context) => /*SearchResult() */FindTripPage(markers: markers,mapController: mapController,polylinePoints: polylinePoints,polylines: polylines,distance: distance,)));
                                 },
                                 weight: FontWeight.w700),
                             SizedBox(height: hauteur * 0.05),

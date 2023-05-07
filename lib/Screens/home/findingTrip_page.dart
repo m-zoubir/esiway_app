@@ -12,7 +12,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import '../../../widgets/login_text.dart';
 
 
 
@@ -208,12 +207,14 @@ class _FindTripPageState extends State<FindTripPage> {
               setState(() {mapController = controller;});
             },
           ),
-          Positioned(
+           Positioned(
             bottom:0,
             child:  Container(
-              color:const Color(0xFFF9F8FF) ,
+              decoration: const BoxDecoration(borderRadius: BorderRadius.only(topLeft: Radius.circular(23), topRight: Radius.circular(23),),color:Color(0xFFF9F8FF)),
+
               width: largeur,
-              height: hauteur * 0.5,
+              height: hauteur * 0.545,
+
               child: SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -227,16 +228,18 @@ class _FindTripPageState extends State<FindTripPage> {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.min,
+                          // mainAxisSize: MainAxisSize.min,
                           children: [
-                            SizedBox(height: hauteur * 0.075),
+                            SizedBox(height: hauteur * 0.1),
                                 Center(
                                   child: Stack(
                                     children: [
                                       LoadingAnimationWidget.beat(
-                                      color: color6,
+                                      color: color6.withOpacity(0.2),
                                         size: hauteur*0.35,
                                       ),
+
+
                                       Positioned(
                                         top: hauteur*0.12,
                                          left: largeur*0.24,
@@ -257,7 +260,9 @@ class _FindTripPageState extends State<FindTripPage> {
                   ],
                 ),
               ),
-            ),),
+            ),
+          ),
+         ///Back Button
           Positioned(
             top: hauteur*0.05,
             left: largeur*0.05,

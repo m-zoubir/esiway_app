@@ -1179,7 +1179,7 @@ class _CreateTripPageState extends State<CreateTripPage> {
                                      builder: (context) {
                                       return AlertDialog(
                                         title: const Text('Alert!',style:TextStyle(fontFamily: 'Montserrat', fontWeight: FontWeight.w700, fontSize: 16, color: bleu_bg,),),
-                                         content: const Text('You must entre a car?',style:TextStyle(fontFamily: 'Montserrat', fontWeight: FontWeight.w500, fontSize: 14, color: bleu_bg,),),
+                                         content: const Text('You must entre an adress?',style:TextStyle(fontFamily: 'Montserrat', fontWeight: FontWeight.w500, fontSize: 14, color: bleu_bg,),),
                                           backgroundColor: const Color.fromARGB(0xFF, 0xB0, 0xD3, 0xD7),
                                        actions: [
                                       TextButton(

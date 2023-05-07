@@ -6,57 +6,46 @@ import 'package:esiway/widgets/trip_resume.dart';
 import 'package:flutter/material.dart';
 
 import 'user.dart';
-class ListOfTrips extends StatelessWidget {
+class ListOfTrips extends StatefulWidget {
   final List<String> names;
 
   ListOfTrips({required this.names});
 
+  @override
+  State<ListOfTrips> createState() => _ListOfTripsState();
+}
+
+class _ListOfTripsState extends State<ListOfTrips> {
   @override
 
   Widget build(BuildContext context) {
     var largeur = MediaQuery.of(context).size.width;
     var hauteur = MediaQuery.of(context).size.height;
     return PageView.builder(
-      itemCount: names.length,
+      itemCount: widget.names.length,
+
       itemBuilder: (BuildContext context, int index) {
         return Container(
-          decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Color(0x30AED6DC),),
-
-
+          decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: const Color(0x30AED6DC),),
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Column(
               children: [
+                /// pdp name statu row
                 Row(
-
                   children: [
-                    CircleAvatar(
-                      backgroundImage: const AssetImage("Assets/Images/logo_background.png"),
-                      radius: largeur*0.1, // adjust the radius to the size you want
-                    ),
+                    const CircleAvatar(backgroundImage: AssetImage("Assets/Images/logo_background.png"), radius: 40,),
                     const SizedBox(width: 8),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children:  [
-                        const SizedBox(
-                          child:  AutoSizeText(
-                             "YASMINE Zaidi",
-                            style:TextStyle(fontFamily: 'Montserrat', fontWeight: FontWeight.w700, fontSize: 14, color: bleu_bg,),
-                          ),
-                        ),
+                        const SizedBox(child:  AutoSizeText("YASMINE Zaidi", style:TextStyle(fontFamily: 'Montserrat', fontWeight: FontWeight.w700, fontSize: 14, color: bleu_bg,),),),
                         SizedBox(
                           width: largeur*0.14,
-                          child:  const AutoSizeText(
-                            "Status",
-                            style:TextStyle(fontFamily: 'Montserrat', fontWeight: FontWeight.w500, fontSize: 12, color: bleu_bg,),
-                          ),
+                          child:  const AutoSizeText("Status", style:TextStyle(fontFamily: 'Montserrat', fontWeight: FontWeight.w500, fontSize: 12, color: bleu_bg,),),
                         ),
-
-
                       ],
                     ),
-
-
                   ],
                 ),
                 ///BOX TRIP
@@ -123,7 +112,7 @@ class ListOfTrips extends StatelessWidget {
                   ],
                 ),
                 SizedBox(  height: hauteur*0.02),
-
+                ///Preferences
                 Row(
                   children: [
                     Column(
@@ -140,6 +129,7 @@ class ListOfTrips extends StatelessWidget {
                   ],
                 ),
                 SizedBox(  height: hauteur*0.02),
+                /// Price
                 Container(
                    height: hauteur*0.03,
                   decoration: BoxDecoration(borderRadius: BorderRadius.circular(4), color: const Color(0x77FFA18E),),
@@ -151,11 +141,11 @@ class ListOfTrips extends StatelessWidget {
                   ),
                 ),
                 SizedBox(  height: hauteur*0.01),
-
+                /// Request & message Buttons
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    SimpleButton(backgroundcolor: orange, size: Size(largeur*0.67,hauteur*0.07), radius: 15, text: names[index], textcolor: bleu_bg, fontsize: 16, fct: (){}),
+                    SimpleButton(backgroundcolor: orange, size: Size(largeur*0.67,hauteur*0.07), radius: 15, text: widget.names[index], textcolor: bleu_bg, fontsize: 16, fct: (){}),
                     ElevatedButton(
                       onPressed: () {/*    Navigator.push(context,MaterialPageRoute(builder: (context) => Notifpage())); */},
                       style: ElevatedButton.styleFrom(
@@ -172,13 +162,7 @@ class ListOfTrips extends StatelessWidget {
                     ),
                   ],
                 )
-                // Padding(
-                //   padding: const EdgeInsets.all(8.0),
-                //   child: Text(
-                //     names[index],
-                //     style: const TextStyle(fontSize: 24),
-                //   ),
-                // ),
+
               ],
             ),
           ),

@@ -23,8 +23,13 @@ class _SearchResultState extends State<SearchResult> {
   LatLng arrivee = const LatLng(36.705219106281575, 3.273786850126649);
   List<LatLng> PolyLinesCoordinates = [];
   List<LatLng> polyLinesCoordinates = [];
-
   Set<Polyline> polylines = {};
+  Set<Marker> markers = {};
+  List searchResult = [];
+  List idresult = [];
+
+
+  ///+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++///
 
   void back() {Navigator.of(context).push(MaterialPageRoute(builder: (context) => const HomePage()));}
 
@@ -46,10 +51,6 @@ class _SearchResultState extends State<SearchResult> {
     }
   }
 
-  Set<Marker> markers = {};
-
-  List searchResult = [];
-  List idresult = [];
 
   void searchFromFirebase(String query) async {
     final result = await FirebaseFirestore.instance.collection('Trips').where('Date', isEqualTo: query,).get();
@@ -97,6 +98,7 @@ class _SearchResultState extends State<SearchResult> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        /// the first and second lines
                         Padding(
                           padding: const EdgeInsets.only(left: 4.0),
                           child: CustomRichText(
@@ -111,6 +113,7 @@ class _SearchResultState extends State<SearchResult> {
                           ),
                         ),
                         const SizedBox(height: 10),
+                        /// Trips inforamations Box
                         Expanded(
                           child: PageView.builder(
                               itemCount: 2,
@@ -154,8 +157,8 @@ class _SearchResultState extends State<SearchResult> {
                                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                           children: [
                                             ProfileTripCard(
-                                              name: "name",
-                                              familyname: "familyname",
+                                              name: "Student",
+                                              familyname: "Yasmine Zaidi",
                                               color: bleu_bg,
                                             ),
                                             RatingBarIndicator(
@@ -218,7 +221,9 @@ class _SearchResultState extends State<SearchResult> {
                                             ],
                                           ),
                                         ),
+                                        /// Row of Date time seats car
                                         Row(
+
                                           mainAxisAlignment:
                                           MainAxisAlignment.spaceAround,
                                           children: [
@@ -248,6 +253,7 @@ class _SearchResultState extends State<SearchResult> {
                                             ),
                                           ],
                                         ),
+                                        ///Prefernces
                                         CustomRichText(
                                           title: "Preferences",
                                           titlesize: 12,
@@ -256,6 +262,7 @@ class _SearchResultState extends State<SearchResult> {
                                         ),
                                         Column(
                                           children: [
+                                            /// Row of price
                                             Container(
                                               color: orange.withOpacity(0.5),
                                               child: Padding(
@@ -264,13 +271,12 @@ class _SearchResultState extends State<SearchResult> {
                                                     horizontal: 10,
                                                     vertical: 5),
                                                 child: Row(
-                                                  mainAxisAlignment:
-                                                  MainAxisAlignment.spaceBetween,
+                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                   children: [
                                                     Row(
-                                                      children: [
-                                                        const Text(
-                                                          "data ",
+                                                      children: const [
+                                                        Text(
+                                                          "Price",
                                                           style: TextStyle(
                                                               color: bleu_bg,
                                                               fontFamily:
@@ -280,8 +286,8 @@ class _SearchResultState extends State<SearchResult> {
                                                               FontWeight
                                                                   .bold),
                                                         ),
-                                                        const Text(
-                                                          "data ",
+                                                        Text(
+                                                          "(negosiable)",
                                                           style: TextStyle(
                                                               color: bleu_bg,
                                                               fontFamily:
@@ -294,7 +300,7 @@ class _SearchResultState extends State<SearchResult> {
                                                       ],
                                                     ),
                                                     const Text(
-                                                      "data ",
+                                                      "500Da",
                                                       style: TextStyle(
                                                           color: bleu_bg,
                                                           fontFamily:
@@ -307,9 +313,8 @@ class _SearchResultState extends State<SearchResult> {
                                                 ),
                                               ),
                                             ),
-                                            const SizedBox(
-                                              height: 8,
-                                            ),
+                                            const SizedBox(height: 8,),
+                                            /// Request Button & message Button
                                             Row(
                                               children: [
                                                 Expanded(

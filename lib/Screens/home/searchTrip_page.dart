@@ -858,7 +858,7 @@ class _SearchTripPageState extends State<SearchTripPage> {
                                        ],
                                      );
                                    });}*/
-                                 Navigator.push(context, MaterialPageRoute(builder: (context) => SearchResult() /*TripSuggestPage(markers: markers,mapController: mapController,polylinePoints: polylinePoints,polylines: polylines,distance: distance,)*/));
+                                 Navigator.push(context, MaterialPageRoute(builder: (context) => /*SearchResult() */TripSuggestPage(markers: markers,mapController: mapController,polylinePoints: polylinePoints,polylines: polylines,distance: distance,)));
                                 },
                                 weight: FontWeight.w700),
                             SizedBox(height: hauteur * 0.05),

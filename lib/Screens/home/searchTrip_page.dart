@@ -7,6 +7,7 @@ import 'package:esiway/widgets/prefixe_icon_button.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_webservice/geocoding.dart';
+import 'package:google_place/google_place.dart';
 import '../../../widgets/constant.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_google_places/flutter_google_places.dart';
@@ -43,7 +44,7 @@ class SearchTripPage extends StatefulWidget {
 class _SearchTripPageState extends State<SearchTripPage> {
   void initState() {
     // TODO: implement initState
-
+    count = 0;
     minute = TimeNow.minute >= 10 ? "${TimeNow.minute}" : "0${TimeNow.minute}";
     hour = TimeNow.hour >= 10 ? "${TimeNow.hour}" : "0${TimeNow.hour}";
     time = hour! + " : " + minute!;
@@ -81,7 +82,7 @@ class _SearchTripPageState extends State<SearchTripPage> {
   String? locationName;
   String? locationNamea;
   List<Placemark>? placemarks;
-
+  late int count;
   DateTime selectedDate = DateTime.now();
 
   int i = 0;
@@ -301,10 +302,9 @@ class _SearchTripPageState extends State<SearchTripPage> {
       querySnapshot.docs.forEach((DocumentSnapshot documentSnapshot) {
         if (date == documentSnapshot.get('Date')) {
           var polylineCoordinate = documentSnapshot.get('polyline');
-          var i = 0;
-          bool trv = false;
+
           print("length ===  ${polylineCoordinate.length}");
-          int count = 0;
+          count = 0;
 
           List<String> rechercheArray =
               polylineCoordinatesToString(Variables.polylineCoordinates);
@@ -321,7 +321,10 @@ class _SearchTripPageState extends State<SearchTripPage> {
           print("count  = $count");
 
           if (percent >= 0.4) {
-            print('Yes =======================');
+            // un pourcentage pour savoir si le trajet de l'utilisateur est inclut
+            // dans le trajet du conducteur (celui qui a crée le trajet)
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => SearchResult()));
           } else {
             print('No=====================');
           }

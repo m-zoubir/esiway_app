@@ -380,11 +380,12 @@ class _SearchTripPageState extends State<SearchTripPage> {
           ),
           Positioned(
             bottom: 0,
-            child: SizedBox(
+            child: Container(
               width: largeur,
               height: hauteur * 0.5,
-              child: SingleChildScrollView(
-                child: Column(
+              decoration: const BoxDecoration(borderRadius: BorderRadius.only(topLeft: Radius.circular(23), topRight: Radius.circular(23),),color:Color(0xFFF9F8FF)),
+
+              child:  Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   mainAxisSize: MainAxisSize.min,
@@ -399,7 +400,7 @@ class _SearchTripPageState extends State<SearchTripPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            SizedBox(height: hauteur * 0.06),
+                            SizedBox(height: hauteur * 0.02),
 
                             /// "Depature"
                             SizedBox(
@@ -868,7 +869,7 @@ class _SearchTripPageState extends State<SearchTripPage> {
                     ),
                   ],
                 ),
-              ),
+
             ),
           ),
 

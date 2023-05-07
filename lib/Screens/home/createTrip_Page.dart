@@ -376,7 +376,9 @@ class _CreateTripPageState extends State<CreateTripPage> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Container(
-                      color: const Color(0xFFF9F8FF),
+
+                      decoration: const BoxDecoration(borderRadius: BorderRadius.only(topLeft: Radius.circular(23), topRight: Radius.circular(23),),color:Color(0xFFF9F8FF)),
+
                       child: Padding(
                         padding:
                             EdgeInsets.symmetric(horizontal: largeur * 0.075),
@@ -1145,7 +1147,7 @@ class _CreateTripPageState extends State<CreateTripPage> {
                                 ),
                               ],
                             ),
-                            SizedBox(height: hauteur * 0.05),
+                            SizedBox(height: hauteur * 0.03),
 
                             /// Create Button
                             SimpleButton(

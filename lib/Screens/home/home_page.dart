@@ -1033,16 +1033,31 @@ class _HomePageState extends State<HomePage> {
             right: 20,
             child: ElevatedButton(
               onPressed: () async {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => CreateTripPage(
-                              markers: markers,
-                              mapController: mapController,
-                              polylinePoints: polylinePoints,
-                              polylines: polylines,
-                              distance: distance,
-                            )));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => CreateTripPage(markers: markers, mapController: mapController, polylinePoints: polylinePoints, polylines: polylines, distance: distance,)));
+                /*showDialog(
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                    title: const Text('You must have a car!',style:TextStyle(fontFamily: 'Montserrat', fontWeight: FontWeight.w700, fontSize: 16, color: bleu_bg,),),
+                    content: const Text('Do you want to add a car?',style:TextStyle(fontFamily: 'Montserrat', fontWeight: FontWeight.w500, fontSize: 14, color: bleu_bg,),),
+                    backgroundColor: const Color.fromARGB(0xFF, 0xB0, 0xD3, 0xD7),
+                    actions: [
+                      TextButton(
+                        onPressed: () {Navigator.pop(context);},
+                        child: const Text('No',style:TextStyle(fontFamily: 'Montserrat', fontWeight: FontWeight.w700, fontSize: 14, color: bleu_bg,)),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          setState(() {
+                            // hasCar = true;
+                          });
+                          Navigator.pop(context);
+                        },
+                        child: const Text('Add Car',style:TextStyle(fontFamily: 'Montserrat', fontWeight: FontWeight.w700, fontSize: 14, color: bleu_bg,)),
+                      ),
+                    ],
+                  );
+                });*/
               }, // createTrip,
 
               style: ElevatedButton.styleFrom(

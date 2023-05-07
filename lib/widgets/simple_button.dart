@@ -31,7 +31,7 @@ class SimpleButton extends StatelessWidget {
           boxShadow: blur != null
               ? [
                   BoxShadow(
-                    // blurRadius: blur,
+                     blurRadius: blur!,
                     color: Color.fromRGBO(32, 35, 108, 0.15),
                   ),
                 ]

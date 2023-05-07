@@ -88,11 +88,9 @@ class _SearchTripPageState extends State<SearchTripPage> {
 
   int i = 0;
 
-  String? date = DateTime(
-    DateTime.now().year,
-    DateTime.now().month,
-    DateTime.now().day,
-  ).toString();
+  //String? date = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day,).toString();
+  String? date ="${DateTime.now().day} - ${DateTime.now().month} - ${DateTime.now().year}";
+
   String? time = "00:00";
   String? minute;
   String? hour;
@@ -110,6 +108,7 @@ class _SearchTripPageState extends State<SearchTripPage> {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   void getAllDocs() {}
+
   List<String> polylineCoordinatesToString(List<LatLng> polylineCoordinates) {
     return polylineCoordinates
         .map((LatLng latLng) => '${latLng.latitude},${latLng.longitude}')
@@ -263,8 +262,7 @@ class _SearchTripPageState extends State<SearchTripPage> {
     if (picked != null) {
       setState(() {
         selectedDate = picked;
-        date =
-            "${selectedDate.day} - ${selectedDate.month} - ${selectedDate.year}";
+        date = "${selectedDate.day} - ${selectedDate.month} - ${selectedDate.year}";
       });
     }
   }
@@ -832,8 +830,8 @@ class _SearchTripPageState extends State<SearchTripPage> {
                                 textcolor: const Color(0xFF20236C),
                                 fontsize: 20,
                                 fct: () {
-                               /*if((locationName == "Search places") || (locationNamea == "Search places")){
-                                  //Variables.created = true;
+                               /*if((locationName == "Search places") || (locationNamea == "Search places")) {
+                                 //Variables.created = true;
                                   // search trip
 
                                   searchTrip(
@@ -844,9 +842,23 @@ class _SearchTripPageState extends State<SearchTripPage> {
                                       Variables.locationNamea,
                                       date!,
                                       time!);
-                                  }else{/*message d'erreur*/}*/
-                                  Navigator.push(context, MaterialPageRoute(builder: (context) => SearchResult() /*TripSuggestPage(markers: markers,mapController: mapController,polylinePoints: polylinePoints,polylines: polylines,distance: distance,)*/));
+                                  }else{ showDialog(
+                                   context: context,
+                                   builder: (context) {
+                                     return AlertDialog(
+                                       title: const Text('Alert!',style:TextStyle(fontFamily: 'Montserrat', fontWeight: FontWeight.w700, fontSize: 16, color: bleu_bg,),),
+                                       content: const Text('You must entre a car?',style:TextStyle(fontFamily: 'Montserrat', fontWeight: FontWeight.w500, fontSize: 14, color: bleu_bg,),),
+                                       backgroundColor: const Color.fromARGB(0xFF, 0xB0, 0xD3, 0xD7),
+                                       actions: [
+                                         TextButton(
+                                           onPressed: () {Navigator.pop(context);},
+                                           child: const Text('OK',style:TextStyle(fontFamily: 'Montserrat', fontWeight: FontWeight.w700, fontSize: 14, color: bleu_bg,)),
+                                         ),
 
+                                       ],
+                                     );
+                                   });}*/
+                                 Navigator.push(context, MaterialPageRoute(builder: (context) => SearchResult() /*TripSuggestPage(markers: markers,mapController: mapController,polylinePoints: polylinePoints,polylines: polylines,distance: distance,)*/));
                                 },
                                 weight: FontWeight.w700),
                             SizedBox(height: hauteur * 0.05),

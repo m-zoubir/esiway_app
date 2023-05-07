@@ -18,6 +18,7 @@ class SearchResult extends StatefulWidget {
 }
 
 class _SearchResultState extends State<SearchResult> {
+  
   @override
   LatLng arrivee = const LatLng(36.705219106281575, 3.273786850126649);
   List<LatLng> PolyLinesCoordinates = [];
@@ -71,7 +72,8 @@ class _SearchResultState extends State<SearchResult> {
       setState(() {});
     });
 
-
+    var largeur = MediaQuery.of(context).size.width;
+    var hauteur = MediaQuery.of(context).size.height;
     return SafeArea(
       child: Scaffold(
         body: Stack(
@@ -85,9 +87,9 @@ class _SearchResultState extends State<SearchResult> {
                 markers: markers.map((e) => e).toSet(),
               ),
               Padding(
-                padding: EdgeInsets.only(top: MediaQuery.of(context).size.height <= 700 ? MediaQuery.of(context).size.height * 0.44 : MediaQuery.of(context).size.height * 0.5),
+                padding: EdgeInsets.only(top: hauteur <= 700 ? hauteur * 0.44 : hauteur * 0.5),
                 child: Container(
-                  width: MediaQuery.of(context).size.width,
+                  width: largeur,
                   decoration: const BoxDecoration(borderRadius: BorderRadius.only(topLeft: Radius.circular(23), topRight: Radius.circular(23),), color: Colors.white,),
                   child: Padding(
                     padding: const EdgeInsets.only(top: 15, left: 20, right: 20, bottom: 5),
@@ -98,17 +100,17 @@ class _SearchResultState extends State<SearchResult> {
                         Padding(
                           padding: const EdgeInsets.only(left: 4.0),
                           child: CustomRichText(
-                            title: "Hello, Nesrine",
-                            value: "We found 2 drivers for your request",
-                            valuesize: MediaQuery.of(context).size.height < 700
-                                ? MediaQuery.of(context).size.height * 0.02
+                            title: "Hello,",
+                            value: "This is what we found for you:",
+                            valuesize: hauteur < 700
+                                ? hauteur * 0.02
                                 : 13,
-                            titlesize: MediaQuery.of(context).size.height < 700
-                                ? MediaQuery.of(context).size.height * 0.035
+                            titlesize: hauteur < 700
+                                ? hauteur * 0.035
                                 : 25,
                           ),
                         ),
-                        const SizedBox(height: 10,),
+                        const SizedBox(height: 10),
                         Expanded(
                           child: PageView.builder(
                               itemCount: 2,
@@ -171,6 +173,7 @@ class _SearchResultState extends State<SearchResult> {
                                             )
                                           ],
                                         ),
+                                        ///Box of daprt arrival
                                         Padding(
                                           padding:
                                           const EdgeInsets.only(left: 65),
@@ -179,8 +182,7 @@ class _SearchResultState extends State<SearchResult> {
                                               SvgPicture.asset(
                                                 'Assets/Icons/tripshape.svg',
                                                 semanticsLabel: 'My SVG Image',
-                                                width:
-                                                2,
+                                                width: 2,
                                                 // Set the size of the SVG image
                                                 height: 42,
                                               ),
@@ -235,6 +237,12 @@ class _SearchResultState extends State<SearchResult> {
                                             CustomRichText(
                                               title: "seats",
                                               value: "value",
+                                              titlesize: 12,
+                                              valuesize: 10,
+                                            ),
+                                            CustomRichText(
+                                              title: "Car",
+                                              value: "Megane",
                                               titlesize: 12,
                                               valuesize: 10,
                                             ),
@@ -309,7 +317,7 @@ class _SearchResultState extends State<SearchResult> {
                                                   child: SimpleButton(
                                                       backgroundcolor:
                                                       const Color(0xFFFFA18E),
-                                                      size: Size(MediaQuery.of(context).size.width, 45),
+                                                      size: Size(largeur, 45),
                                                       radius: 10,
                                                       text: 'Request',
                                                       textcolor: const Color(0xFF20236C),
@@ -346,9 +354,7 @@ class _SearchResultState extends State<SearchResult> {
                                 );
                               }),
                         ),
-                        const SizedBox(
-                          height: 15,
-                        )
+                        const SizedBox(height: 15,)
                       ],
                     ),
                   ),

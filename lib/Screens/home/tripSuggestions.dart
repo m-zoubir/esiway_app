@@ -258,7 +258,7 @@ class _TripSuggestPageState extends State<TripSuggestPage> {
                           SizedBox(height: hauteur*0.02,),
                           SizedBox(
                             width: largeur*0.88,
-                            height:hauteur*0.43 ,
+                            height:hauteur*0.43,
                             child: ListOfTrips(names: names),
                           )
 

@@ -2,12 +2,12 @@ import 'dart:convert';
 import 'dart:math';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:esiway/Screens/home/search_result.dart';
 import 'package:esiway/Screens/home/variables.dart';
 import 'package:esiway/widgets/prefixe_icon_button.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_webservice/geocoding.dart';
-import 'package:google_place/google_place.dart';
 import '../../../widgets/constant.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_google_places/flutter_google_places.dart';
@@ -323,8 +323,8 @@ class _SearchTripPageState extends State<SearchTripPage> {
           if (percent >= 0.4) {
             // un pourcentage pour savoir si le trajet de l'utilisateur est inclut
             // dans le trajet du conducteur (celui qui a crée le trajet)
-            Navigator.push(
-                context, MaterialPageRoute(builder: (context) => SearchResult()));
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => SearchResult()));
           } else {
             print('No=====================');
           }

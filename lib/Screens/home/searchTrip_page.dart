@@ -23,7 +23,6 @@ import '../../../widgets/login_text.dart';
 import '../../../widgets/simple_button.dart';
 import 'findingTrip_page.dart';
 import 'home_page.dart';
-import 'search_result.dart';
 
 class SearchTripPage extends StatefulWidget {
   Set<Marker> markers = Set(); //markers for google map
@@ -92,7 +91,8 @@ class _SearchTripPageState extends State<SearchTripPage> {
   int i = 0;
 
   //String? date = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day,).toString();
-  String? date ="${DateTime.now().day} - ${DateTime.now().month} - ${DateTime.now().year}";
+  String? date =
+      "${DateTime.now().day} - ${DateTime.now().month} - ${DateTime.now().year}";
 
   String? time = "00:00";
   String? minute;
@@ -265,7 +265,8 @@ class _SearchTripPageState extends State<SearchTripPage> {
     if (picked != null) {
       setState(() {
         selectedDate = picked;
-        date = "${selectedDate.day} - ${selectedDate.month} - ${selectedDate.year}";
+        date =
+            "${selectedDate.day} - ${selectedDate.month} - ${selectedDate.year}";
       });
     }
   }
@@ -325,8 +326,16 @@ class _SearchTripPageState extends State<SearchTripPage> {
           if (percent >= 0.4) {
             // un pourcentage pour savoir si le trajet de l'utilisateur est inclut
             // dans le trajet du conducteur (celui qui a crée le trajet)
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => SearchResult()));
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => TripSuggestPage(
+                          markers: markers,
+                          mapController: mapController,
+                          polylinePoints: polylinePoints,
+                          polylines: polylines,
+                          distance: distance,
+                        )));
           } else {
             print('No=====================');
           }
@@ -388,455 +397,455 @@ class _SearchTripPageState extends State<SearchTripPage> {
             child: Container(
               width: largeur,
               height: hauteur * 0.5,
-              decoration: const BoxDecoration(borderRadius: BorderRadius.only(topLeft: Radius.circular(23), topRight: Radius.circular(23),),color:Color(0xFFF9F8FF)),
+              decoration: const BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(23),
+                    topRight: Radius.circular(23),
+                  ),
+                  color: Color(0xFFF9F8FF)),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    color: const Color(0xFFF9F8FF),
+                    child: Padding(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: largeur * 0.075),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          SizedBox(height: hauteur * 0.02),
 
-              child:  Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Container(
-                      color: const Color(0xFFF9F8FF),
-                      child: Padding(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: largeur * 0.075),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            SizedBox(height: hauteur * 0.02),
-
-                            /// "Depature"
-                            SizedBox(
-                                width: largeur * 0.55,
-                                height: hauteur * 0.025,
-                                child: MyText(
-                                    text: "Departure",
-                                    weight: FontWeight.w700,
-                                    fontsize: 14,
-                                    color: const Color(0xff20236C),
-                                    largeur: largeur * 0.55)),
-                            SizedBox(height: hauteur * 0.005),
-
-                            /// +Departure Filed
-                            Container(
-                              width: largeur * 0.9,
-                              height: hauteur * 0.0625,
-                              decoration: BoxDecoration(
-                                  boxShadow: [
-                                    BoxShadow(
-                                        blurRadius: 20,
-                                        color: bleu_bg.withOpacity(0.15),
-                                        offset: const Offset(0, 0),
-                                        spreadRadius: 10)
-                                  ],
-                                  color: Colors.white,
-                                  borderRadius: const BorderRadius.all(
-                                      Radius.circular(4))),
-                              child: Row(
-                                children: [
-                                  ///Search places
-                                  InkWell(
-                                    onTap: () async {
-                                      var place = await PlacesAutocomplete.show(
-                                          context: context,
-                                          apiKey: APIKEY,
-                                          mode: Mode.overlay,
-                                          types: [],
-                                          strictbounds: false,
-                                          components: [
-                                            Component(Component.country, 'dz')
-                                          ],
-                                          //google_map_webservice package
-                                          onError: (err) {
-                                            print(err);
-                                          });
-                                      if (place != null) {
-                                        setState(() {
-                                          Variables.locationName =
-                                              place.description.toString();
-                                          print(Variables.locationName);
-                                        });
-
-                                        //form google_maps_webservice package
-                                        final plist = GoogleMapsPlaces(
-                                            apiKey: APIKEY,
-                                            apiHeaders:
-                                                await const GoogleApiHeaders()
-                                                    .getHeaders());
-                                        String placeid = place.placeId ?? "0";
-                                        final detail = await plist
-                                            .getDetailsByPlaceId(placeid);
-                                        final geometry =
-                                            detail.result.geometry!;
-                                        final lat = geometry.location.lat;
-                                        final lang = geometry.location.lng;
-                                        var newlatlang = LatLng(lat, lang);
-                                        location = newlatlang;
-                                        debut = PointLatLng(newlatlang.latitude,
-                                            newlatlang.longitude);
-                                        //move map camera to selected place with animation
-                                        mapController?.animateCamera(
-                                            CameraUpdate.newCameraPosition(
-                                                CameraPosition(
-                                                    target: newlatlang,
-                                                    zoom: 17)));
-                                      }
-                                      ;
-                                      setState(() {});
-                                    },
-                                    child: Row(
-                                      children: [
-                                        SizedBox(width: largeur * 0.02),
-                                        Icons_ESIWay(
-                                            icon: 'search',
-                                            largeur: largeur * 0.08,
-                                            hauteur: largeur * 0.08),
-                                        SizedBox(width: largeur * 0.02),
-                                        SizedBox(
-                                            width: largeur * 0.57,
-                                            child: AutoSizeText(
-                                              Variables.locationName,
-                                              style: const TextStyle(
-                                                fontFamily: 'Montserrat',
-                                                fontWeight: FontWeight.w500,
-                                                color: bleu_bg,
-                                                fontSize: 12,
-                                              ),
-                                              maxLines: 2,
-                                            )),
-                                      ],
-                                    ),
-                                  ),
-
-                                  /// ESI
-                                  InkWell(
-                                      onTap: () {
-                                        setState(() {
-                                          Variables.locationName =
-                                              "Ecole Nationale Supérieure d'Informatique (Ex. INI)";
-                                          debut = PointLatLng(
-                                              LocationEsi.latitude,
-                                              LocationEsi.longitude);
-                                        });
-                                      },
-                                      child: Image(
-                                          image: const AssetImage(
-                                              "Assets/Images/esi_logo.png"),
-                                          width: largeur * 0.06,
-                                          height: hauteur * 0.06)),
-                                  // Icon(Icons.my_location,color:bleu_bg,size: largeur*0.06,),
-                                  SizedBox(
-                                    width: largeur * 0.015,
-                                  ),
-
-                                  ///Current location
-                                  InkWell(
-                                      onTap: () {
-                                        setState(() {
-                                          Variables.locationName =
-                                              "Current Location";
-                                        });
-                                      },
-                                      child: Icon(
-                                        Icons.my_location,
-                                        color: bleu_bg,
-                                        size: largeur * 0.06,
-                                      )),
-                                ],
-                              ),
-                            ),
-                            SizedBox(height: hauteur * 0.02),
-
-                            ///  "Arival"
-                            SizedBox(
-                                width: largeur * 0.139,
-                                height: hauteur * 0.025,
-                                child: MyText(
-                                  text: "Arrival",
+                          /// "Depature"
+                          SizedBox(
+                              width: largeur * 0.55,
+                              height: hauteur * 0.025,
+                              child: MyText(
+                                  text: "Departure",
                                   weight: FontWeight.w700,
                                   fontsize: 14,
                                   color: const Color(0xff20236C),
-                                  largeur: largeur * 0.139,
-                                )),
-                            SizedBox(height: hauteur * 0.005),
+                                  largeur: largeur * 0.55)),
+                          SizedBox(height: hauteur * 0.005),
 
-                            /// +Arrival Filed
-                            Container(
-                              width: largeur * 0.9,
-                              height: hauteur * 0.0625,
-                              decoration: BoxDecoration(
-                                  boxShadow: [
-                                    BoxShadow(
-                                        blurRadius: 20,
-                                        color: bleu_bg.withOpacity(0.15),
-                                        offset: const Offset(0, 0),
-                                        spreadRadius: 10)
-                                  ],
-                                  color: Colors.white,
-                                  borderRadius: const BorderRadius.all(
-                                      Radius.circular(4))),
-                              child: Row(
-                                children: [
-                                  ///Search places
-                                  InkWell(
-                                    onTap: () async {
-                                      var place = await PlacesAutocomplete.show(
-                                          context: context,
-                                          apiKey: APIKEY,
-                                          mode: Mode.overlay,
-                                          types: [],
-                                          strictbounds: false,
-                                          components: [
-                                            Component(Component.country, 'dz')
-                                          ],
-                                          //google_map_webservice package
-                                          onError: (err) {
-                                            print(err);
-                                          });
-                                      if (place != null) {
-                                        setState(() {
-                                          Variables.locationNamea =
-                                              place.description.toString();
-                                          print(Variables.locationNamea);
+                          /// +Departure Filed
+                          Container(
+                            width: largeur * 0.9,
+                            height: hauteur * 0.0625,
+                            decoration: BoxDecoration(
+                                boxShadow: [
+                                  BoxShadow(
+                                      blurRadius: 20,
+                                      color: bleu_bg.withOpacity(0.15),
+                                      offset: const Offset(0, 0),
+                                      spreadRadius: 10)
+                                ],
+                                color: Colors.white,
+                                borderRadius:
+                                    const BorderRadius.all(Radius.circular(4))),
+                            child: Row(
+                              children: [
+                                ///Search places
+                                InkWell(
+                                  onTap: () async {
+                                    var place = await PlacesAutocomplete.show(
+                                        context: context,
+                                        apiKey: APIKEY,
+                                        mode: Mode.overlay,
+                                        types: [],
+                                        strictbounds: false,
+                                        components: [
+                                          Component(Component.country, 'dz')
+                                        ],
+                                        //google_map_webservice package
+                                        onError: (err) {
+                                          print(err);
                                         });
+                                    if (place != null) {
+                                      setState(() {
+                                        Variables.locationName =
+                                            place.description.toString();
+                                        print(Variables.locationName);
+                                      });
 
-                                        //form google_maps_webservice package
-                                        final plist = GoogleMapsPlaces(
-                                            apiKey: APIKEY,
-                                            apiHeaders:
-                                                await const GoogleApiHeaders()
-                                                    .getHeaders());
-                                        String placeid = place.placeId ?? "0";
-                                        final detail = await plist
-                                            .getDetailsByPlaceId(placeid);
-                                        final geometry =
-                                            detail.result.geometry!;
-                                        final lat = geometry.location.lat;
-                                        final lang = geometry.location.lng;
-                                        var newlatlang = LatLng(lat, lang);
-                                        location = newlatlang;
-                                        fin = PointLatLng(newlatlang.latitude,
-                                            newlatlang.longitude);
-                                        //move map camera to selected place with animation
-                                        mapController?.animateCamera(
-                                            CameraUpdate.newCameraPosition(
-                                                CameraPosition(
-                                                    target: newlatlang,
-                                                    zoom: 17)));
-                                      }
-                                      ;
-                                      setState(() {});
+                                      //form google_maps_webservice package
+                                      final plist = GoogleMapsPlaces(
+                                          apiKey: APIKEY,
+                                          apiHeaders:
+                                              await const GoogleApiHeaders()
+                                                  .getHeaders());
+                                      String placeid = place.placeId ?? "0";
+                                      final detail = await plist
+                                          .getDetailsByPlaceId(placeid);
+                                      final geometry = detail.result.geometry!;
+                                      final lat = geometry.location.lat;
+                                      final lang = geometry.location.lng;
+                                      var newlatlang = LatLng(lat, lang);
+                                      location = newlatlang;
+                                      debut = PointLatLng(newlatlang.latitude,
+                                          newlatlang.longitude);
+                                      //move map camera to selected place with animation
+                                      mapController?.animateCamera(
+                                          CameraUpdate.newCameraPosition(
+                                              CameraPosition(
+                                                  target: newlatlang,
+                                                  zoom: 17)));
+                                    }
+                                    ;
+                                    setState(() {});
+                                  },
+                                  child: Row(
+                                    children: [
+                                      SizedBox(width: largeur * 0.02),
+                                      Icons_ESIWay(
+                                          icon: 'search',
+                                          largeur: largeur * 0.08,
+                                          hauteur: largeur * 0.08),
+                                      SizedBox(width: largeur * 0.02),
+                                      SizedBox(
+                                          width: largeur * 0.57,
+                                          child: AutoSizeText(
+                                            Variables.locationName,
+                                            style: const TextStyle(
+                                              fontFamily: 'Montserrat',
+                                              fontWeight: FontWeight.w500,
+                                              color: bleu_bg,
+                                              fontSize: 12,
+                                            ),
+                                            maxLines: 2,
+                                          )),
+                                    ],
+                                  ),
+                                ),
+
+                                /// ESI
+                                InkWell(
+                                    onTap: () {
+                                      setState(() {
+                                        Variables.locationName =
+                                            "Ecole Nationale Supérieure d'Informatique (Ex. INI)";
+                                        debut = PointLatLng(
+                                            LocationEsi.latitude,
+                                            LocationEsi.longitude);
+                                      });
                                     },
-                                    child: Row(
-                                      children: [
-                                        SizedBox(width: largeur * 0.02),
-                                        Icons_ESIWay(
-                                            icon: 'search',
-                                            largeur: largeur * 0.08,
-                                            hauteur: largeur * 0.08),
-                                        SizedBox(width: largeur * 0.02),
-                                        SizedBox(
-                                            width: largeur * 0.57,
-                                            child: AutoSizeText(
-                                              Variables.locationNamea,
-                                              style: const TextStyle(
-                                                fontFamily: 'Montserrat',
-                                                fontWeight: FontWeight.w500,
-                                                color: bleu_bg,
-                                                fontSize: 12,
+                                    child: Image(
+                                        image: const AssetImage(
+                                            "Assets/Images/esi_logo.png"),
+                                        width: largeur * 0.06,
+                                        height: hauteur * 0.06)),
+                                // Icon(Icons.my_location,color:bleu_bg,size: largeur*0.06,),
+                                SizedBox(
+                                  width: largeur * 0.015,
+                                ),
+
+                                ///Current location
+                                InkWell(
+                                    onTap: () {
+                                      setState(() {
+                                        Variables.locationName =
+                                            "Current Location";
+                                      });
+                                    },
+                                    child: Icon(
+                                      Icons.my_location,
+                                      color: bleu_bg,
+                                      size: largeur * 0.06,
+                                    )),
+                              ],
+                            ),
+                          ),
+                          SizedBox(height: hauteur * 0.02),
+
+                          ///  "Arival"
+                          SizedBox(
+                              width: largeur * 0.139,
+                              height: hauteur * 0.025,
+                              child: MyText(
+                                text: "Arrival",
+                                weight: FontWeight.w700,
+                                fontsize: 14,
+                                color: const Color(0xff20236C),
+                                largeur: largeur * 0.139,
+                              )),
+                          SizedBox(height: hauteur * 0.005),
+
+                          /// +Arrival Filed
+                          Container(
+                            width: largeur * 0.9,
+                            height: hauteur * 0.0625,
+                            decoration: BoxDecoration(
+                                boxShadow: [
+                                  BoxShadow(
+                                      blurRadius: 20,
+                                      color: bleu_bg.withOpacity(0.15),
+                                      offset: const Offset(0, 0),
+                                      spreadRadius: 10)
+                                ],
+                                color: Colors.white,
+                                borderRadius:
+                                    const BorderRadius.all(Radius.circular(4))),
+                            child: Row(
+                              children: [
+                                ///Search places
+                                InkWell(
+                                  onTap: () async {
+                                    var place = await PlacesAutocomplete.show(
+                                        context: context,
+                                        apiKey: APIKEY,
+                                        mode: Mode.overlay,
+                                        types: [],
+                                        strictbounds: false,
+                                        components: [
+                                          Component(Component.country, 'dz')
+                                        ],
+                                        //google_map_webservice package
+                                        onError: (err) {
+                                          print(err);
+                                        });
+                                    if (place != null) {
+                                      setState(() {
+                                        Variables.locationNamea =
+                                            place.description.toString();
+                                        print(Variables.locationNamea);
+                                      });
+
+                                      //form google_maps_webservice package
+                                      final plist = GoogleMapsPlaces(
+                                          apiKey: APIKEY,
+                                          apiHeaders:
+                                              await const GoogleApiHeaders()
+                                                  .getHeaders());
+                                      String placeid = place.placeId ?? "0";
+                                      final detail = await plist
+                                          .getDetailsByPlaceId(placeid);
+                                      final geometry = detail.result.geometry!;
+                                      final lat = geometry.location.lat;
+                                      final lang = geometry.location.lng;
+                                      var newlatlang = LatLng(lat, lang);
+                                      location = newlatlang;
+                                      fin = PointLatLng(newlatlang.latitude,
+                                          newlatlang.longitude);
+                                      //move map camera to selected place with animation
+                                      mapController?.animateCamera(
+                                          CameraUpdate.newCameraPosition(
+                                              CameraPosition(
+                                                  target: newlatlang,
+                                                  zoom: 17)));
+                                    }
+                                    ;
+                                    setState(() {});
+                                  },
+                                  child: Row(
+                                    children: [
+                                      SizedBox(width: largeur * 0.02),
+                                      Icons_ESIWay(
+                                          icon: 'search',
+                                          largeur: largeur * 0.08,
+                                          hauteur: largeur * 0.08),
+                                      SizedBox(width: largeur * 0.02),
+                                      SizedBox(
+                                          width: largeur * 0.57,
+                                          child: AutoSizeText(
+                                            Variables.locationNamea,
+                                            style: const TextStyle(
+                                              fontFamily: 'Montserrat',
+                                              fontWeight: FontWeight.w500,
+                                              color: bleu_bg,
+                                              fontSize: 12,
+                                            ),
+                                            maxLines: 2,
+                                          )),
+                                    ],
+                                  ),
+                                ),
+
+                                /// ESI
+                                InkWell(
+                                    onTap: () {
+                                      setState(() {
+                                        Variables.locationNamea =
+                                            "Ecole Nationale Supérieure d'Informatique (Ex. INI)";
+                                        fin = PointLatLng(LocationEsi.latitude,
+                                            LocationEsi.longitude);
+                                      });
+                                    },
+                                    child: Image(
+                                        image: const AssetImage(
+                                            "Assets/Images/esi_logo.png"),
+                                        width: largeur * 0.06,
+                                        height: hauteur * 0.06)),
+                                SizedBox(
+                                  width: largeur * 0.015,
+                                ),
+
+                                ///Current location
+                                InkWell(
+                                    onTap: () {
+                                      setState(() {
+                                        Variables.locationNamea =
+                                            "Current Location";
+                                      });
+                                    },
+                                    child: Icon(
+                                      Icons.my_location,
+                                      color: bleu_bg,
+                                      size: largeur * 0.06,
+                                    )),
+                              ],
+                            ),
+                          ),
+                          SizedBox(height: hauteur * 0.02),
+
+                          /// +Date & Hour
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  /// "Date"
+                                  SizedBox(
+                                      width: largeur * 0.11,
+                                      height: hauteur * 0.025,
+                                      child: MyText(
+                                        text: "Date",
+                                        weight: FontWeight.w700,
+                                        fontsize: 14,
+                                        color: const Color(0xff20236C),
+                                        largeur: largeur * 0.11,
+                                      )),
+                                  SizedBox(height: hauteur * 0.005),
+
+                                  /// +Date Filed
+                                  GestureDetector(
+                                    onTap: () async {
+                                      _selectDate(context);
+                                    },
+                                    child: SizedBox(
+                                      height: hauteur * 0.0625,
+                                      width: largeur * 0.5,
+                                      child: Container(
+                                          decoration: BoxDecoration(
+                                              boxShadow: const [
+                                                BoxShadow(
+                                                    blurRadius: 18,
+                                                    color: Color.fromRGBO(
+                                                        32, 35, 108, 0.15))
+                                              ],
+                                              color: Colors.white,
+                                              borderRadius:
+                                                  BorderRadius.circular(5)),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceEvenly,
+                                            children: [
+                                              const SizedBox(
+                                                width: 5,
                                               ),
-                                              maxLines: 2,
-                                            )),
-                                      ],
+                                              Transform.scale(
+                                                scale:
+                                                    1.5, // to make the icon smaller or larger
+                                                child: const Icons_ESIWay(
+                                                    icon: "calendar",
+                                                    largeur: 20,
+                                                    hauteur: 20),
+                                              ),
+                                              MyText(
+                                                text: date!,
+                                                weight: FontWeight.w500,
+                                                fontsize: 14,
+                                                color: const Color(0xFF20236C),
+                                                largeur: largeur * 0.2,
+                                              ),
+                                              const SizedBox(
+                                                width: 5,
+                                              ),
+                                            ],
+                                          )),
                                     ),
                                   ),
-
-                                  /// ESI
-                                  InkWell(
-                                      onTap: () {
-                                        setState(() {
-                                          Variables.locationNamea =
-                                              "Ecole Nationale Supérieure d'Informatique (Ex. INI)";
-                                          fin = PointLatLng(
-                                              LocationEsi.latitude,
-                                              LocationEsi.longitude);
-                                        });
-                                      },
-                                      child: Image(
-                                          image: const AssetImage(
-                                              "Assets/Images/esi_logo.png"),
-                                          width: largeur * 0.06,
-                                          height: hauteur * 0.06)),
-                                  SizedBox(
-                                    width: largeur * 0.015,
-                                  ),
-
-                                  ///Current location
-                                  InkWell(
-                                      onTap: () {
-                                        setState(() {
-                                          Variables.locationNamea =
-                                              "Current Location";
-                                        });
-                                      },
-                                      child: Icon(
-                                        Icons.my_location,
-                                        color: bleu_bg,
-                                        size: largeur * 0.06,
-                                      )),
                                 ],
                               ),
-                            ),
-                            SizedBox(height: hauteur * 0.02),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  /// "Heure"
+                                  SizedBox(
+                                      width: largeur * 0.13,
+                                      height: hauteur * 0.025,
+                                      child: MyText(
+                                        text: "Heure",
+                                        weight: FontWeight.w700,
+                                        fontsize: 14,
+                                        color: const Color(0xff20236C),
+                                        largeur: largeur * 0.13,
+                                      )),
+                                  SizedBox(height: hauteur * 0.005),
 
-                            /// +Date & Hour
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    /// "Date"
-                                    SizedBox(
-                                        width: largeur * 0.11,
-                                        height: hauteur * 0.025,
-                                        child: MyText(
-                                          text: "Date",
-                                          weight: FontWeight.w700,
-                                          fontsize: 14,
-                                          color: const Color(0xff20236C),
-                                          largeur: largeur * 0.11,
-                                        )),
-                                    SizedBox(height: hauteur * 0.005),
-
-                                    /// +Date Filed
-                                    GestureDetector(
-                                      onTap: () async {
-                                        _selectDate(context);
-                                      },
-                                      child: SizedBox(
-                                        height: hauteur * 0.0625,
-                                        width: largeur * 0.5,
-                                        child: Container(
-                                            decoration: BoxDecoration(
-                                                boxShadow: const [
-                                                  BoxShadow(
-                                                      blurRadius: 18,
-                                                      color: Color.fromRGBO(
-                                                          32, 35, 108, 0.15))
-                                                ],
-                                                color: Colors.white,
-                                                borderRadius:
-                                                    BorderRadius.circular(5)),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.spaceEvenly,
-                                              children: [
-                                                const SizedBox(
-                                                  width: 5,
-                                                ),
-                                                Transform.scale(
-                                                  scale:
-                                                      1.5, // to make the icon smaller or larger
-                                                  child: const Icons_ESIWay(
-                                                      icon: "calendar",
-                                                      largeur: 20,
-                                                      hauteur: 20),
-                                                ),
-                                                MyText(
-                                                  text: date!,
+                                  /// +Heure Filed
+                                  GestureDetector(
+                                    onTap: () async {
+                                      _selectTime(context);
+                                    },
+                                    child: SizedBox(
+                                      height: hauteur * 0.0625,
+                                      width: largeur * 0.3,
+                                      child: Container(
+                                          decoration: BoxDecoration(
+                                              boxShadow: const [
+                                                BoxShadow(
+                                                    blurRadius: 18,
+                                                    color: Color.fromRGBO(
+                                                        32, 35, 108, 0.15))
+                                              ],
+                                              color: Colors.white,
+                                              borderRadius:
+                                                  BorderRadius.circular(5)),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceEvenly,
+                                            children: [
+                                              Transform.scale(
+                                                scale:
+                                                    1.5, // to make the icon smaller or larger
+                                                child: const Icons_ESIWay(
+                                                    icon: "timer",
+                                                    largeur: 20,
+                                                    hauteur: 20),
+                                              ),
+                                              MyText(
+                                                  text: time!,
                                                   weight: FontWeight.w500,
                                                   fontsize: 14,
                                                   color:
                                                       const Color(0xFF20236C),
-                                                  largeur: largeur * 0.2,
-                                                ),
-                                                const SizedBox(
-                                                  width: 5,
-                                                ),
-                                              ],
-                                            )),
-                                      ),
+                                                  largeur: largeur * 0.15),
+                                            ],
+                                          )),
                                     ),
-                                  ],
-                                ),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    /// "Heure"
-                                    SizedBox(
-                                        width: largeur * 0.13,
-                                        height: hauteur * 0.025,
-                                        child: MyText(
-                                          text: "Heure",
-                                          weight: FontWeight.w700,
-                                          fontsize: 14,
-                                          color: const Color(0xff20236C),
-                                          largeur: largeur * 0.13,
-                                        )),
-                                    SizedBox(height: hauteur * 0.005),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(height: hauteur * 0.02),
+                            ],
+                          ),
+                          SizedBox(height: hauteur * 0.03),
 
-                                    /// +Heure Filed
-                                    GestureDetector(
-                                      onTap: () async {
-                                        _selectTime(context);
-                                      },
-                                      child: SizedBox(
-                                        height: hauteur * 0.0625,
-                                        width: largeur * 0.3,
-                                        child: Container(
-                                            decoration: BoxDecoration(
-                                                boxShadow: const [
-                                                  BoxShadow(
-                                                      blurRadius: 18,
-                                                      color: Color.fromRGBO(
-                                                          32, 35, 108, 0.15))
-                                                ],
-                                                color: Colors.white,
-                                                borderRadius:
-                                                    BorderRadius.circular(5)),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.spaceEvenly,
-                                              children: [
-                                                Transform.scale(
-                                                  scale:
-                                                      1.5, // to make the icon smaller or larger
-                                                  child: const Icons_ESIWay(
-                                                      icon: "timer",
-                                                      largeur: 20,
-                                                      hauteur: 20),
-                                                ),
-                                                MyText(
-                                                    text: time!,
-                                                    weight: FontWeight.w500,
-                                                    fontsize: 14,
-                                                    color:
-                                                        const Color(0xFF20236C),
-                                                    largeur: largeur * 0.15),
-                                              ],
-                                            )),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                SizedBox(height: hauteur * 0.02),
-                              ],
-                            ),
-                            SizedBox(height: hauteur * 0.03),
-
-                            /// search Button
-                            SimpleButton(
-                                backgroundcolor: const Color(0xffFFA18E),
-                                size: Size(largeur, hauteur * 0.06),
-                                radius: 10,
-                                text: "Search",
-                                textcolor: const Color(0xFF20236C),
-                                fontsize: 20,
-                                fct: () {
-                               /*if((locationName == "Search places") || (locationNamea == "Search places")) {
+                          /// search Button
+                          SimpleButton(
+                              backgroundcolor: const Color(0xffFFA18E),
+                              size: Size(largeur, hauteur * 0.06),
+                              radius: 10,
+                              text: "Search",
+                              textcolor: const Color(0xFF20236C),
+                              fontsize: 20,
+                              fct: () {
+                                /*if((locationName == "Search places") || (locationNamea == "Search places")) {
                                  //Variables.created = true;
                                   // search trip
 
@@ -864,28 +873,39 @@ class _SearchTripPageState extends State<SearchTripPage> {
                                        ],
                                      );
                                    });}*/
-                                 Navigator.push(context, MaterialPageRoute(builder: (context) => /*SearchResult() */FindTripPage(markers: markers,mapController: mapController,polylinePoints: polylinePoints,polylines: polylines,distance: distance,)));
-                                },
-                                weight: FontWeight.w700),
-                            SizedBox(height: hauteur * 0.05),
-                          ],
-                        ),
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder:
+                                            (context) => /*SearchResult() */
+                                                TripSuggestPage(
+                                                  markers: markers,
+                                                  mapController: mapController,
+                                                  polylinePoints:
+                                                      polylinePoints,
+                                                  polylines: polylines,
+                                                  distance: distance,
+                                                )));
+                              },
+                              weight: FontWeight.w700),
+                          SizedBox(height: hauteur * 0.05),
+                        ],
                       ),
                     ),
-                  ],
-                ),
-
+                  ),
+                ],
+              ),
             ),
           ),
 
           ///Back Button
           Positioned(
-            top: hauteur*0.05,
-            left: largeur*0.05,
-            right: largeur*0.05,
+            top: hauteur * 0.05,
+            left: largeur * 0.05,
+            right: largeur * 0.05,
             child: SizedBox(
-              height: hauteur*0.07,
-              width:largeur*0.8,
+              height: hauteur * 0.07,
+              width: largeur * 0.8,
               child: PrefixeIconButton(
                   size: const Size(73, 34),
                   color: Colors.white,
@@ -894,10 +914,17 @@ class _SearchTripPageState extends State<SearchTripPage> {
                   textcolor: const Color(0xFF20236C),
                   weight: FontWeight.w600,
                   fontsize: 12,
-                  icon: Transform.scale(scale: 0.75, child: const Icons_ESIWay(icon: "arrow_left", largeur: 30, hauteur: 30),),
+                  icon: Transform.scale(
+                    scale: 0.75,
+                    child: const Icons_ESIWay(
+                        icon: "arrow_left", largeur: 30, hauteur: 30),
+                  ),
                   espaceicontext: 5.0,
-                  fct: (){Navigator.pop(context);}),
-            ),)
+                  fct: () {
+                    Navigator.pop(context);
+                  }),
+            ),
+          )
         ],
       ),
     );

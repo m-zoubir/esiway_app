@@ -74,6 +74,7 @@ class _CreateTripPageState extends State<CreateTripPage> {
 
   /// +Fire base (pour stocker dans firebase on choisit la collection Trips)
   final docTrips = FirebaseFirestore.instance.collection("Trips");
+  final docUsers = FirebaseFirestore.instance.collection("Users");
   final auth = FirebaseAuth.instance; // pour l'utilisateur
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
@@ -104,7 +105,8 @@ class _CreateTripPageState extends State<CreateTripPage> {
   String? seats = "4";
   int i = 0;
 
-  String? date ="${DateTime.now().day} - ${DateTime.now().month} - ${DateTime.now().year}";
+  String? date =
+      "${DateTime.now().day} - ${DateTime.now().month} - ${DateTime.now().year}";
 
   String? time = "00:00";
   String? minute;
@@ -201,7 +203,19 @@ class _CreateTripPageState extends State<CreateTripPage> {
       //prefrences
     };
 
-    await docTrips.doc("$date-$heure-${auth.currentUser?.uid}_").set(json);
+    // await docTrips.doc("${auth.currentUser?.uid}_$date-$heure").set(json);
+    DocumentReference docRefUser =
+        firestore.collection('Users').doc("${auth.currentUser?.uid}");
+
+// Update the array field with the new element
+    docRefUser.update({
+      'myArray': FieldValue.arrayUnion(['newElement']),
+    }).then((value) {
+      print('Element added successfully!');
+    }).catchError((error) {
+      print('Failed to add element: $error');
+    });
+
     setState(() {
       Variables.distance = totalDistance;
     });
@@ -376,9 +390,12 @@ class _CreateTripPageState extends State<CreateTripPage> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Container(
-
-                      decoration: const BoxDecoration(borderRadius: BorderRadius.only(topLeft: Radius.circular(23), topRight: Radius.circular(23),),color:Color(0xFFF9F8FF)),
-
+                      decoration: const BoxDecoration(
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(23),
+                            topRight: Radius.circular(23),
+                          ),
+                          color: Color(0xFFF9F8FF)),
                       child: Padding(
                         padding:
                             EdgeInsets.symmetric(horizontal: largeur * 0.075),
@@ -981,13 +998,18 @@ class _CreateTripPageState extends State<CreateTripPage> {
                                     },
                                     blur: 18),
                                 SimpleButton(
-                                    backgroundcolor: talking ? bleu_ciel : Colors.white,
-                                    size: Size(largeur * 0.277, hauteur * 0.00875),
+                                    backgroundcolor:
+                                        talking ? bleu_ciel : Colors.white,
+                                    size: Size(
+                                        largeur * 0.277, hauteur * 0.00875),
                                     radius: 3,
                                     text: "Talking",
                                     textcolor: bleu_bg,
                                     fontsize: 12,
-                                    fct: () {(talking = !talking);setState(() {});},
+                                    fct: () {
+                                      (talking = !talking);
+                                      setState(() {});
+                                    },
                                     blur: 18),
                                 SimpleButton(
                                     backgroundcolor:
@@ -1159,42 +1181,70 @@ class _CreateTripPageState extends State<CreateTripPage> {
                                 fontsize: 20,
                                 weight: FontWeight.w700,
                                 fct: () async {
-                                if((locationName == "Search places") || (locationNamea == "Search places")){
-                                  Variables.created = true;
-                                  print("date is :   $date");
-                                  createTrip(
-                                      auth.currentUser!.uid,
-                                      debut,
-                                      fin,
-                                      Variables.locationName,
-                                      Variables.locationNamea,
-                                      date!,
-                                      time!,
-                                      pricecontroller.text.trim(),
-                                      seats!,
-                                      methode);
+                                  if ((locationName == "Search places") ||
+                                      (locationNamea == "Search places")) {
+                                    Variables.created = true;
+                                    print("date is :   $date");
+                                    createTrip(
+                                        auth.currentUser!.uid,
+                                        debut,
+                                        fin,
+                                        Variables.locationName,
+                                        Variables.locationNamea,
+                                        date!,
+                                        time!,
+                                        pricecontroller.text.trim(),
+                                        seats!,
+                                        methode);
 
-                                  final FirebaseFirestore firestore =FirebaseFirestore.instance;
-                                }else{
-                                   showDialog(
-                                     context: context,
-                                     builder: (context) {
-                                      return AlertDialog(
-                                        title: const Text('Alert!',style:TextStyle(fontFamily: 'Montserrat', fontWeight: FontWeight.w700, fontSize: 16, color: bleu_bg,),),
-                                         content: const Text('You must entre an adress?',style:TextStyle(fontFamily: 'Montserrat', fontWeight: FontWeight.w500, fontSize: 14, color: bleu_bg,),),
-                                          backgroundColor: const Color.fromARGB(0xFF, 0xB0, 0xD3, 0xD7),
-                                       actions: [
-                                      TextButton(
-                                               onPressed: () {Navigator.pop(context);},
-                                           child: const Text('OK',style:TextStyle(fontFamily: 'Montserrat', fontWeight: FontWeight.w700, fontSize: 14, color: bleu_bg,)),
-                                       ),
-
-                                      ],
-                                     );
-                                   });
-                                };
-                                }
-                               ),
+                                    final FirebaseFirestore firestore =
+                                        FirebaseFirestore.instance;
+                                  } else {
+                                    showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return AlertDialog(
+                                            title: const Text(
+                                              'Alert!',
+                                              style: TextStyle(
+                                                fontFamily: 'Montserrat',
+                                                fontWeight: FontWeight.w700,
+                                                fontSize: 16,
+                                                color: bleu_bg,
+                                              ),
+                                            ),
+                                            content: const Text(
+                                              'You must entre an adress?',
+                                              style: TextStyle(
+                                                fontFamily: 'Montserrat',
+                                                fontWeight: FontWeight.w500,
+                                                fontSize: 14,
+                                                color: bleu_bg,
+                                              ),
+                                            ),
+                                            backgroundColor:
+                                                const Color.fromARGB(
+                                                    0xFF, 0xB0, 0xD3, 0xD7),
+                                            actions: [
+                                              TextButton(
+                                                onPressed: () {
+                                                  Navigator.pop(context);
+                                                },
+                                                child: const Text('OK',
+                                                    style: TextStyle(
+                                                      fontFamily: 'Montserrat',
+                                                      fontWeight:
+                                                          FontWeight.w700,
+                                                      fontSize: 14,
+                                                      color: bleu_bg,
+                                                    )),
+                                              ),
+                                            ],
+                                          );
+                                        });
+                                  }
+                                  ;
+                                }),
 
                             SizedBox(height: hauteur * 0.05),
                           ],

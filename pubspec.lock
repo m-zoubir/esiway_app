@@ -732,10 +732,10 @@ packages:
     dependency: transitive
     description:
       name: image
-      sha256: "73964e3609fb96e01e69b0924b939967c556e46c7ff05db2ea9e31019000f4ef"
+      sha256: a72242c9a0ffb65d03de1b7113bc4e189686fc07c7147b8b41811d0dd0e0d9bf
       url: "https://pub.dev"
     source: hosted
-    version: "4.0.16"
+    version: "4.0.17"
   image_picker:
     dependency: "direct main"
     description:
@@ -1056,14 +1056,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.1"
-  simple_ripple_animation:
-    dependency: "direct main"
-    description:
-      name: simple_ripple_animation
-      sha256: e194718e95e77be86a8a6421d236ef4dc5ded1113c26e938e3e7f1a722b922a4
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.0.7"
   sky_engine:
     dependency: transitive
     description: flutter

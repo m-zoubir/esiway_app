@@ -148,8 +148,8 @@ class _CreateTripPageState extends State<CreateTripPage> {
       String price,
       String places,
       String methode) async {
+    Variables.polylineCoordinates.clear();
     List<LatLng> polylineCoordinates = [];
-    List<String> cities = [];
     List<String> latLngStrings = polylineCoordinates
         .map((latLng) => '${latLng.latitude},${latLng.longitude}')
         .toList();
@@ -162,8 +162,7 @@ class _CreateTripPageState extends State<CreateTripPage> {
 
     if (result.points.isNotEmpty) {
       result.points.forEach((PointLatLng point) async {
-        Variables.polylineCoordinates
-            .add(LatLng(point.latitude, point.longitude));
+        Variables.polylineCoordinates.add(LatLng(point.latitude, point.longitude));
       });
     } else {
       print(result.errorMessage);
@@ -203,7 +202,7 @@ class _CreateTripPageState extends State<CreateTripPage> {
       //prefrences
     };
 
-    // await docTrips.doc("${auth.currentUser?.uid}_$date-$heure").set(json);
+    await docTrips.doc("${auth.currentUser?.uid}_$date-$heure").set(json);
     DocumentReference docRefUser =
         firestore.collection('Users').doc("${auth.currentUser?.uid}");
 
@@ -219,6 +218,8 @@ class _CreateTripPageState extends State<CreateTripPage> {
     setState(() {
       Variables.distance = totalDistance;
     });
+    addPolyLine(Variables.polylineCoordinates);
+
   }
 
   ///+++++++++++++++++++++++++++++< Add Polyline >++++++++++++++++++++++++++++++///
@@ -331,20 +332,19 @@ class _CreateTripPageState extends State<CreateTripPage> {
       String price,
       String places,
       String methode) async {
+
     if (depart == "Current Location") {
       Position positione = await determinePosition();
       Variables.fin = PointLatLng(positione.latitude, positione.longitude);
-    }
-    ;
+    };
+
     if (arrivee == "Current Location") {
       Position positione = await determinePosition();
       Variables.debut = PointLatLng(positione.latitude, positione.longitude);
-    }
-    ;
+    };
 
     setState(() {});
-    getDirection(conducteur, one, two, depart, arrivee, date, heure, price,
-        places, methode); //fetch direction polylines from Google API
+    getDirection(conducteur, one, two, depart, arrivee, date, heure, price, places, methode); //fetch direction polylines from Google API
     ajouterMarkers(one, "Starting Location", depart);
     ajouterMarkers(two, "Arrival Location", arrivee);
     mapController?.animateCamera(CameraUpdate.newCameraPosition(
@@ -481,9 +481,8 @@ class _CreateTripPageState extends State<CreateTripPage> {
                                                 CameraPosition(
                                                     target: newlatlang,
                                                     zoom: 17)));
-                                      }
-                                      ;
-                                      setState(() {});
+                                      };
+
                                     },
                                     child: Row(
                                       children: [
@@ -1039,8 +1038,7 @@ class _CreateTripPageState extends State<CreateTripPage> {
                                     text: "Smoking",
                                     textcolor: bleu_bg,
                                     fontsize: 12,
-                                    fct: () {
-                                      (smoking = !smoking);
+                                    fct: () {smoking = !smoking;
                                       setState(() {});
                                     },
                                     blur: 18),
@@ -1048,8 +1046,7 @@ class _CreateTripPageState extends State<CreateTripPage> {
                                 SimpleButton(
                                     backgroundcolor:
                                         others ? bleu_ciel : Colors.white,
-                                    size: Size(
-                                        largeur * 0.277, hauteur * 0.00875),
+                                    size: Size(largeur * 0.277, hauteur * 0.00875),
                                     radius: 3,
                                     text: "Other",
                                     textcolor: bleu_bg,
@@ -1181,8 +1178,7 @@ class _CreateTripPageState extends State<CreateTripPage> {
                                 fontsize: 20,
                                 weight: FontWeight.w700,
                                 fct: () async {
-                                  if ((locationName == "Search places") ||
-                                      (locationNamea == "Search places")) {
+                                  //if ((locationName == "Search places") || (locationNamea == "Search places")) {
                                     Variables.created = true;
                                     print("date is :   $date");
                                     createTrip(
@@ -1197,9 +1193,9 @@ class _CreateTripPageState extends State<CreateTripPage> {
                                         seats!,
                                         methode);
 
-                                    final FirebaseFirestore firestore =
-                                        FirebaseFirestore.instance;
-                                  } else {
+                                    final FirebaseFirestore firestore = FirebaseFirestore.instance;
+                                   // }
+                                  /*else {
                                     showDialog(
                                         context: context,
                                         builder: (context) {
@@ -1242,8 +1238,7 @@ class _CreateTripPageState extends State<CreateTripPage> {
                                             ],
                                           );
                                         });
-                                  }
-                                  ;
+                                  };*/
                                 }),
 
                             SizedBox(height: hauteur * 0.05),
@@ -1277,7 +1272,10 @@ class _CreateTripPageState extends State<CreateTripPage> {
                   ),
                   espaceicontext: 5.0,
                   fct: () {
+                    if(Variables.created == false) markers.clear();
+                    else(print('test'));
                     toHome();
+
                   }),
             ),
           )

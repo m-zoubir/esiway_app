@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class MyWidget extends StatefulWidget {
-  List<dynamic> notiflist = [];
+  List notiflist = [];
   MyWidget({
     super.key,
     required this.notiflist,

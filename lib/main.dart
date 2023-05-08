@@ -1,4 +1,5 @@
 import 'package:esiway/Screens/SignIn_Up/page1.dart';
+import 'package:esiway/Screens/home/notif_page.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'Screens/SignIn_Up/authentification.dart';
@@ -20,7 +21,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Auth(),
+
+      home: Notifpage(),
+
     );
   }
 }

@@ -1,7 +1,8 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+/* import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:esiway/Screens/home/notif_page.dart';
 import 'package:esiway/notification_services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
 import '../../Auth.dart';
@@ -11,24 +12,40 @@ class PageOne extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Future<void> addItemToArray(int type, String nom, String prenom) async {
-      // Get a reference to your document
+    final FirebaseFirestore firestore = FirebaseFirestore.instance;
+    void writeData(int type, DateTime date) async {
+      try {
+        await firestore.collection('Notifications').add({
+          'type': type,
+          'date': date,
+          'uid': "${FirebaseAuth.instance.currentUser!.uid}",
+          // add more fields and values as needed
+        });
+        print('Data has been written successfully!');
+      } catch (e) {
+        print('Error writing data: $e');
+      }
+    }
 
-      DocumentReference documentReference = FirebaseFirestore.instance
-          .collection('Notifications')
-          .doc(FirebaseAuth.instance.currentUser!.uid);
+    List<Map<String, dynamic>>? dataList = [];
 
-      // Add the new item to the beginning of the 'array' field
-      await documentReference.update({
-        'array': FieldValue.arrayUnion([
-          {
-            'type': type,
-            'nom': nom,
-            'prenom': prenom,
-            'uid': "${FirebaseAuth.instance.currentUser!.uid}",
-          },
-        ]),
-      });
+    Future<void> readCollection() async {
+      try {
+        QuerySnapshot snapshot = await firestore
+            .collection('Notifications')
+            .where('uid',
+                isEqualTo: '${FirebaseAuth.instance.currentUser!.uid}')
+            .orderBy('date')
+            .get();
+
+        List<DocumentSnapshot> docs = snapshot.docs;
+        dataList =
+            docs.map((doc) => doc.data()).cast<Map<String, dynamic>>().toList();
+
+        // Set the state to rebuild the widget and display the retrieved data
+      } catch (e) {
+        print('Error reading collection: $e');
+      }
     }
 
     return Scaffold(
@@ -48,19 +65,23 @@ class PageOne extends StatelessWidget {
               backgroundColor: Theme.of(context).primaryColor,
             ),
             onPressed: () async {
-              addItemToArray(0, "title", "description");
+              //      addItemToArray(0, "title", "description");
               await NotificationService.showNotification(
                 title: "Covoiturage",
                 body: "Your request is on keep waiting ",
               );
+              // writeData(1, DateTime.now());
+
+              readCollection();
 
               Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => Notifpage()));
+                  MaterialPageRoute(builder: (context) => Notifpage(dataNotif: dataList,)));
             },
-            child: Text("Normal Notification"),
+            child: Text(FirebaseAuth.instance.currentUser!.uid),
           ),
         ],
       ),
     );
   }
 }
+ */

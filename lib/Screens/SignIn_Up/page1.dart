@@ -1,4 +1,4 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+/* import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:esiway/Screens/home/notif_page.dart';
 import 'package:esiway/notification_services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -12,47 +12,37 @@ class PageOne extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Future<void> addItemToArray(int type, DateTime date) async {
-      // Get a reference to your document
-
-      DocumentReference documentReference = FirebaseFirestore.instance
-          .collection('Notifications')
-          .doc(FirebaseAuth.instance.currentUser!.uid);
-
-      CollectionReference notifCollection =
-          FirebaseFirestore.instance.collection('Notifications');
-
-      // Add the new item to the beginning of the 'array' field
-      await documentReference.update({
-        'array': FieldValue.arrayUnion([
-          {
-            'type': type,
-            'date': date,
-            'uid': "${FirebaseAuth.instance.currentUser!.uid}",
-          },
-        ]),
-      });
+    final FirebaseFirestore firestore = FirebaseFirestore.instance;
+    void writeData(int type, DateTime date) async {
+      try {
+        await firestore.collection('Notifications').add({
+          'type': type,
+          'date': date,
+          'uid': "${FirebaseAuth.instance.currentUser!.uid}",
+          // add more fields and values as needed
+        });
+        print('Data has been written successfully!');
+      } catch (e) {
+        print('Error writing data: $e');
+      }
     }
 
-    final FirebaseFirestore firestore = FirebaseFirestore.instance;
+    List<Map<String, dynamic>>? dataList = [];
 
-    void readCollection() async {
+    Future<void> readCollection() async {
       try {
         QuerySnapshot snapshot = await firestore
             .collection('Notifications')
-            .where('uid', isEqualTo: 'He9ne8pNjuX7ixQB80X6gZmkjjw1')
+            .where('uid',
+                isEqualTo: '${FirebaseAuth.instance.currentUser!.uid}')
             .orderBy('date')
             .get();
 
         List<DocumentSnapshot> docs = snapshot.docs;
-        List<Object?> dataList = docs.map((doc) => doc.data()).toList();
+        dataList =
+            docs.map((doc) => doc.data()).cast<Map<String, dynamic>>().toList();
 
-        // Now the dataList variable contains a list of maps, where each map represents a document in the collection
-        // You can use the dataList variable to populate your UI or perform other operations with the retrieved data.
-        print("========================================");
-        print(snapshot.size);
-        print("========================================");
-        print(dataList); // This will print the list in your console
+        // Set the state to rebuild the widget and display the retrieved data
       } catch (e) {
         print('Error reading collection: $e');
       }
@@ -80,24 +70,12 @@ class PageOne extends StatelessWidget {
                 title: "Covoiturage",
                 body: "Your request is on keep waiting ",
               );
-              addItemToArray(0, DateTime.now());
+              // writeData(1, DateTime.now());
 
-              /*  firestore
-                  .collection('Notifications')
-                  .where('uid', isEqualTo: 'He9ne8pNjuX7ixQB80X6gZmkjjw1')
-                  .orderBy('date')
-                  .get()
-                  .then((QuerySnapshot querySnapshot) {
-                List<DocumentSnapshot> docs = snapshot.docs;
-                List<Map<String, dynamic>> dataList =
-                    docs.map((doc) => doc.data()).toList();
-                print("print ======== ");
-                print(dataList); */
-              // querySnapshot contains the ordered list of documents matching the query
-              // you can access the data using querySnapshot.docs
+              readCollection();
 
-              /*   Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => Notifpage())); */
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => Notifpage(dataNotif: dataList,)));
             },
             child: Text(FirebaseAuth.instance.currentUser!.uid),
           ),
@@ -106,3 +84,4 @@ class PageOne extends StatelessWidget {
     );
   }
 }
+ */

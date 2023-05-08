@@ -5,68 +5,56 @@ import 'package:esiway/widgets/login_text.dart';
 import 'package:esiway/widgets/notif.dart';
 import 'package:esiway/widgets/notif_list.dart';
 import 'package:esiway/widgets/our_prefixeIconButton.dart';
+import 'package:esiway/widgets/refuse_notif.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class Notifpage extends StatefulWidget {
-  const Notifpage({super.key});
+  //List<Map<String, dynamic>>? dataNotif = [];
+  Notifpage({
+    super.key,
+    //  this.dataNotif,
+  });
 
   @override
   State<Notifpage> createState() => _NotifpageState();
 }
 
 class _NotifpageState extends State<Notifpage> {
-/*   Future<List<Map<String, String>>> getStackItems() async {
-    List<Map<String, String>> stackItems = [];
-
-    // Get a reference to your document
-    DocumentReference documentReference = FirebaseFirestore.instance
-        .collection('Notifications')
-        .doc(FirebaseAuth.instance.currentUser!.uid);
-
-    // Get the 'stack' array field and reverse it
-
-    List<dynamic> stack = (await documentReference.get()).data()!["array"];
-    stack = stack.reversed.toList();
-
-    // Add each item in the 'stack' array to the list of stack items
-    stack.forEach((item) {
-      stackItems.add({
-        'title': item[0],
-        'description': item[1],
-        'author': item[2],
-        'date': item[3],
-      });
-    });
-
-    return stackItems;
-  } */
-
-  initState() {
+  @override
+  void initState() {
     super.initState();
-
-    // await docTrips.doc("${auth.currentUser?.uid}").set(json);
+    // readCollection();
   }
 
-  void login() {}
+  List<Map<String, dynamic>>? dataList = [];
+  final FirebaseFirestore firestore = FirebaseFirestore.instance;
+  Future<void> readCollection() async {
+    print(dataList);
+    try {
+      QuerySnapshot snapshot = await firestore
+          .collection('Notifications')
+          .where('uid', isEqualTo: '${FirebaseAuth.instance.currentUser!.uid}')
+          .orderBy('date')
+          .get();
+
+      List<DocumentSnapshot> docs = snapshot.docs;
+      dataList =
+          docs.map((doc) => doc.data()).cast<Map<String, dynamic>>().toList();
+
+      // Set the state to rebuild the widget and display the retrieved data
+    } catch (e) {
+      print('Error reading collection: $e');
+    }
+  }
+
   final String today = 'Today';
+
   final String month = 'This month';
+
   final String notif = 'Notifications';
 
-  List<dynamic> notifList = [
-    StreamBuilder(
-      stream: FirebaseFirestore.instance.collection('Users').snapshots(),
-      builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-        if (snapshot.hasData) {
-          return AcceptB();
-        } else {
-          return Notif();
-        }
-      },
-    ),
-    Notif(),
-
-    /*   Container(
+  /*   Container(
       margin: EdgeInsets.only(left: 32),
       child: Text(
         'Today',
@@ -77,14 +65,15 @@ class _NotifpageState extends State<Notifpage> {
             fontFamily: 'mont'),
       ),
     ), */
-  ];
+
   @override
   Widget build(BuildContext context) {
     var largeur = MediaQuery.of(context).size.width;
     var hauteur = MediaQuery.of(context).size.height;
     //   addToEndOfArray('newElemen 1');
+
     return Scaffold(
-      body: SafeArea(
+      body: /* SafeArea(
         child: Container(
           color: Colors.white,
           child: Column(
@@ -105,7 +94,7 @@ class _NotifpageState extends State<Notifpage> {
                         fontsize: 14,
                         iconName: "arrow_left",
                         espaceicontext: 0.0,
-                        fct: login),
+                        fct: () {}),
                   ],
                 ),
               ),
@@ -133,11 +122,30 @@ class _NotifpageState extends State<Notifpage> {
                 //       color: BLUE,
                 //       fontFamily: 'mont'),
               ),
-
+              MyWidget(
+                notiflist: notifList,
+              ),
               /////////////////////////////////////////////////////////////////
             ],
           ),
         ),
+      ), */
+          Center(
+              child: ListView.builder(
+        itemCount: dataList?.length,
+        itemBuilder: (context, index) {
+          Map<String, dynamic> data = dataList![index];
+          print("object ==== ${data['type']}");
+          return (data['type'] == 0)
+              ? AcceptB()
+              : ((data['type'] == 1) ? RefuseB() : Notif());
+        },
+      )),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          readCollection();
+        },
+        child: Icon(Icons.refresh),
       ),
     );
   }

@@ -40,6 +40,8 @@ class _HomePageState extends State<HomePage> {
       if ((Variables.locationName != "Search places") &&
           (Variables.locationNamea != "Search places")) {
         getDirection(Variables.debut, Variables.fin);
+        ajouterMarkers(Variables.debut);
+        ajouterMarkers(Variables.fin);
         distance = Variables.distance;
         mapController?.animateCamera(CameraUpdate.newCameraPosition(
             CameraPosition(target: LatLng(debut.latitude, debut.longitude), zoom: 17)));
@@ -121,6 +123,8 @@ class _HomePageState extends State<HomePage> {
   getDirection(PointLatLng depart, PointLatLng arrival) async {
     List<LatLng> polylineCoordinates = [];
     List<String> cities = [];
+    markers.clear();
+
     List<String> latLngStrings = polylineCoordinates
         .map((latLng) => '${latLng.latitude},${latLng.longitude}')
         .toList();

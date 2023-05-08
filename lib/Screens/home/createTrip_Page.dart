@@ -148,6 +148,7 @@ class _CreateTripPageState extends State<CreateTripPage> {
       String price,
       String places,
       String methode) async {
+    markers.clear();
     Variables.polylineCoordinates.clear();
     List<LatLng> polylineCoordinates = [];
     List<String> latLngStrings = polylineCoordinates

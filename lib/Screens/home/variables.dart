@@ -9,5 +9,4 @@ class Variables{
   static PointLatLng fin =const PointLatLng(36.64364699576445, 2.9943386163692787);
   static bool created = false;
   static List<LatLng> polylineCoordinates = [];
-
 }

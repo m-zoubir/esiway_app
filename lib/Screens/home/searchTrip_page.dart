@@ -3,13 +3,11 @@ import 'dart:math';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import 'package:esiway/Screens/home/tripSuggestions.dart';
-
 import 'package:esiway/Screens/home/variables.dart';
 import 'package:esiway/widgets/prefixe_icon_button.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:geocoding/geocoding.dart';
-import 'package:google_maps_webservice/geocoding.dart';
+
 import '../../../widgets/constant.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_google_places/flutter_google_places.dart';
@@ -296,7 +294,7 @@ class _SearchTripPageState extends State<SearchTripPage> {
 
     mapController?.animateCamera(CameraUpdate.newCameraPosition(
         CameraPosition(target: LatLng(one.latitude, one.longitude), zoom: 17)));
-
+////////
     firestore.collection('Trips').get().then((QuerySnapshot querySnapshot) {
       querySnapshot.docs.forEach((DocumentSnapshot documentSnapshot) {
         if (date == documentSnapshot.get('Date')) {
@@ -316,8 +314,8 @@ class _SearchTripPageState extends State<SearchTripPage> {
           }
 
           double percent = count / Variables.polylineCoordinates.length;
-          //  print("percent = $percent");
-          //  print("count  = $count");
+          print("percent = $percent");
+          print("count  = $count");
 
           if (percent >= 0.4) {
             // un pourcentage pour savoir si le trajet de l'utilisateur est inclut
@@ -330,6 +328,17 @@ class _SearchTripPageState extends State<SearchTripPage> {
                 .cast<Map<String, dynamic>>()
                 .toList();
             print("List ======================== $listTrajet");
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => FindTripPage(
+                          listTrajet: listTrajet,
+                          markers: markers,
+                          mapController: mapController,
+                          polylinePoints: polylinePoints,
+                          polylines: polylines,
+                          distance: distance,
+                        )));
             /*   Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -343,7 +352,6 @@ class _SearchTripPageState extends State<SearchTripPage> {
           } else {
             print('No=====================');
           }
-          //       }
 
           /* while ((i < polylineCoordinate.length) && (trv == false)) {
             // confirmer que le derpart de la recherche est inclut dans dans le trajet du conducteur

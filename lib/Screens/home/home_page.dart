@@ -44,7 +44,8 @@ class _HomePageState extends State<HomePage> {
         ajouterMarkers(Variables.fin);
         distance = Variables.distance;
         mapController?.animateCamera(CameraUpdate.newCameraPosition(
-            CameraPosition(target: LatLng(debut.latitude, debut.longitude), zoom: 17)));
+            CameraPosition(
+                target: LatLng(debut.latitude, debut.longitude), zoom: 17)));
       } else {
         markers.clear();
       }
@@ -262,14 +263,11 @@ class _HomePageState extends State<HomePage> {
         CameraPosition(target: LatLng(one.latitude, one.longitude), zoom: 17)));
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     var largeur = MediaQuery.of(context).size.width;
     var hauteur = MediaQuery.of(context).size.height;
     var dropdownValue = "-1"; // drop down value
-
 
     return Scaffold(
       bottomNavigationBar: BottomNavBar(currentindex: 3),
@@ -366,10 +364,10 @@ class _HomePageState extends State<HomePage> {
                           ///Notification Button
                           ElevatedButton(
                             onPressed: () {
-                              /*    Navigator.push(
+                              Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => Notifpage())); */
+                                      builder: (context) => Notifpage()));
                             },
                             style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.white,
@@ -396,7 +394,16 @@ class _HomePageState extends State<HomePage> {
             right: 20,
             child: ElevatedButton(
               onPressed: () async {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => CreateTripPage(markers: markers, mapController: mapController, polylinePoints: polylinePoints, polylines: polylines, distance: distance,)));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => CreateTripPage(
+                              markers: markers,
+                              mapController: mapController,
+                              polylinePoints: polylinePoints,
+                              polylines: polylines,
+                              distance: distance,
+                            )));
                 /*showDialog(
                 context: context,
                 builder: (context) {

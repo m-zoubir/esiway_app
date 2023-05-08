@@ -23,9 +23,11 @@ class TripSuggestPage extends StatefulWidget {
   PolylinePoints polylinePoints = PolylinePoints();
   Map<PolylineId, Polyline> polylines = {}; //polylines to show direction
   double distance = 0.0;
+  List<Map<String, dynamic>>? listTrajet = [];
 
   TripSuggestPage({
     super.key,
+    required this.listTrajet,
     required this.markers,
     required this.mapController,
     required this.polylinePoints,
@@ -44,6 +46,7 @@ class _TripSuggestPageState extends State<TripSuggestPage> {
 
   void initState() {
     // TODO: implement initState
+    print("suggest trip ============= ${widget.listTrajet}");
     Variables.locationName = "Search places";
     Variables.locationNamea = "Search places";
     Variables.debut = const PointLatLng(36.72376684085901, 2.991892973393687);
@@ -203,6 +206,24 @@ class _TripSuggestPageState extends State<TripSuggestPage> {
     point = PointLatLng(positione.latitude, positione.longitude);
   }
 
+/*   final FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+  Future<Map<String, dynamic>?> readDocument(String documentId) async {
+    try {
+      DocumentSnapshot snapshot =
+          await firestore.collection('Trips').doc(documentId).get();
+
+      if (snapshot.exists) {
+        return snapshot.data() as Map<String, dynamic>?;
+      } else {
+        return null;
+      }
+    } catch (e) {
+      print('Error reading document: $e');
+      return null;
+    }
+  } */
+
   List<String> names = ['Alice', 'Bob', 'Charlie', 'David', 'Eve'];
 
   /// rani mdayrhom dans le button request pour tester ctt
@@ -292,7 +313,7 @@ class _TripSuggestPageState extends State<TripSuggestPage> {
                           width: largeur * 0.88,
                           height: hauteur * 0.43,
                           child: PageView.builder(
-                            itemCount: names.length,
+                            itemCount: widget.listTrajet?.length,
                             onPageChanged: (int index) {
                               setState(() {
                                 _selectedIndex = index;
@@ -427,7 +448,7 @@ class _TripSuggestPageState extends State<TripSuggestPage> {
                                                   ),
                                                 ),
                                                 AutoSizeText(
-                                                  "${TripUser.date}",
+                                                  '${widget.listTrajet!.map((doc) => doc['Date'][index] as String)}',
                                                   style: const TextStyle(
                                                     fontFamily: 'Montserrat',
                                                     fontWeight: FontWeight.w500,

@@ -1,4 +1,4 @@
-/* import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:esiway/Screens/home/notif_page.dart';
 import 'package:esiway/notification_services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -75,13 +75,12 @@ class PageOne extends StatelessWidget {
               readCollection();
 
               Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => Notifpage(dataNotif: dataList,)));
+                  MaterialPageRoute(builder: (context) => Notifpage()));
             },
-            child: Text(FirebaseAuth.instance.currentUser!.uid),
+            child: Text("qsdfcvg"),
           ),
         ],
       ),
     );
   }
 }
- */

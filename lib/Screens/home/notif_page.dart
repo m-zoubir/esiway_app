@@ -1,6 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:esiway/Screens/Profile/profile_screen.dart';
+import 'package:esiway/Screens/home/home_page.dart';
 import 'package:esiway/widgets/accept_notif.dart';
 import 'package:esiway/widgets/constant.dart';
+import 'package:esiway/widgets/icons_ESIWay.dart';
 import 'package:esiway/widgets/login_text.dart';
 import 'package:esiway/widgets/notif.dart';
 import 'package:esiway/widgets/notif_list.dart';
@@ -11,10 +14,7 @@ import 'package:flutter/material.dart';
 
 class Notifpage extends StatefulWidget {
   //List<Map<String, dynamic>>? dataNotif = [];
-  Notifpage({
-    super.key,
-    //  this.dataNotif,
-  });
+  Notifpage({Key? key}) : super(key: key);
 
   @override
   State<Notifpage> createState() => _NotifpageState();
@@ -24,7 +24,7 @@ class _NotifpageState extends State<Notifpage> {
   @override
   void initState() {
     super.initState();
-    // readCollection();
+    readCollection();
   }
 
   List<Map<String, dynamic>>? dataList = [];
@@ -73,6 +73,35 @@ class _NotifpageState extends State<Notifpage> {
     //   addToEndOfArray('newElemen 1');
 
     return Scaffold(
+      appBar: AppBar(
+        elevation: 2,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        centerTitle: true,
+        leading: IconButton(
+          icon: Transform.scale(
+            scale: 0.9,
+            child: Icons_ESIWay(icon: "arrow_left", largeur: 50, hauteur: 50),
+          ),
+          onPressed: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) {
+                  return HomePage();
+                },
+              ),
+            );
+          },
+          color: vert,
+        ),
+        title: Text(
+          "Notifications",
+          style: TextStyle(
+            color: bleu_bg,
+            fontSize: 20.0,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
       body: /* SafeArea(
         child: Container(
           color: Colors.white,
@@ -130,17 +159,34 @@ class _NotifpageState extends State<Notifpage> {
           ),
         ),
       ), */
-          Center(
-              child: ListView.builder(
-        itemCount: dataList?.length,
-        itemBuilder: (context, index) {
-          Map<String, dynamic> data = dataList![index];
-          print("object ==== ${data['type']}");
-          return (data['type'] == 0)
-              ? AcceptB()
-              : ((data['type'] == 1) ? RefuseB() : Notif());
-        },
-      )),
+          Column(
+        children: [
+          // other widgets
+          Expanded(
+            child: ListView.builder(
+              itemCount: dataList?.length,
+              itemBuilder: (context, index) {
+                Map<String, dynamic> data = dataList![index];
+                return (data['type'] == 0)
+                    ? AcceptB()
+                    : ((data['type'] == 1) ? RefuseB() : Notif());
+              },
+            ),
+          ),
+        ],
+      ),
+      /*  dataList!.isNotEmpty
+              ? ListView.builder(
+                  itemCount: dataList!.length,
+                  itemBuilder: (context, index) {
+                    Map<String, dynamic> data = dataList![index];
+                    print("object ==== ${data['type']}");
+                    return (data['type'] == 0)
+                        ? AcceptB()
+                        : ((data['type'] == 1) ? RefuseB() : Notif());
+                  },
+                )
+              : Center(child: CircularProgressIndicator()), */
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           readCollection();

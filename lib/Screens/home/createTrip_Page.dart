@@ -104,11 +104,8 @@ class _CreateTripPageState extends State<CreateTripPage> {
   String? seats = "4";
   int i = 0;
 
-  String? date = DateTime(
-    DateTime.now().year,
-    DateTime.now().month,
-    DateTime.now().day,
-  ).toString();
+  String? date ="${DateTime.now().day} - ${DateTime.now().month} - ${DateTime.now().year}";
+
   String? time = "00:00";
   String? minute;
   String? hour;
@@ -379,7 +376,9 @@ class _CreateTripPageState extends State<CreateTripPage> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Container(
-                      color: const Color(0xFFF9F8FF),
+
+                      decoration: const BoxDecoration(borderRadius: BorderRadius.only(topLeft: Radius.circular(23), topRight: Radius.circular(23),),color:Color(0xFFF9F8FF)),
+
                       child: Padding(
                         padding:
                             EdgeInsets.symmetric(horizontal: largeur * 0.075),
@@ -982,18 +981,13 @@ class _CreateTripPageState extends State<CreateTripPage> {
                                     },
                                     blur: 18),
                                 SimpleButton(
-                                    backgroundcolor:
-                                        talking ? bleu_ciel : Colors.white,
-                                    size: Size(
-                                        largeur * 0.277, hauteur * 0.00875),
+                                    backgroundcolor: talking ? bleu_ciel : Colors.white,
+                                    size: Size(largeur * 0.277, hauteur * 0.00875),
                                     radius: 3,
                                     text: "Talking",
                                     textcolor: bleu_bg,
                                     fontsize: 12,
-                                    fct: () {
-                                      (talking = !talking);
-                                      setState(() {});
-                                    },
+                                    fct: () {(talking = !talking);setState(() {});},
                                     blur: 18),
                                 SimpleButton(
                                     backgroundcolor:
@@ -1153,7 +1147,7 @@ class _CreateTripPageState extends State<CreateTripPage> {
                                 ),
                               ],
                             ),
-                            SizedBox(height: hauteur * 0.05),
+                            SizedBox(height: hauteur * 0.03),
 
                             /// Create Button
                             SimpleButton(
@@ -1163,25 +1157,44 @@ class _CreateTripPageState extends State<CreateTripPage> {
                                 text: "Create",
                                 textcolor: const Color(0xFF20236C),
                                 fontsize: 20,
+                                weight: FontWeight.w700,
                                 fct: () async {
+                                if((locationName == "Search places") || (locationNamea == "Search places")){
                                   Variables.created = true;
                                   print("date is :   $date");
                                   createTrip(
                                       auth.currentUser!.uid,
                                       debut,
                                       fin,
-                                      Variables.locationName!,
-                                      Variables.locationNamea!,
+                                      Variables.locationName,
+                                      Variables.locationNamea,
                                       date!,
                                       time!,
                                       pricecontroller.text.trim(),
                                       seats!,
                                       methode);
 
-                                  final FirebaseFirestore firestore =
-                                      FirebaseFirestore.instance;
-                                },
-                                weight: FontWeight.w700),
+                                  final FirebaseFirestore firestore =FirebaseFirestore.instance;
+                                }else{
+                                   showDialog(
+                                     context: context,
+                                     builder: (context) {
+                                      return AlertDialog(
+                                        title: const Text('Alert!',style:TextStyle(fontFamily: 'Montserrat', fontWeight: FontWeight.w700, fontSize: 16, color: bleu_bg,),),
+                                         content: const Text('You must entre an adress?',style:TextStyle(fontFamily: 'Montserrat', fontWeight: FontWeight.w500, fontSize: 14, color: bleu_bg,),),
+                                          backgroundColor: const Color.fromARGB(0xFF, 0xB0, 0xD3, 0xD7),
+                                       actions: [
+                                      TextButton(
+                                               onPressed: () {Navigator.pop(context);},
+                                           child: const Text('OK',style:TextStyle(fontFamily: 'Montserrat', fontWeight: FontWeight.w700, fontSize: 14, color: bleu_bg,)),
+                                       ),
+
+                                      ],
+                                     );
+                                   });
+                                };
+                                }
+                               ),
 
                             SizedBox(height: hauteur * 0.05),
                           ],

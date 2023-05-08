@@ -20,7 +20,7 @@ class SimpleButton extends StatelessWidget {
     this.weight = FontWeight.w600,
     required this.fontsize,
     required this.fct,
-    this.blur = 0,
+    this.blur = null,
   });
 
   @override
@@ -31,7 +31,7 @@ class SimpleButton extends StatelessWidget {
           boxShadow: blur != null
               ? [
                   BoxShadow(
-                    // blurRadius: blur,
+                     blurRadius: blur!,
                     color: Color.fromRGBO(32, 35, 108, 0.15),
                   ),
                 ]

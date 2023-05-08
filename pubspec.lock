@@ -816,6 +816,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.1"
+  loading_animation_widget:
+    dependency: "direct main"
+    description:
+      name: loading_animation_widget
+      sha256: "1901682600273a966c34cf44a85fc5355da92a8d08a8a43c11adc4e471993e3a"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.2.0+4"
   location:
     dependency: "direct main"
     description:
@@ -1048,6 +1056,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.1"
+  simple_ripple_animation:
+    dependency: "direct main"
+    description:
+      name: simple_ripple_animation
+      sha256: e194718e95e77be86a8a6421d236ef4dc5ded1113c26e938e3e7f1a722b922a4
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.7"
   sky_engine:
     dependency: transitive
     description: flutter

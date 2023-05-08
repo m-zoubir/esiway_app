@@ -2,7 +2,9 @@ import 'dart:convert';
 import 'dart:math';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:esiway/Screens/home/search_result.dart';
+
+import 'package:esiway/Screens/home/tripSuggestions.dart';
+
 import 'package:esiway/Screens/home/variables.dart';
 import 'package:esiway/widgets/prefixe_icon_button.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -19,7 +21,9 @@ import 'package:google_maps_webservice/places.dart';
 import '../../../widgets/icons_ESIWay.dart';
 import '../../../widgets/login_text.dart';
 import '../../../widgets/simple_button.dart';
+import 'findingTrip_page.dart';
 import 'home_page.dart';
+import 'search_result.dart';
 
 class SearchTripPage extends StatefulWidget {
   Set<Marker> markers = Set(); //markers for google map
@@ -87,11 +91,9 @@ class _SearchTripPageState extends State<SearchTripPage> {
 
   int i = 0;
 
-  String? date = DateTime(
-    DateTime.now().year,
-    DateTime.now().month,
-    DateTime.now().day,
-  ).toString();
+  //String? date = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day,).toString();
+  String? date ="${DateTime.now().day} - ${DateTime.now().month} - ${DateTime.now().year}";
+
   String? time = "00:00";
   String? minute;
   String? hour;
@@ -109,6 +111,7 @@ class _SearchTripPageState extends State<SearchTripPage> {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   void getAllDocs() {}
+
   List<String> polylineCoordinatesToString(List<LatLng> polylineCoordinates) {
     return polylineCoordinates
         .map((LatLng latLng) => '${latLng.latitude},${latLng.longitude}')
@@ -262,8 +265,7 @@ class _SearchTripPageState extends State<SearchTripPage> {
     if (picked != null) {
       setState(() {
         selectedDate = picked;
-        date =
-            "${selectedDate.day} - ${selectedDate.month} - ${selectedDate.year}";
+        date = "${selectedDate.day} - ${selectedDate.month} - ${selectedDate.year}";
       });
     }
   }
@@ -383,11 +385,12 @@ class _SearchTripPageState extends State<SearchTripPage> {
           ),
           Positioned(
             bottom: 0,
-            child: SizedBox(
+            child: Container(
               width: largeur,
-              height: hauteur * 0.43,
-              child: SingleChildScrollView(
-                child: Column(
+              height: hauteur * 0.5,
+              decoration: const BoxDecoration(borderRadius: BorderRadius.only(topLeft: Radius.circular(23), topRight: Radius.circular(23),),color:Color(0xFFF9F8FF)),
+
+              child:  Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   mainAxisSize: MainAxisSize.min,
@@ -402,7 +405,7 @@ class _SearchTripPageState extends State<SearchTripPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            SizedBox(height: hauteur * 0.01),
+                            SizedBox(height: hauteur * 0.02),
 
                             /// "Depature"
                             SizedBox(
@@ -833,17 +836,35 @@ class _SearchTripPageState extends State<SearchTripPage> {
                                 textcolor: const Color(0xFF20236C),
                                 fontsize: 20,
                                 fct: () {
-                                  //Variables.created = true;
+                               /*if((locationName == "Search places") || (locationNamea == "Search places")) {
+                                 //Variables.created = true;
                                   // search trip
 
                                   searchTrip(
                                       auth.currentUser!.uid,
                                       debut,
                                       fin,
-                                      Variables.locationName!,
-                                      Variables.locationNamea!,
+                                      Variables.locationName,
+                                      Variables.locationNamea,
                                       date!,
                                       time!);
+                                  }else{ showDialog(
+                                   context: context,
+                                   builder: (context) {
+                                     return AlertDialog(
+                                       title: const Text('Alert!',style:TextStyle(fontFamily: 'Montserrat', fontWeight: FontWeight.w700, fontSize: 16, color: bleu_bg,),),
+                                       content: const Text('You must entre a car?',style:TextStyle(fontFamily: 'Montserrat', fontWeight: FontWeight.w500, fontSize: 14, color: bleu_bg,),),
+                                       backgroundColor: const Color.fromARGB(0xFF, 0xB0, 0xD3, 0xD7),
+                                       actions: [
+                                         TextButton(
+                                           onPressed: () {Navigator.pop(context);},
+                                           child: const Text('OK',style:TextStyle(fontFamily: 'Montserrat', fontWeight: FontWeight.w700, fontSize: 14, color: bleu_bg,)),
+                                         ),
+
+                                       ],
+                                     );
+                                   });}*/
+                                 Navigator.push(context, MaterialPageRoute(builder: (context) => /*SearchResult() */FindTripPage(markers: markers,mapController: mapController,polylinePoints: polylinePoints,polylines: polylines,distance: distance,)));
                                 },
                                 weight: FontWeight.w700),
                             SizedBox(height: hauteur * 0.05),
@@ -853,36 +874,30 @@ class _SearchTripPageState extends State<SearchTripPage> {
                     ),
                   ],
                 ),
-              ),
+
             ),
           ),
 
           ///Back Button
           Positioned(
-            top: hauteur * 0.05,
-            left: largeur * 0.05,
+            top: hauteur*0.05,
+            left: largeur*0.05,
+            right: largeur*0.05,
             child: SizedBox(
-              height: 35,
-              width: 80,
+              height: hauteur*0.07,
+              width:largeur*0.8,
               child: PrefixeIconButton(
                   size: const Size(73, 34),
                   color: Colors.white,
                   radius: 10,
-                  text: "Back",
+                  text: "Ecole Nationale superieure d’informatique  ",
                   textcolor: const Color(0xFF20236C),
                   weight: FontWeight.w600,
-                  fontsize: 14,
-                  icon: Transform.scale(
-                    scale: 0.75,
-                    child: const Icons_ESIWay(
-                        icon: "arrow_left", largeur: 30, hauteur: 30),
-                  ),
+                  fontsize: 12,
+                  icon: Transform.scale(scale: 0.75, child: const Icons_ESIWay(icon: "arrow_left", largeur: 30, hauteur: 30),),
                   espaceicontext: 5.0,
-                  fct: () {
-                    toHome();
-                  }),
-            ),
-          )
+                  fct: (){Navigator.pop(context);}),
+            ),)
         ],
       ),
     );

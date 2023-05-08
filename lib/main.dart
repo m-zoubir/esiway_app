@@ -3,7 +3,7 @@ import 'package:esiway/Screens/home/notif_page.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'Screens/SignIn_Up/authentification.dart';
-import 'Screens/myTrips/myTrips.dart';
+
 import 'firebase_options.dart';
 
 void main() async {

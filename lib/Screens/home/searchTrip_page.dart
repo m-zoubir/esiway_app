@@ -135,10 +135,6 @@ class _SearchTripPageState extends State<SearchTripPage> {
   ///-----------------------------< get Direction (draw polyline between two point and put markers) >---------------------------///
   getDirection(PointLatLng depart, PointLatLng arrival) async {
     List<LatLng> polylineCoordinates = [];
-    List<String> cities = [];
-    List<String> latLngStrings = polylineCoordinates
-        .map((latLng) => '${latLng.latitude},${latLng.longitude}')
-        .toList();
 
     PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
       APIKEY,
@@ -184,7 +180,7 @@ class _SearchTripPageState extends State<SearchTripPage> {
     PolylineId id = const PolylineId("poly");
     Polyline polyline = Polyline(
       polylineId: id,
-      color: Colors.deepPurpleAccent,
+      color: Color.fromRGBO(81, 34, 209, 1),
       points: polylineCoordinates,
       width: 8,
     );
@@ -306,7 +302,7 @@ class _SearchTripPageState extends State<SearchTripPage> {
         if (date == documentSnapshot.get('Date')) {
           var polylineCoordinate = documentSnapshot.get('polyline');
 
-          print("length ===  ${polylineCoordinate.length}");
+          // print("length ===  ${polylineCoordinate.length}");
           count = 0;
 
           List<String> rechercheArray =
@@ -320,13 +316,21 @@ class _SearchTripPageState extends State<SearchTripPage> {
           }
 
           double percent = count / Variables.polylineCoordinates.length;
-          print("percent = $percent");
-          print("count  = $count");
+          //  print("percent = $percent");
+          //  print("count  = $count");
 
           if (percent >= 0.4) {
             // un pourcentage pour savoir si le trajet de l'utilisateur est inclut
             // dans le trajet du conducteur (celui qui a crée le trajet)
-            Navigator.push(
+            List<Map<String, dynamic>>? listTrajet = [];
+
+            List<DocumentSnapshot> docs = querySnapshot.docs;
+            listTrajet = docs
+                .map((doc) => doc.data())
+                .cast<Map<String, dynamic>>()
+                .toList();
+            print("List ======================== $listTrajet");
+            /*   Navigator.push(
                 context,
                 MaterialPageRoute(
                     builder: (context) => TripSuggestPage(
@@ -335,7 +339,7 @@ class _SearchTripPageState extends State<SearchTripPage> {
                           polylinePoints: polylinePoints,
                           polylines: polylines,
                           distance: distance,
-                        )));
+                        ))); */
           } else {
             print('No=====================');
           }
@@ -845,19 +849,23 @@ class _SearchTripPageState extends State<SearchTripPage> {
                               textcolor: const Color(0xFF20236C),
                               fontsize: 20,
                               fct: () {
-                                /*if((locationName == "Search places") || (locationNamea == "Search places")) {
-                                 //Variables.created = true;
-                                  // search trip
+                                // if((locationName == "Search places") || (locationNamea == "Search places")) {
+                                //Variables.created = true;
+                                // search trip
 
-                                  searchTrip(
-                                      auth.currentUser!.uid,
-                                      debut,
-                                      fin,
-                                      Variables.locationName,
-                                      Variables.locationNamea,
-                                      date!,
-                                      time!);
-                                  }else{ showDialog(
+                                searchTrip(
+                                    auth.currentUser!.uid,
+                                    debut,
+                                    fin,
+                                    Variables.locationName,
+                                    Variables.locationNamea,
+                                    date!,
+                                    time!);
+
+                                /*     }else
+                                  { 
+                                    
+                                    showDialog(
                                    context: context,
                                    builder: (context) {
                                      return AlertDialog(
@@ -872,8 +880,8 @@ class _SearchTripPageState extends State<SearchTripPage> {
 
                                        ],
                                      );
-                                   });}*/
-                                Navigator.push(
+                                   });} */
+                                /*    Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                         builder:
@@ -885,7 +893,7 @@ class _SearchTripPageState extends State<SearchTripPage> {
                                                       polylinePoints,
                                                   polylines: polylines,
                                                   distance: distance,
-                                                )));
+                                                ))); */
                               },
                               weight: FontWeight.w700),
                           SizedBox(height: hauteur * 0.05),

@@ -23,11 +23,9 @@ class TripSuggestPage extends StatefulWidget {
   PolylinePoints polylinePoints = PolylinePoints();
   Map<PolylineId, Polyline> polylines = {}; //polylines to show direction
   double distance = 0.0;
-  List<Map<String, dynamic>>? listTrajet = [];
 
   TripSuggestPage({
     super.key,
-    required this.listTrajet,
     required this.markers,
     required this.mapController,
     required this.polylinePoints,
@@ -46,13 +44,16 @@ class _TripSuggestPageState extends State<TripSuggestPage> {
 
   void initState() {
     // TODO: implement initState
-    print("suggest trip ============= ${widget.listTrajet}");
     Variables.locationName = "Search places";
     Variables.locationNamea = "Search places";
     Variables.debut = const PointLatLng(36.72376684085901, 2.991892973393687);
     Variables.fin = const PointLatLng(36.72376684085901, 2.991892973393687);
     Variables.polylineCoordinates = [];
     Variables.created = false;
+    List<TripUser> users = [];
+    users.add(user1);
+    users.add(user2);
+
     super.initState();
   }
 
@@ -80,6 +81,10 @@ class _TripSuggestPageState extends State<TripSuggestPage> {
   String? locationName;
   String? locationNamea;
   List<Placemark>? placemarks;
+  TripUser user1 = TripUser(name: 'ISSAM', familyName: 'BOUSSEBATA', statu: "student", prcnt: 0.4, carName: 'Megane', depart: "Blida", arrivee: "Esi", departLatLng: const PointLatLng(36.47421279556045, 2.830230655027655), arriveeLatLng: PointLatLng(LocationEsi.latitude, LocationEsi.longitude), date: "10/05/2023", time: "09:00", seats: "4", price: "500", methode: "Negosiable");
+  TripUser user2 = TripUser(name: 'YASMINE', familyName: 'ZAIDI', statu: "student", prcnt: 0.4, carName: 'clio4', depart: "Ben Aknoun", arrivee: "Esi", departLatLng: const PointLatLng(36.75981099159468, 3.013811224114057), arriveeLatLng: PointLatLng(LocationEsi.latitude, LocationEsi.longitude), date: "10/05/2023", time: "10:00", seats: "1", price: "800", methode: "Negosiable");
+  List<TripUser> users = [];
+
 
   final List<LatLng> _markers = [
     const LatLng(37.42796133580664, -122.085749655962),
@@ -112,11 +117,7 @@ class _TripSuggestPageState extends State<TripSuggestPage> {
   ///-----------------------------< get Direction (draw polyline between two point and put markers) >---------------------------///
   getDirection(PointLatLng depart, PointLatLng arrival) async {
     List<LatLng> polylineCoordinates = [];
-    List<String> cities = [];
-    List<String> latLngStrings = polylineCoordinates
-        .map((latLng) => '${latLng.latitude},${latLng.longitude}')
-        .toList();
-
+     Variables.polylineCoordinates.clear();
     PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
       APIKEY,
       depart,
@@ -224,15 +225,15 @@ class _TripSuggestPageState extends State<TripSuggestPage> {
     }
   } */
 
-  List<String> names = ['Alice', 'Bob', 'Charlie', 'David', 'Eve'];
 
-  /// rani mdayrhom dans le button request pour tester ctt
+
 
   @override
   Widget build(BuildContext context) {
     var largeur = MediaQuery.of(context).size.width;
     var hauteur = MediaQuery.of(context).size.height;
-
+    users.add(user1);
+    users.add(user2);
     return Scaffold(
       body: Stack(
         children: [
@@ -313,45 +314,21 @@ class _TripSuggestPageState extends State<TripSuggestPage> {
                           width: largeur * 0.88,
                           height: hauteur * 0.43,
                           child: PageView.builder(
-                            itemCount: widget.listTrajet?.length,
+                            itemCount: users.length,
                             onPageChanged: (int index) {
                               setState(() {
                                 _selectedIndex = index;
 
-                                if (names[index] == "Bob") {
-                                  setState(() {
-                                    ajouterMarkers(
-                                        const PointLatLng(36.705219106281575,
-                                            3.173904867312714),
-                                        "Esi",
-                                        "snippet");
-                                    mapController?.animateCamera(
-                                        CameraUpdate.newCameraPosition(
-                                            const CameraPosition(
-                                                target: LatLng(
-                                                    36.705219106281575,
-                                                    3.173904867312714),
-                                                zoom: 12)));
-                                  });
-                                } else {
-                                  /// on va
-                                  ajouterMarkers(
-                                      const PointLatLng(36.67090714883246,
-                                          3.0050179832850783),
-                                      "Khraicia",
-                                      "snippet");
-                                  mapController?.animateCamera(
-                                      CameraUpdate.newCameraPosition(
-                                          const CameraPosition(
-                                              target: LatLng(36.67090714883246,
-                                                  3.0050179832850783),
-                                              zoom: 12)));
-                                }
-                              });
-                              /* getdirection(list[index].depart,list[index].arrival)
+
+                                widget.markers.clear();
+                                mapController?.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(target: LatLng(users[index].departLatLng!.latitude,users[index].departLatLng!.longitude),zoom: 12)));
+                                ajouterMarkers(users[index].departLatLng!, "Departure", "${users[index].depart}");
+                                ajouterMarkers(users[index].arriveeLatLng!, "Arrival", "${users[index].arrivee}");
+                                getDirection(users[index].departLatLng!, users[index].arriveeLatLng!);
+                                /* getdirection(list[index].depart,list[index].arrival)
                                 * ajouterMarkers(list[index].departlatlng,"starting",list[index].departname)
                                 * ajouterMarkers(list[index].arrivallatlng,"arrival",list[index].arrivalname)*/
-                            },
+                            });},
                             itemBuilder: (BuildContext context, int index) {
                               return Container(
                                 decoration: BoxDecoration(
@@ -376,20 +353,21 @@ class _TripSuggestPageState extends State<TripSuggestPage> {
                                                 CrossAxisAlignment.start,
                                             children: [
                                               SizedBox(
+                                                width:largeur*0.30,
                                                 child: AutoSizeText(
-                                                  "${TripUser.name} ${TripUser.familyName}",
+                                                  "${users[index].name} ${users[index].familyName}",
                                                   style: const TextStyle(
                                                     fontFamily: 'Montserrat',
                                                     fontWeight: FontWeight.w700,
                                                     fontSize: 14,
                                                     color: bleu_bg,
                                                   ),
-                                                ),
+                                                maxLines: 1,),
                                               ),
                                               SizedBox(
                                                 width: largeur * 0.14,
                                                 child: AutoSizeText(
-                                                  "${TripUser.statu}",
+                                                  "${users[index].statu}",
                                                   style: const TextStyle(
                                                     fontFamily: 'Montserrat',
                                                     fontWeight: FontWeight.w500,
@@ -402,7 +380,7 @@ class _TripSuggestPageState extends State<TripSuggestPage> {
                                           ),
                                           SizedBox(width: largeur * 0.15),
                                           RatingBarIndicator(
-                                            rating: TripUser.prcnt! * 5 / 100,
+                                            rating: users[index].prcnt! * 5 / 100,
                                             itemCount: 5,
                                             itemSize: 15.0,
                                             unratedColor:
@@ -422,8 +400,8 @@ class _TripSuggestPageState extends State<TripSuggestPage> {
                                         children: [
                                           SizedBox(width: largeur * 0.2),
                                           InfoTripBox(
-                                            arrival: '${TripUser.depart}',
-                                            departure: '${TripUser.arrivee}',
+                                            arrival: '${users[index].arrivee}',
+                                            departure: '${users[index].depart}',
                                           ),
                                         ],
                                       ),
@@ -448,7 +426,7 @@ class _TripSuggestPageState extends State<TripSuggestPage> {
                                                   ),
                                                 ),
                                                 AutoSizeText(
-                                                  '${widget.listTrajet!.map((doc) => doc['Date'][index] as String)}',
+                                               users[index].date!,
                                                   style: const TextStyle(
                                                     fontFamily: 'Montserrat',
                                                     fontWeight: FontWeight.w500,
@@ -476,7 +454,7 @@ class _TripSuggestPageState extends State<TripSuggestPage> {
                                                   ),
                                                 ),
                                                 AutoSizeText(
-                                                  "${TripUser.time}",
+                                                  "${users[index].time}",
                                                   style: const TextStyle(
                                                     fontFamily: 'Montserrat',
                                                     fontWeight: FontWeight.w500,
@@ -504,7 +482,7 @@ class _TripSuggestPageState extends State<TripSuggestPage> {
                                                   ),
                                                 ),
                                                 AutoSizeText(
-                                                  "${i}/${TripUser.seats}",
+                                                  "${i}/${users[index].seats}",
                                                   style: const TextStyle(
                                                     fontFamily: 'Montserrat',
                                                     fontWeight: FontWeight.w500,
@@ -532,7 +510,7 @@ class _TripSuggestPageState extends State<TripSuggestPage> {
                                                   ),
                                                 ),
                                                 AutoSizeText(
-                                                  "${TripUser.carName}",
+                                                  "${users[index].carName}",
                                                   style: const TextStyle(
                                                     fontFamily: 'Montserrat',
                                                     fontWeight: FontWeight.w500,
@@ -608,7 +586,7 @@ class _TripSuggestPageState extends State<TripSuggestPage> {
                                                 ),
                                                 SizedBox(width: largeur * 0.01),
                                                 AutoSizeText(
-                                                  "(${TripUser.methode})",
+                                                  "(${users[index].methode})",
                                                   style: const TextStyle(
                                                     fontFamily: 'Montserrat',
                                                     fontWeight: FontWeight.w500,
@@ -621,7 +599,7 @@ class _TripSuggestPageState extends State<TripSuggestPage> {
                                             SizedBox(
                                                 width: largeur * 0.14,
                                                 child: AutoSizeText(
-                                                  "${TripUser.price} DA",
+                                                  "${users[index].price} DA",
                                                   style: const TextStyle(
                                                     fontFamily: 'Montserrat',
                                                     fontWeight: FontWeight.w700,
@@ -644,7 +622,7 @@ class _TripSuggestPageState extends State<TripSuggestPage> {
                                               size: Size(largeur * 0.67,
                                                   hauteur * 0.07),
                                               radius: 10,
-                                              text: names[index],
+                                              text: "Request",
                                               textcolor: bleu_bg,
                                               fontsize: 16,
                                               fct: () {}),

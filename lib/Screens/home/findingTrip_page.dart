@@ -17,11 +17,9 @@ class FindTripPage extends StatefulWidget {
   PolylinePoints polylinePoints = PolylinePoints();
   Map<PolylineId, Polyline> polylines = {}; //polylines to show direction
   double distance = 0.0;
-  List<Map<String, dynamic>>? listTrajet = [];
 
   FindTripPage({
     super.key,
-    required this.listTrajet,
     required this.markers,
     required this.mapController,
     required this.polylinePoints,
@@ -35,7 +33,6 @@ class FindTripPage extends StatefulWidget {
 
 class _FindTripPageState extends State<FindTripPage> {
   void initState() {
-    print("find trip ============= ${widget.listTrajet}");
     // TODO: implement initState
     Variables.locationName = "Search places";
     Variables.locationNamea = "Search places";
@@ -49,7 +46,6 @@ class _FindTripPageState extends State<FindTripPage> {
           context,
           MaterialPageRoute(
               builder: (context) => TripSuggestPage(
-                    listTrajet: widget.listTrajet,
                     markers: widget.markers,
                     mapController: widget.mapController,
                     polylinePoints: widget.polylinePoints,

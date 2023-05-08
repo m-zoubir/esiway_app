@@ -111,9 +111,7 @@ class _SearchTripPageState extends State<SearchTripPage> {
   void getAllDocs() {}
 
   List<String> polylineCoordinatesToString(List<LatLng> polylineCoordinates) {
-    return polylineCoordinates
-        .map((LatLng latLng) => '${latLng.latitude},${latLng.longitude}')
-        .toList();
+    return polylineCoordinates.map((LatLng latLng) => '${latLng.latitude},${latLng.longitude}').toList();
   }
 
   ajouterMarkers(PointLatLng point, String title, String snippet) async {
@@ -132,6 +130,8 @@ class _SearchTripPageState extends State<SearchTripPage> {
 
   ///-----------------------------< get Direction (draw polyline between two point and put markers) >---------------------------///
   getDirection(PointLatLng depart, PointLatLng arrival) async {
+    print('***********************************************************************************************\n inside debut get direction    ----- ');
+
     List<LatLng> polylineCoordinates = [];
 
     PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
@@ -149,14 +149,6 @@ class _SearchTripPageState extends State<SearchTripPage> {
       print(result.errorMessage);
     }
 
-    /*for (LatLng coordinate in polylineCoordinates) {
-      List<Placemark> placemarks = await placemarkFromCoordinates(coordinate.latitude, coordinate.longitude);
-      if (placemarks.isNotEmpty) {
-        String? locality = placemarks![0].locality;
-        print(locality);
-      }
-    }*/
-
     //polulineCoordinates is the List of longitute and latidtude.
     double totalDistance = 0;
     for (var i = 0; i < Variables.polylineCoordinates.length - 1; i++) {
@@ -171,6 +163,8 @@ class _SearchTripPageState extends State<SearchTripPage> {
       Variables.distance = totalDistance;
     });
     addPolyLine(Variables.polylineCoordinates);
+    print('***********************************************************************************************\n inside fin get direction    ----- ');
+
   }
 
   ///+++++++++++++++++++++++++++++< Add Polyline >++++++++++++++++++++++++++++++///
@@ -274,19 +268,20 @@ class _SearchTripPageState extends State<SearchTripPage> {
 
   Future<void> searchTrip(String conducteur, PointLatLng one, PointLatLng two,
       String depart, String arrivee, String date, String heure) async {
+
+    print('***********************************************************************************************\n inside  Search trip    ----- ');
     if (depart == "Current Location") {
       Position positione = await determinePosition();
       Variables.fin = PointLatLng(positione.latitude, positione.longitude);
-    }
-    ;
+    };
     if (arrivee == "Current Location") {
       Position positione = await determinePosition();
       Variables.debut = PointLatLng(positione.latitude, positione.longitude);
-    }
-    ;
+    };
 
     setState(() {});
     getDirection(one, two); //fetch direction polylines from Google API
+    print('***********************************************************************************************\n fin getdirection in search trip    ----- ');
 
     ajouterMarkers(one, "Starting Location", depart);
 
@@ -294,88 +289,76 @@ class _SearchTripPageState extends State<SearchTripPage> {
 
     mapController?.animateCamera(CameraUpdate.newCameraPosition(
         CameraPosition(target: LatLng(one.latitude, one.longitude), zoom: 17)));
-////////
+    Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => FindTripPage(
+                      markers: markers,
+                      mapController: mapController,
+                      polylinePoints: polylinePoints,
+                      polylines: polylines,
+                      distance: distance,
+                    )));
+
+        print('***********************************************************************************************\n avant fire store    ----- ');
+   /*
     firestore.collection('Trips').get().then((QuerySnapshot querySnapshot) {
       querySnapshot.docs.forEach((DocumentSnapshot documentSnapshot) {
+        print('***********************************************************************************************\n avant date    ----- ');
+
         if (date == documentSnapshot.get('Date')) {
+
+          print('***********************************************************************************************\n inside date    ----- ');
+
           var polylineCoordinate = documentSnapshot.get('polyline');
+          var dapart = documentSnapshot.get('Depart');
+          var arrivee = documentSnapshot.get('Arrivee');
+          var time = documentSnapshot.get('heure');
+
+          print('Depart : $depart \n arivee: $arrivee \n time: $time');
 
           // print("length ===  ${polylineCoordinate.length}");
           count = 0;
-
-          List<String> rechercheArray =
-              polylineCoordinatesToString(Variables.polylineCoordinates);
-
-          //        if (polylineCoordinate.contains(rechercheArray[0])) {
+          print("=============== Avant la comparison =================");
+          List<String> rechercheArray = polylineCoordinatesToString(Variables.polylineCoordinates);
           for (String point1 in rechercheArray) {
-            if (polylineCoordinate.contains(point1)) {
-              count++;
-            }
+            if (polylineCoordinate.contains(point1)) {count++;}
           }
+          print('count $count');
+          print("=============== after la comparison =================");
+
 
           double percent = count / Variables.polylineCoordinates.length;
-          print("percent = $percent");
-          print("count  = $count");
+          print("/-- percent = $percent");
 
-          if (percent >= 0.4) {
-            // un pourcentage pour savoir si le trajet de l'utilisateur est inclut
+          if (percent >= 0.4) {// un pourcentage pour savoir si le trajet de l'utilisateur est inclut
             // dans le trajet du conducteur (celui qui a crée le trajet)
             List<Map<String, dynamic>>? listTrajet = [];
-
             List<DocumentSnapshot> docs = querySnapshot.docs;
-            listTrajet = docs
-                .map((doc) => doc.data())
-                .cast<Map<String, dynamic>>()
-                .toList();
-            print("List ======================== $listTrajet");
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => FindTripPage(
-                          listTrajet: listTrajet,
-                          markers: markers,
-                          mapController: mapController,
-                          polylinePoints: polylinePoints,
-                          polylines: polylines,
-                          distance: distance,
-                        )));
-            /*   Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => TripSuggestPage(
-                          markers: markers,
-                          mapController: mapController,
-                          polylinePoints: polylinePoints,
-                          polylines: polylines,
-                          distance: distance,
-                        ))); */
+            listTrajet = docs.map((doc) => doc.data()).cast<Map<String, dynamic>>().toList();
+            print("List ======================== \n$listTrajet \nFin list======================");
+            // Navigator.push(
+            //     context,
+            //     MaterialPageRoute(
+            //         builder: (context) => FindTripPage(
+            //               listTrajet: listTrajet,
+            //               markers: markers,
+            //               mapController: mapController,
+            //               polylinePoints: polylinePoints,
+            //               polylines: polylines,
+            //               distance: distance,
+            //             )));
+
           } else {
             print('No=====================');
           }
+          print('***********************************************************************************************\n after fire store    ----- ');
 
-          /* while ((i < polylineCoordinate.length) && (trv == false)) {
-            // confirmer que le derpart de la recherche est inclut dans dans le trajet du conducteur
-            print("i = $i");
-            print('depart  == ${Variables.polylineCoordinates[0].toString()}');
-            if (polylineCoordinate[i] ==
-                Variables.polylineCoordinates[0].toString()) {
-              trv = true;
-              print(
-                  'CONDUCTEUR ==  ${polylineCoordinate[i]} , recherche == ${Variables.polylineCoordinates[0]}');
-              // print('Field 1: ${documentSnapshot.get('polyline')}');
-            }
-            i++;
-            //  print('${Variables.polylineCoordinates[0]}');
-          } */
         }
-
-        //je parcours tous les documents de ma collection 'Trips'
-
-        // print('Document data: ${documentSnapshot.data()}');
       });
     }).catchError((error) {
       print('Failed to retrieve documents: $error');
-    });
+    });*/
   }
 
   @override

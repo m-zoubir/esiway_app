@@ -1,21 +1,37 @@
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-class TripUser{
-  static String? name = "YASMINE";
-  static String? familyName ="ZAIDI";
-  static String? statu= "Student";// techer employ...
-  static double? prcnt = 0.5;
-  static String? carName = "Megane";
-  static String? depart="ESI";
-  static String? arrivee="ALGER";
-  static PointLatLng? departLatLng;
-  static PointLatLng? arriveeLatLng;
-  static String? date="22/05/2023";
-  static String? time="07:30";
-  static String? seats = "3";
-  static String? price = "500" ;
-  static String? methode ="Service";
-  static List<LatLng> polylineCoordinates = [];
+class TripUser {
+  String? name;
+  String? familyName;
+  String? statu;
+  double? prcnt;
+  String? carName;
+  String? depart;
+  String? arrivee;
+  PointLatLng? departLatLng;
+  PointLatLng? arriveeLatLng;
+  String? date;
+  String? time;
+  String? seats;
+  String? price;
+  String? methode;
 
+  // Constructor
+  TripUser({
+    required this.name,
+    required this.familyName,
+    required this.statu,
+    required this.prcnt,
+    required this.carName,
+    required this.depart,
+    required this.arrivee,
+    required this.departLatLng,
+    required this.arriveeLatLng,
+    required this.date,
+    required this.time,
+    required this.seats,
+    required this.price,
+    required this.methode,
+  });
 }

@@ -7,11 +7,15 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:iconsax/iconsax.dart';
+import '../../widgets/Tripswidget/tripsComments.dart';
+import '../../widgets/Tripswidget/tripsTitle.dart';
 import '../../widgets/button.dart';
 import '../../widgets/constant.dart';
 import '../../widgets/prefixe_icon_button.dart';
 import '../../widgets/rich_text.dart';
+import '../Trips/request_info.dart';
 import 'admin_users.dart';
 
 class UserProfile extends StatefulWidget {
@@ -35,6 +39,8 @@ class _UserProfileState extends State<UserProfile> {
         .push(MaterialPageRoute(builder: (context) => AdminInfoUsers()));
   }
 
+  List<Comment> comments = [];
+
   void initState() {
     super.initState();
     _reference = FirebaseFirestore.instance.collection('Users').doc(widget.uid);
@@ -55,6 +61,7 @@ class _UserProfileState extends State<UserProfile> {
         body: FutureBuilder<DocumentSnapshot>(
           future: _futureData,
           builder: (BuildContext context, AsyncSnapshot snapshot) {
+            Map<String, dynamic> passenger;
             if (snapshot.hasError) {
               print('Error ${snapshot.error}');
               return Center(child: CircularProgressIndicator());
@@ -64,6 +71,15 @@ class _UserProfileState extends State<UserProfile> {
               //Get the data
               DocumentSnapshot documentSnapshot = snapshot.data;
               data = documentSnapshot.data() as Map;
+              if (data["Comments"] != null)
+                for (var element in data["Comments"]) {
+                  passenger = element as Map<String, dynamic>;
+                  comments.add(Comment(
+                      text: passenger["Comment"],
+                      name: "${passenger["Name"]} ${passenger["FamilyName"]}",
+                      timestamp: DateTime.now(),
+                      photoProfile: null));
+                }
               createdAt = data["CreatedAt"];
               return SafeArea(
                 child: Column(
@@ -153,17 +169,18 @@ class _UserProfileState extends State<UserProfile> {
                                             data["hasCar"] == false
                                         ? SizedBox()
                                         : RatingBarIndicator(
-                                            rating: // data["Rating"],
-                                                2.5,
-                                            itemBuilder: (context, index) =>
-                                                Icon(
-                                              Iconsax.star1,
-                                              color: orange,
-                                            ),
+                                            rating: 2.5,
                                             itemCount: 5,
                                             itemSize: 15.0,
-                                            direction: Axis.horizontal,
-                                          ),
+                                            unratedColor:
+                                                orange.withOpacity(0.25),
+                                            itemBuilder: (context, _) =>
+                                                SvgPicture.asset(
+                                              'Assets/Icons/starFilled.svg',
+                                              width: 8,
+                                              height: 8,
+                                            ),
+                                          )
                                   ],
                                 ),
                                 IconButton(
@@ -378,6 +395,23 @@ class _UserProfileState extends State<UserProfile> {
                                 }),
                             height: 37,
                             width: double.infinity,
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.only(
+                                    left: MediaQuery.of(context).size.width *
+                                        0.04),
+                                child: CustomTitle(
+                                    title: 'Rider\'s Review ', titleSize: 16.0),
+                              ),
+                              CommentsBloc(comments: comments),
+                            ],
                           ),
                         ],
                       ),

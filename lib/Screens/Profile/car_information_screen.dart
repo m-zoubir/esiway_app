@@ -4,14 +4,13 @@ import 'package:esiway/widgets/icons_ESIWay.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:iconsax/iconsax.dart';
 import 'package:image_picker/image_picker.dart';
+import '../../widgets/Tripswidget/tripsTitle.dart';
 import '../../widgets/bottom_navbar.dart';
 import '../../widgets/button.dart';
 import '../../widgets/constant.dart';
 import '../../widgets/text_field.dart';
 import '../../widgets/text_validation.dart';
-import '../../widgets/title_text_field.dart';
 import 'profile_screen.dart';
 
 class CarInfo extends StatelessWidget {
@@ -224,7 +223,10 @@ class _CarInformationState extends State<CarInformation> with UserValidation {
               SizedBox(
                 height: 20.0,
               ),
-              TitleTextFeild(title: "Car's picture"),
+              CustomTitle(
+                title: "Car's picture",
+                titleSize: 13,
+              ),
               SizedBox(
                 height: 10.0,
               ),
@@ -354,7 +356,10 @@ class _CarInformationState extends State<CarInformation> with UserValidation {
 
 //*****************************************************************************/
 
-              TitleTextFeild(title: "Insurance policy"),
+              CustomTitle(
+                title: "Insurance policy",
+                titleSize: 13,
+              ),
               SizedBox(
                 height: 10.0,
               ),

@@ -1,11 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:esiway/widgets/Tripswidget/tripsTitle.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../../widgets/constant.dart';
-import '../../widgets/title_text_field.dart';
 
 class UserCarInfo extends StatefulWidget {
-  UserCarInfo({Key? key}) : super(key: key);
+  UserCarInfo({Key? key, this.uid}) : super(key: key);
+
+  String? uid = FirebaseAuth.instance.currentUser!.uid;
 
   @override
   State<UserCarInfo> createState() => _UserCarInfoState();
@@ -19,9 +21,7 @@ class _UserCarInfoState extends State<UserCarInfo> {
   void initState() {
     super.initState();
 
-    _reference = FirebaseFirestore.instance
-        .collection('Cars')
-        .doc(FirebaseAuth.instance.currentUser!.uid);
+    _reference = FirebaseFirestore.instance.collection('Cars').doc(widget.uid);
     _futureData = _reference.get();
   }
 
@@ -91,7 +91,10 @@ class _UserCarInfoState extends State<UserCarInfo> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          TitleTextFeild(title: "Brand"),
+                          CustomTitle(
+                            title: "Brand",
+                            titleSize: 13,
+                          ),
                           SizedBox(
                             height: 5,
                           ),
@@ -106,7 +109,10 @@ class _UserCarInfoState extends State<UserCarInfo> {
                           SizedBox(
                             height: 20,
                           ),
-                          TitleTextFeild(title: "Model"),
+                          CustomTitle(
+                            title: "Model",
+                            titleSize: 13,
+                          ),
                           SizedBox(
                             height: 5,
                           ),
@@ -121,7 +127,10 @@ class _UserCarInfoState extends State<UserCarInfo> {
                           SizedBox(
                             height: 20,
                           ),
-                          TitleTextFeild(title: "Registration number"),
+                          CustomTitle(
+                            title: "Registration number",
+                            titleSize: 13,
+                          ),
                           SizedBox(
                             height: 5,
                           ),
@@ -136,7 +145,10 @@ class _UserCarInfoState extends State<UserCarInfo> {
                           SizedBox(
                             height: 20,
                           ),
-                          TitleTextFeild(title: "Insurance policy"),
+                          CustomTitle(
+                            title: "Insurance policy",
+                            titleSize: 13,
+                          ),
                           SizedBox(
                             height: 20,
                           ),

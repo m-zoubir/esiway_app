@@ -66,8 +66,9 @@ class _Text_FieldState extends State<Text_Field> {
                   Text(
                     widget.subtitle!,
                     style: TextStyle(
+                      fontFamily: "Montserrat",
                       color: widget.validate ? bleu_bg : Colors.red,
-                      fontSize: 12.0,
+                      fontSize: 13.0,
                       fontWeight: FontWeight.normal,
                     ),
                   ),

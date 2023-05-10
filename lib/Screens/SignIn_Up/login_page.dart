@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:esiway/Screens/Profile/profile_screen.dart';
 import 'package:esiway/Screens/SignIn_Up/signup_page.dart';
+import 'package:esiway/Screens/Home/home_page.dart';
 import 'package:esiway/widgets/icons_ESIWay.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -134,6 +135,7 @@ class _LogInPageState extends State<LogInPage> with UserValidation {
                               text: 'Log in',
                               textcolor: const Color(0xff20236C),
                               weight: FontWeight.w700,
+                              blur: null,
                               fontsize: 20,
                               fct: () async {
                                 if (isEmail(emailcontroller.text) == true) {
@@ -172,12 +174,12 @@ class _LogInPageState extends State<LogInPage> with UserValidation {
                                               Navigator.of(context).push(
                                                 MaterialPageRoute(
                                                     builder: (context) {
-                                                  return Profile();
+                                                  return HomePage();
                                                 }),
                                               ));
                                       Navigator.of(context).push(
                                         MaterialPageRoute(builder: (context) {
-                                          return Profile();
+                                          return HomePage();
                                         }),
                                       );
                                     } else if (usersignin!.emailVerified ==

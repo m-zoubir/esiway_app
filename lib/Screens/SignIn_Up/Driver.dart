@@ -8,16 +8,15 @@ import 'package:esiway/widgets/icons_ESIWay.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:iconsax/iconsax.dart';
 
 import 'package:image_picker/image_picker.dart';
 
+import '../../widgets/Tripswidget/tripsTitle.dart';
 import '../../widgets/constant.dart';
 import '../../widgets/prefixe_icon_button.dart';
 import '../../widgets/suffixe_icon_button.dart';
 import '../../widgets/text_field.dart';
 import '../../widgets/text_validation.dart';
-import '../../widgets/title_text_field.dart';
 
 class Driver extends StatefulWidget {
   const Driver({super.key});
@@ -243,7 +242,10 @@ class _DriverState extends State<Driver> with UserValidation {
 
                     //*****************************************************************************/
 
-                    TitleTextFeild(title: "Car's picture"),
+                    CustomTitle(
+                      title: "Car's picture",
+                      titleSize: 13,
+                    ),
 
                     carpicture != null
                         ? Padding(
@@ -321,7 +323,10 @@ class _DriverState extends State<Driver> with UserValidation {
                     ),
                     //*****************************************************************************/
 
-                    TitleTextFeild(title: "Insurance policy"),
+                    CustomTitle(
+                      title: "Insurance policy",
+                      titleSize: 13,
+                    ),
 
                     policy != null
                         ? Padding(

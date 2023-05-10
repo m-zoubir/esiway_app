@@ -3,6 +3,7 @@ import 'package:esiway/Screens/Profile/history.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:iconsax/iconsax.dart';
 import '../../widgets/bottom_navbar.dart';
 import '../../widgets/button.dart';
@@ -23,9 +24,6 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> with UserValidation {
-  int _currentindex = 3;
-  int _selectedindex = 3;
-
   String user_picture = "Assets/Images/photo_profile.png";
 
   @override
@@ -94,7 +92,7 @@ class _ProfileState extends State<Profile> with UserValidation {
               data = documentSnapshot.data() as Map;
               name = data["Name"];
               familyName = data["FamilyName"];
-              rating = data.containsKey('Rating') ? data["Rating"] : 2.5;
+              rating = data.containsKey('Rate') ? data["Rate"] : 2.5;
             } catch (e) {
               name = "Name";
               familyName = "FamilyName";
@@ -162,13 +160,14 @@ class _ProfileState extends State<Profile> with UserValidation {
                     data["hasCar"] == true
                         ? RatingBarIndicator(
                             rating: rating,
-                            itemBuilder: (context, index) => Icon(
-                              Iconsax.star1,
-                              color: Colors.amber,
-                            ),
                             itemCount: 5,
-                            itemSize: 25.0,
-                            direction: Axis.horizontal,
+                            itemSize: 15.0,
+                            unratedColor: orange.withOpacity(0.25),
+                            itemBuilder: (context, _) => SvgPicture.asset(
+                              'Assets/Icons/starFilled.svg',
+                              width: 8,
+                              height: 8,
+                            ),
                           )
                         : const SizedBox(
                             height: 1.0,

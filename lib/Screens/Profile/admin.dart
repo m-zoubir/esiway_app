@@ -16,9 +16,6 @@ class AdminScreen extends StatefulWidget {
 }
 
 class _AdminScreenState extends State<AdminScreen> {
-  int _currentindex = 3;
-  int _selectedindex = 3;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

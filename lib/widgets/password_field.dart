@@ -37,8 +37,9 @@ class _MyPasswordFieldState extends State<MyPasswordField> {
           widget.title,
           style: TextStyle(
             color: widget.validate ? bleu_bg : Colors.red,
-            fontSize: 14.0,
-            fontWeight: FontWeight.bold,
+            fontSize: 13.0,
+            fontFamily: "Montserrat",
+            fontWeight: FontWeight.w700,
           ),
         ),
         SizedBox(

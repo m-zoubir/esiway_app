@@ -45,8 +45,8 @@ class AdminInfoUsers extends StatelessWidget {
             } catch (e) {
               print(e);
               FirebaseAuth.instance.signOut();
-              Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (context) => AdminInfoUsers()));
+              Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => AdminInfoUsers()));
             }
           }
 
@@ -236,7 +236,7 @@ class _AdminScreenUsersState extends State<AdminScreenUsers> {
                                     ),
                                     Padding(
                                       padding: const EdgeInsets.only(
-                                          left: 45, top: 10),
+                                          left: 20, top: 10),
                                       child: Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.start,
@@ -251,7 +251,7 @@ class _AdminScreenUsersState extends State<AdminScreenUsers> {
                                             width: MediaQuery.of(context)
                                                     .size
                                                     .width *
-                                                0.1,
+                                                0.08,
                                           ),
                                           CustomRichText(
                                             title: "Email",

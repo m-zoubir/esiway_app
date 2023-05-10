@@ -169,26 +169,36 @@ class InfoTripBox extends StatelessWidget {
           height: 42,
         ),
         SizedBox(width: 2),
-        RichText(
-          text: TextSpan(
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              TextSpan(
-                text: "$departure\n\n",
+              Text(
+                "$departure",
                 style: TextStyle(
                   fontSize: 12,
                   fontFamily: 'Montserrat',
                   fontWeight: FontWeight.w700,
                   color: bleu_bg,
                 ),
+                softWrap: false,
+                maxLines: 1,
+                overflow: TextOverflow.fade,
               ),
-              TextSpan(
-                text: '$arrival',
+              SizedBox(
+                height: 17,
+              ),
+              Text(
+                '$arrival',
                 style: TextStyle(
                   fontSize: 12,
                   fontFamily: 'Montserrat',
                   fontWeight: FontWeight.w700,
                   color: bleu_bg,
                 ),
+                softWrap: false,
+                maxLines: 1,
+                overflow: TextOverflow.fade,
               ),
             ],
           ),

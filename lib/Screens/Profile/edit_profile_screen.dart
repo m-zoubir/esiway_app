@@ -5,6 +5,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import '../../widgets/Tripswidget/tripsTitle.dart';
 import '../../widgets/bottom_navbar.dart';
 import '../../widgets/button.dart';
 import '../../widgets/constant.dart';
@@ -12,7 +13,6 @@ import '../../widgets/icons_ESIWay.dart';
 import '../../widgets/text_field.dart';
 import '../../widgets/text_validation.dart';
 import '../../widgets/tile_list.dart';
-import '../../widgets/title_text_field.dart';
 import 'profile_screen.dart';
 
 class EditProfileInfo extends StatelessWidget {
@@ -100,9 +100,6 @@ class EditProfile extends StatefulWidget {
 
 class _EditProfileState extends State<EditProfile> with UserValidation {
   @override
-  int _currentindex = 3;
-  int _selectedindex = 3;
-
   bool namevalidate = true;
   bool lastNamevalidate = true;
   bool phonevalidate = true;
@@ -402,7 +399,8 @@ class _EditProfileState extends State<EditProfile> with UserValidation {
                 height: MediaQuery.of(context).size.height * 0.008,
               ),
 //*****************************************************************************/
-              TitleTextFeild(title: "Gender"),
+              //TitleTextFeild(title: "Gender"),
+              CustomTitle(title: "Gender", titleSize: 13),
               SizedBox(
                 height: 10.0,
               ),
@@ -458,7 +456,10 @@ class _EditProfileState extends State<EditProfile> with UserValidation {
                 height: MediaQuery.of(context).size.height * 0.008,
               ),
 //*****************************************************************************/
-              TitleTextFeild(title: "Status "),
+              CustomTitle(
+                title: "Status ",
+                titleSize: 13,
+              ),
               SizedBox(
                 height: 10.0,
               ),
@@ -534,7 +535,10 @@ class _EditProfileState extends State<EditProfile> with UserValidation {
                 height: MediaQuery.of(context).size.height * 0.008,
               ),
 //*****************************************************************************/
-              TitleTextFeild(title: "Birth"),
+              CustomTitle(
+                title: "Birth",
+                titleSize: 13,
+              ),
               SizedBox(
                 height: 10.0,
               ),

@@ -119,7 +119,7 @@ class _UserTripsState extends State<UserTrips> {
                                                         : data2["FamilyName"],
                                                 arrival: data["Arrivee"],
                                                 departure:
-                                                    data["Arrivee"], //*** */
+                                                    data["Depart"], //*** */
                                                 color: documentSnapshot2
                                                             .data() ==
                                                         null
@@ -134,14 +134,14 @@ class _UserTripsState extends State<UserTrips> {
                                                             .withOpacity(0.5)
                                                         : bleu_ciel
                                                             .withOpacity(0.4),
-                                                date: data["Arrivee"], //** */
+                                                date: data["Date"], //** */
                                                 name:
                                                     documentSnapshot2.data() ==
                                                             null
                                                         ? "Null"
                                                         : data2["Name"], //** */
-                                                price: data["Arrivee"], //** */
-                                                time: data["Arrivee"], //** */
+                                                price: data["Price"], //** */
+                                                time: data["Heure"], //** */
                                               ),
                                               onTap: () {});
                                         } catch (e) {

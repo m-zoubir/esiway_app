@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 
+import '../../widgets/Tripswidget/tripsTitle.dart';
 import '../../widgets/constant.dart';
 import '../../widgets/icons_ESIWay.dart';
 import '../../widgets/prefixe_icon_button.dart';
@@ -12,7 +13,6 @@ import '../../widgets/suffixe_icon_button.dart';
 import '../../widgets/text_field.dart';
 import '../../widgets/text_validation.dart';
 import '../../widgets/tile_list.dart';
-import '../../widgets/title_text_field.dart';
 import 'Driver.dart';
 
 class CreateProfile extends StatefulWidget {
@@ -156,7 +156,10 @@ class _CreateProfileState extends State<CreateProfile> with UserValidation {
                     SizedBox(
                       height: 10.0,
                     ),
-                    TitleTextFeild(title: "Gender"),
+                    CustomTitle(
+                      title: "Gender",
+                      titleSize: 13,
+                    ),
                     SizedBox(
                       height: 10.0,
                     ),
@@ -212,7 +215,10 @@ class _CreateProfileState extends State<CreateProfile> with UserValidation {
                       height: 10.0,
                     ),
 //*****************************************************************************/
-                    TitleTextFeild(title: "Status "),
+                    CustomTitle(
+                      title: "Status ",
+                      titleSize: 13,
+                    ),
                     SizedBox(
                       height: 10.0,
                     ),

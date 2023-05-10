@@ -129,7 +129,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                                       : data2["FamilyName"],
                                                   arrival: data["Arrivee"],
                                                   departure:
-                                                      data["Arrivee"], //*** */
+                                                      data["Depart"], //*** */
                                                   color: FirebaseAuth
                                                               .instance
                                                               .currentUser!
@@ -138,15 +138,14 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                                       ? orange.withOpacity(0.5)
                                                       : bleu_ciel
                                                           .withOpacity(0.4),
-                                                  date: data["Arrivee"], //** */
+                                                  date: data["Date"], //** */
                                                   name: documentSnapshot2
                                                               .data() ==
                                                           null
                                                       ? "Null"
                                                       : data2["Name"], //** */
-                                                  price:
-                                                      data["Arrivee"], //** */
-                                                  time: data["Arrivee"], //** */
+                                                  price: data["Price"], //** */
+                                                  time: data["Heure"], //** */
                                                 ),
                                                 onTap: () {});
                                           } else

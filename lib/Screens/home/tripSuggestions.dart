@@ -1,4 +1,4 @@
-import 'dart:math';
+/* import 'dart:math';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:esiway/Screens/home/tripUser.dart';
@@ -81,10 +81,37 @@ class _TripSuggestPageState extends State<TripSuggestPage> {
   String? locationName;
   String? locationNamea;
   List<Placemark>? placemarks;
-  TripUser user1 = TripUser(name: 'ISSAM', familyName: 'BOUSSEBATA', statu: "student", prcnt: 0.4, carName: 'Megane', depart: "Blida", arrivee: "Esi", departLatLng: const PointLatLng(36.47421279556045, 2.830230655027655), arriveeLatLng: PointLatLng(LocationEsi.latitude, LocationEsi.longitude), date: "10/05/2023", time: "09:00", seats: "4", price: "500", methode: "Negosiable");
-  TripUser user2 = TripUser(name: 'YASMINE', familyName: 'ZAIDI', statu: "student", prcnt: 0.4, carName: 'clio4', depart: "Ben Aknoun", arrivee: "Esi", departLatLng: const PointLatLng(36.75981099159468, 3.013811224114057), arriveeLatLng: PointLatLng(LocationEsi.latitude, LocationEsi.longitude), date: "10/05/2023", time: "10:00", seats: "1", price: "800", methode: "Negosiable");
+  TripUser user1 = TripUser(
+      name: 'ISSAM',
+      familyName: 'BOUSSEBATA',
+      statu: "student",
+      prcnt: 0.4,
+      carName: 'Megane',
+      depart: "Blida",
+      arrivee: "Esi",
+      departLatLng: const PointLatLng(36.47421279556045, 2.830230655027655),
+      arriveeLatLng: PointLatLng(LocationEsi.latitude, LocationEsi.longitude),
+      date: "10/05/2023",
+      time: "09:00",
+      seats: "4",
+      price: "500",
+      methode: "Negosiable");
+  TripUser user2 = TripUser(
+      name: 'YASMINE',
+      familyName: 'ZAIDI',
+      statu: "student",
+      prcnt: 0.4,
+      carName: 'clio4',
+      depart: "Birtouta",
+      arrivee: "Esi",
+      departLatLng: const PointLatLng(36.642948, 2.9929093),
+      arriveeLatLng: PointLatLng(LocationEsi.latitude, LocationEsi.longitude),
+      date: "10/05/2023",
+      time: "10:00",
+      seats: "1",
+      price: "800",
+      methode: "Negosiable");
   List<TripUser> users = [];
-
 
   final List<LatLng> _markers = [
     const LatLng(37.42796133580664, -122.085749655962),
@@ -117,7 +144,7 @@ class _TripSuggestPageState extends State<TripSuggestPage> {
   ///-----------------------------< get Direction (draw polyline between two point and put markers) >---------------------------///
   getDirection(PointLatLng depart, PointLatLng arrival) async {
     List<LatLng> polylineCoordinates = [];
-     Variables.polylineCoordinates.clear();
+    Variables.polylineCoordinates.clear();
     PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
       APIKEY,
       depart,
@@ -225,9 +252,6 @@ class _TripSuggestPageState extends State<TripSuggestPage> {
     }
   } */
 
-
-
-
   @override
   Widget build(BuildContext context) {
     var largeur = MediaQuery.of(context).size.width;
@@ -319,16 +343,29 @@ class _TripSuggestPageState extends State<TripSuggestPage> {
                               setState(() {
                                 _selectedIndex = index;
 
-
                                 widget.markers.clear();
-                                mapController?.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(target: LatLng(users[index].departLatLng!.latitude,users[index].departLatLng!.longitude),zoom: 12)));
-                                ajouterMarkers(users[index].departLatLng!, "Departure", "${users[index].depart}");
-                                ajouterMarkers(users[index].arriveeLatLng!, "Arrival", "${users[index].arrivee}");
-                                getDirection(users[index].departLatLng!, users[index].arriveeLatLng!);
+                                mapController?.animateCamera(
+                                    CameraUpdate.newCameraPosition(
+                                        CameraPosition(
+                                            target: LatLng(
+                                                users[index]
+                                                    .departLatLng!
+                                                    .latitude,
+                                                users[index]
+                                                    .departLatLng!
+                                                    .longitude),
+                                            zoom: 12)));
+                                ajouterMarkers(users[index].departLatLng!,
+                                    "Departure", "${users[index].depart}");
+                                ajouterMarkers(users[index].arriveeLatLng!,
+                                    "Arrival", "${users[index].arrivee}");
+                                getDirection(users[index].departLatLng!,
+                                    users[index].arriveeLatLng!);
                                 /* getdirection(list[index].depart,list[index].arrival)
                                 * ajouterMarkers(list[index].departlatlng,"starting",list[index].departname)
                                 * ajouterMarkers(list[index].arrivallatlng,"arrival",list[index].arrivalname)*/
-                            });},
+                              });
+                            },
                             itemBuilder: (BuildContext context, int index) {
                               return Container(
                                 decoration: BoxDecoration(
@@ -353,7 +390,7 @@ class _TripSuggestPageState extends State<TripSuggestPage> {
                                                 CrossAxisAlignment.start,
                                             children: [
                                               SizedBox(
-                                                width:largeur*0.30,
+                                                width: largeur * 0.30,
                                                 child: AutoSizeText(
                                                   "${users[index].name} ${users[index].familyName}",
                                                   style: const TextStyle(
@@ -362,7 +399,8 @@ class _TripSuggestPageState extends State<TripSuggestPage> {
                                                     fontSize: 14,
                                                     color: bleu_bg,
                                                   ),
-                                                maxLines: 1,),
+                                                  maxLines: 1,
+                                                ),
                                               ),
                                               SizedBox(
                                                 width: largeur * 0.14,
@@ -380,9 +418,10 @@ class _TripSuggestPageState extends State<TripSuggestPage> {
                                           ),
                                           SizedBox(width: largeur * 0.15),
                                           RatingBarIndicator(
-                                            rating: users[index].prcnt! * 5 / 100,
+                                            rating:
+                                                users[index].prcnt! * 5 / 100,
                                             itemCount: 5,
-                                            itemSize: 15.0,
+                                            itemSize: 12.0,
                                             unratedColor:
                                                 orange.withOpacity(0.25),
                                             itemBuilder: (context, _) =>
@@ -426,7 +465,7 @@ class _TripSuggestPageState extends State<TripSuggestPage> {
                                                   ),
                                                 ),
                                                 AutoSizeText(
-                                               users[index].date!,
+                                                  users[index].date!,
                                                   style: const TextStyle(
                                                     fontFamily: 'Montserrat',
                                                     fontWeight: FontWeight.w500,
@@ -693,3 +732,4 @@ class _TripSuggestPageState extends State<TripSuggestPage> {
     );
   }
 }
+ */

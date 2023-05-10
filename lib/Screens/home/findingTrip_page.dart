@@ -42,7 +42,7 @@ class _FindTripPageState extends State<FindTripPage> {
     Variables.created = false;
     super.initState();
     Timer(Duration(seconds: 8), () {
-      Navigator.push(
+      /*   Navigator.push(
           context,
           MaterialPageRoute(
               builder: (context) => TripSuggestPage(
@@ -51,7 +51,7 @@ class _FindTripPageState extends State<FindTripPage> {
                     polylinePoints: widget.polylinePoints,
                     polylines: widget.polylines,
                     distance: widget.distance,
-                  )));
+                  ))); */
     });
   }
 

@@ -2,28 +2,28 @@ import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class TripUser {
-  String? name;
+/*   String? name;
   String? familyName;
   String? statu;
   double? prcnt;
-  String? carName;
+  String? carName; */
   String? depart;
   String? arrivee;
   PointLatLng? departLatLng;
-  PointLatLng? arriveeLatLng;
+/*   PointLatLng? arriveeLatLng;
   String? date;
   String? time;
   String? seats;
   String? price;
-  String? methode;
+  String? methode; */
 
   // Constructor
-  TripUser({
-    required this.name,
+  /* TripUser({
+     required this.name,
     required this.familyName,
     required this.statu,
     required this.prcnt,
-    required this.carName,
+    required this.carName, 
     required this.depart,
     required this.arrivee,
     required this.departLatLng,
@@ -33,5 +33,5 @@ class TripUser {
     required this.seats,
     required this.price,
     required this.methode,
-  });
+  }); */
 }

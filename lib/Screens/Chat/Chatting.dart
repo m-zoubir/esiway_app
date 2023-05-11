@@ -180,7 +180,6 @@ class _Groupe_ChatState extends State<Groupe_Chat> {
         await referenceImageToUpload.putFile(File(_image!.path));
         //Success: get the download URL
         imageUrl = await referenceImageToUpload.getDownloadURL();
-        print(imageUrl);
         Navigator.of(context).pop();
       } catch (error) {
         print(error);

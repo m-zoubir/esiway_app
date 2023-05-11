@@ -109,7 +109,6 @@ class _MailAdressState extends State<MailAdress> with UserValidation {
                       setState(() {
                         emailvalidate = true;
                       });
-                      print(email.text);
                     } else {
                       setState(() {
                         emailvalidate = false;

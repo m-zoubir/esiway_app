@@ -143,7 +143,6 @@ class _HomeState extends State<Home> {
                               const EdgeInsets.symmetric(horizontal: 4.0),
                           onRatingUpdate: (rating) {
                             this.rating = rating;
-                            print(rating);
                           },
                         ),
                         const SizedBox(

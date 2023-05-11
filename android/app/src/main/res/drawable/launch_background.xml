@@ -3,7 +3,7 @@
     <item>
         <bitmap android:gravity="fill" android:src="@drawable/background"/>
     </item>
-     <item android:width="200dp"
+    <item android:width="200dp"
         android:height="150dp"
         android:gravity="center">
         <bitmap  android:src="@drawable/splash"/>

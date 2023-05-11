@@ -76,9 +76,11 @@ class _UserProfileState extends State<UserProfile> {
                   passenger = element as Map<String, dynamic>;
                   comments.add(Comment(
                       text: passenger["Comment"],
-                      name: "${passenger["Name"]} ${passenger["FamilyName"]}",
-                      timestamp: DateTime.now(),
-                      photoProfile: null));
+                      name: "${passenger["Name"]}",
+                      timestamp: "${passenger["Date"]}",
+                      photoProfile: passenger.containsKey("ProfilePicture")
+                          ? passenger["ProfilePicture"]
+                          : null));
                 }
               createdAt = data["CreatedAt"];
               return SafeArea(

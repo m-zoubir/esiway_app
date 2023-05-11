@@ -298,13 +298,11 @@ class _nameState extends State<name> {
                                   builder: (BuildContext context,
                                       AsyncSnapshot<DocumentSnapshot>
                                           snapshot) {
-                                    print("chatId:$chatId");
                                     if (snapshot.hasError) {
                                       print(snapshot.error);
                                       return const CircularProgressIndicator();
                                     }
                                     if (!snapshot.hasData) {
-                                      print("no data");
                                       return const CircularProgressIndicator();
                                     }
                                     Map datas = snapshot.data!.data() as Map;
@@ -412,7 +410,6 @@ class _nameState extends State<name> {
                                             DateFormat('HH:mm').format(
                                                 Donnee['TimeOfLastMessage']
                                                     .toDate());
-                                        print("$chatName");
                                         String lastSender =
                                             Donnee['LastSender'];
                                         return Column(

@@ -16,6 +16,7 @@ class CustomRichText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return RichText(
+      overflow: TextOverflow.ellipsis,
       text: TextSpan(
         children: [
           TextSpan(

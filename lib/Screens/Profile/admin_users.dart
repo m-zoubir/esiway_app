@@ -367,13 +367,24 @@ class _AdminScreenUsersState extends State<AdminScreenUsers> {
                                                         .width *
                                                     0.1,
                                               ),
-                                              CustomRichText(
-                                                title: "Email",
-                                                value: snapshot
-                                                    .data?.docs[index]
-                                                    .data()["Email"],
-                                                titlesize: 12,
-                                                valuesize: 10,
+                                              Container(
+                                                width: MediaQuery.of(context)
+                                                            .size
+                                                            .width *
+                                                        0.7 -
+                                                    MediaQuery.of(context)
+                                                            .size
+                                                            .width *
+                                                        0.1 -
+                                                    100,
+                                                child: CustomRichText(
+                                                  title: "Email",
+                                                  value: snapshot
+                                                      .data?.docs[index]
+                                                      .data()["Email"],
+                                                  titlesize: 12,
+                                                  valuesize: 10,
+                                                ),
                                               ),
                                             ],
                                           ),

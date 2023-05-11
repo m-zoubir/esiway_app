@@ -7,7 +7,7 @@ class Comment {
   final String text;
   final String name;
   final String? photoProfile;
-  final DateTime timestamp;
+  final String timestamp;
   Comment(
       {required this.text,
       required this.name,
@@ -59,9 +59,10 @@ class CommentCard extends StatelessWidget {
               Container(
                 margin: EdgeInsets.only(top: screenHeight * 0.009),
                 child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     SizedBox(
-                      width: screenWidth * 0.3,
+                      width: screenWidth * 0.7 - 70,
                       child: AutoSizeText(
                         '${comment.name}',
                         style: TextStyle(
@@ -75,9 +76,9 @@ class CommentCard extends StatelessWidget {
                       ),
                     ),
                     SizedBox(
-                      width: screenWidth * 0.4,
+                      width: 70,
                       child: AutoSizeText(
-                        '${comment.timestamp.toString()}',
+                        '${comment.timestamp}',
                         style: TextStyle(
                           fontSize: 8,
                           fontFamily: 'Montserrat',

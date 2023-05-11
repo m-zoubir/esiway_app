@@ -187,7 +187,7 @@ class _LogInPageState extends State<LogInPage> with UserValidation {
                                       try {
                                         usersignin.delete();
                                       } catch (e) {
-                                        print("Error");
+                                        print(e);
                                       }
 
                                       ScaffoldMessenger.of(context)
@@ -214,8 +214,7 @@ class _LogInPageState extends State<LogInPage> with UserValidation {
                                               )));
                                     }
                                   } on FirebaseAuthException catch (e) {
-                                    print(
-                                        "-----------------> Error  ${e.code}");
+                                    print("${e.code}");
                                     if (e.code == 'wrong-password') {
                                       ScaffoldMessenger.of(context)
                                           .showSnackBar(SnackBar(

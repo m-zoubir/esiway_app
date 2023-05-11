@@ -54,9 +54,12 @@ class _RequestInfoState extends State<RequestInfo> {
       for (var element in widget.copassager!) {
         passenger = element as Map<String, dynamic>;
         coPassengers.add(Co_passenger(
-            FamilyName: passenger["Name"]!,
-            Name: passenger["Name"]!,
-            imageProfile: null));
+          FamilyName: passenger["Name"]!,
+          Name: passenger["FamilyName"]!,
+          imageProfile: passenger.containsKey("ProfilePicture")
+              ? passenger["ProfilePicture"]
+              : null,
+        ));
       }
     else {
       coPassengers = [];
@@ -71,11 +74,11 @@ class _RequestInfoState extends State<RequestInfo> {
         buttonText: 'Cancel',
         buttonColor: bleu_ciel,
       ),
-      body: FutureBuilder(
-          future: FirebaseFirestore.instance
+      body: StreamBuilder(
+          stream: FirebaseFirestore.instance
               .collection("Users")
               .doc(widget.uid)
-              .get(),
+              .snapshots(),
           builder: (context, snapshot) {
             if (snapshot.hasError) {
               print(snapshot.error);
@@ -87,22 +90,22 @@ class _RequestInfoState extends State<RequestInfo> {
               DocumentSnapshot documentSnapshot = snapshot.data!;
               try {
                 data = documentSnapshot.data() as Map;
-                print("comments");
                 if (data.containsKey("Comments") && data["Comments"] != [])
                   for (var element in data["Comments"]) {
-                    print(element);
                     passenger = element as Map<String, dynamic>;
                     comments.add(Comment(
                         text: passenger["Comment"],
-                        name: "${passenger["Name"]} ${passenger["FamilyName"]}",
-                        timestamp: DateTime.now(),
-                        photoProfile: null));
+                        name: "${passenger["Name"]}",
+                        timestamp: "${passenger["Date"]}",
+                        photoProfile: passenger.containsKey("ProfilePicture")
+                            ? passenger["ProfilePicture"]
+                            : null));
                   }
 
                 profileInfo = ProfileTripCard(
                     name: "${data['Name']} ${data["FamilyName"]}",
                     staff: data["Status"],
-                    rating: 2.5,
+                    rating: data["Rate"],
                     profileImage: data["ProfilePicture"],
                     color: Colors.white);
                 return SafeArea(
@@ -342,9 +345,10 @@ class CoPassenger extends StatelessWidget {
                       height: screenHeight * 0.01,
                     ),
                     SizedBox(
-                      width: screenWidth * 0.4,
+                      width: screenWidth * 0.2,
                       child: AutoSizeText(
                         '${e.Name}' '\n' '${e.FamilyName}',
+                        overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                           fontSize: 15,
                           fontFamily: 'Montserrat',

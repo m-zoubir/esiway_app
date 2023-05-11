@@ -400,7 +400,6 @@ class _DriverState extends State<Driver> with UserValidation {
                             setState(() {
                               brandvalidate = true;
                             });
-                            print(brandcontroller.text);
                           }
                           if (isCar(modelcontroller.text) == false)
                             setState(() {
@@ -410,7 +409,6 @@ class _DriverState extends State<Driver> with UserValidation {
                             setState(() {
                               modelvalidate = true;
                             });
-                            print(modelcontroller.text);
                           }
 
                           if (isRegistrationNumber(
@@ -423,7 +421,6 @@ class _DriverState extends State<Driver> with UserValidation {
                             setState(() {
                               registrationnumbervalidate = true;
                             });
-                            print(registrationNumbercontroller.text);
                             User? currentuser =
                                 FirebaseAuth.instance.currentUser;
 

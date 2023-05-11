@@ -33,11 +33,8 @@ class _NotifpageState extends State<Notifpage> {
   Future<void> readCollection() async {
     print(dataList);
     try {
-      QuerySnapshot snapshot = await firestore
-          .collection('Notifications')
-          .where('uid', isEqualTo: '${FirebaseAuth.instance.currentUser!.uid}')
-          .orderBy('date')
-          .get();
+      QuerySnapshot snapshot =
+          await firestore.collection('Notifications').get();
 
       List<DocumentSnapshot> docs = snapshot.docs;
       dataList =
@@ -168,9 +165,7 @@ class _NotifpageState extends State<Notifpage> {
               itemCount: dataList?.length,
               itemBuilder: (context, index) {
                 Map<String, dynamic> data = dataList![index];
-                return (data['type'] == 0)
-                    ? AcceptB()
-                    : ((data['type'] == 1) ? RefuseB() : Notif());
+                return Notif();
               },
             ),
           ),

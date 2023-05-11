@@ -1,7 +1,8 @@
-import 'dart:convert';
 import 'dart:math';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:esiway/Screens/Home/liste.dart';
+import 'package:esiway/Screens/Home/tripSuggestions.dart';
 import 'package:esiway/widgets/prefixe_icon_button.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:geocoding/geocoding.dart';
@@ -352,15 +353,23 @@ class _SearchTripPageState extends State<SearchTripPage> {
           if (percent >= 0.4) {
             print('prcnt > 40');
             trip.depart = depart.toString();
+            //  GeoPoint geoPoint = documentSnapshot.data()!['Arrivee_LatLng'] as GeoPoint;
+            /*   GeoPoint geoPoint =
+                documentSnapshot.data()!['Arrivee_LatLng'] as GeoPoint;
+ */
+            GeoPoint geoPointData = documentSnapshot.get("Arrivee_LatLng");
+
+            GeoPoint geoPoint = geoPointData;
             trip.arrivee = documentSnapshot.get('Arrivee').toString();
-            trip.departLatLng = (documentSnapshot.get('Arrivee_LatLng'));
-            liste.add(trip);
+            trip.departLatLng =
+                (PointLatLng(geoPoint.latitude, geoPoint.longitude));
+            ListeTrip.liste.add(trip);
 
             // un pourcentage pour savoir si le trajet de l'utilisateur est inclut
             // dans le trajet du conducteur (celui qui a crée le trajet)
             print("9bel5");
             print(
-                "List ======================== \n${liste[index].depart} ,${liste[index].arrivee} ,${liste[index].departLatLng} \nFin list======================");
+                "List ======================== \n${ListeTrip.liste[index].depart} ,${ListeTrip.liste[index].arrivee} ,${ListeTrip.liste[index].departLatLng} \nFin list======================");
             index++;
           } else {
             print('--------- No prcnt = $percent =====================');
@@ -888,7 +897,7 @@ class _SearchTripPageState extends State<SearchTripPage> {
                                        ],
                                      );
                                    });} */
-                                /*    Navigator.push(
+                                Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                         builder:
@@ -900,7 +909,7 @@ class _SearchTripPageState extends State<SearchTripPage> {
                                                       polylinePoints,
                                                   polylines: polylines,
                                                   distance: distance,
-                                                ))); */
+                                                )));
                               },
                               weight: FontWeight.w700),
                           SizedBox(height: hauteur * 0.05),

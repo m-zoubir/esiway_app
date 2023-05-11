@@ -179,10 +179,11 @@ class _CreateTripPageState extends State<CreateTripPage> {
     }
 
     addPolylineCoordinates(Variables.polylineCoordinates);
+
     final json = {
       "Conducteur": conducteur,
-      "Depart_LatLng": "$one",
-      "Arrivee_LatLng": "$two",
+      "Depart_LatLng": GeoPoint(one.latitude, one.longitude),
+      "Arrivee_LatLng": GeoPoint(two.latitude, two.longitude),
       "Depart": depart,
       "Arrivee": arrivee,
       "Date": "$date",

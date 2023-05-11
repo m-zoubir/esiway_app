@@ -152,9 +152,6 @@ class _CreateTripPageState extends State<CreateTripPage> {
     markers.clear();
     Variables.polylineCoordinates.clear();
     List<LatLng> polylineCoordinates = [];
-    List<String> latLngStrings = polylineCoordinates
-        .map((latLng) => '${latLng.latitude},${latLng.longitude}')
-        .toList();
 
     PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
       APIKEY,
@@ -170,14 +167,6 @@ class _CreateTripPageState extends State<CreateTripPage> {
     } else {
       print(result.errorMessage);
     }
-
-    /*for (LatLng coordinate in polylineCoordinates) {
-      List<Placemark> placemarks = await placemarkFromCoordinates(coordinate.latitude, coordinate.longitude);
-      if (placemarks.isNotEmpty) {
-        String? locality = placemarks![0].locality;
-        print(locality);
-      }
-    }*/
 
     //polulineCoordinates is the List of longitute and latidtude.
     double totalDistance = 0;
@@ -1272,6 +1261,8 @@ class _CreateTripPageState extends State<CreateTripPage> {
               ),
             ),
           ),
+
+          /// Back Button
           Positioned(
             top: hauteur * 0.05,
             left: largeur * 0.05,

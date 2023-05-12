@@ -18,6 +18,8 @@ import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
+import 'home_page.dart';
+
 class TripSuggestPage extends StatefulWidget {
   Set<Marker> markers = Set(); //markers for google map
   GoogleMapController? mapController; //controller for Google map
@@ -45,8 +47,11 @@ class _TripSuggestPageState extends State<TripSuggestPage> {
 
   void initState() {
     // TODO: implement initState
-    print("object");
-    print(ListeTrip.liste);
+    print("in find Trip notre liste equal = ");
+    print(ListeTrip.liste[0].depart);
+    print(ListeTrip.liste[0].methode);
+    print('lenth = ${ListeTrip.liste.length}');
+    print('in findtrip mor lprint de notre liste');
     Variables.locationName = "Search places";
     Variables.locationNamea = "Search places";
     Variables.debut = const PointLatLng(36.72376684085901, 2.991892973393687);
@@ -67,8 +72,7 @@ class _TripSuggestPageState extends State<TripSuggestPage> {
   /// +Fire base (pour stocker dans firebase on choisit la collection Trips)
   final docTrips = FirebaseFirestore.instance.collection("Trips");
   final auth = FirebaseAuth.instance; // pour l'utilisateur
-  DocumentReference DocRef =
-      FirebaseFirestore.instance.collection("Trips").doc("Prefrences");
+  DocumentReference DocRef = FirebaseFirestore.instance.collection("Trips").doc("Prefrences");
 
   /// +Map variables
   Set<Marker> markers = Set(); //markers for google map
@@ -115,6 +119,7 @@ class _TripSuggestPageState extends State<TripSuggestPage> {
       seats: "1",
       price: "800",
       methode: "Negosiable"); */
+
   List<TripUser> users = [];
 
   final List<LatLng> _markers = [
@@ -255,6 +260,13 @@ class _TripSuggestPageState extends State<TripSuggestPage> {
       return null;
     }
   } */
+  void toHome() {
+    setState(() {
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => const HomePage()));
+    });
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -306,7 +318,7 @@ class _TripSuggestPageState extends State<TripSuggestPage> {
                       children: [
                         SizedBox(height: hauteur * 0.02),
 
-                        /// Hellp
+                        /// Hello
                         SizedBox(
                           width: largeur * 0.17,
                           child: const AutoSizeText(
@@ -317,6 +329,7 @@ class _TripSuggestPageState extends State<TripSuggestPage> {
                               fontSize: 22,
                               color: bleu_bg,
                             ),
+                            maxLines: 1,
                           ),
                         ),
 
@@ -331,41 +344,34 @@ class _TripSuggestPageState extends State<TripSuggestPage> {
                               fontSize: 14,
                               color: bleu_bg,
                             ),
+                            maxLines: 1,
                           ),
                         ),
-                        SizedBox(
-                          height: hauteur * 0.02,
-                        ),
+                        SizedBox(height: hauteur * 0.02,),
 
                         ///Sugestion trips box
                         SizedBox(
                           width: largeur * 0.88,
                           height: hauteur * 0.43,
                           child: PageView.builder(
-                            itemCount: 1, //ListeTrip.liste.length,
+                            itemCount: ListeTrip.liste.length, //ListeTrip.liste.length,
                             onPageChanged: (int index) {
                               setState(() {
                                 _selectedIndex = index;
-
                                 widget.markers.clear();
                                 mapController?.animateCamera(
                                     CameraUpdate.newCameraPosition(
                                         CameraPosition(
-                                            target: LatLng(
-                                                ListeTrip.liste[0].departLatLng!
-                                                    .latitude,
-                                                ListeTrip.liste[0].departLatLng!
-                                                    .longitude),
+                                            target: LatLng(ListeTrip.liste[0].departLatLng!.latitude, ListeTrip.liste[0].departLatLng!.longitude),
                                             zoom: 12)));
                                 ajouterMarkers(ListeTrip.liste[0].departLatLng!,
                                     "Departure", ListeTrip.liste[0].depart!);
+
                                 /*   ajouterMarkers(users[index].arriveeLatLng!,
                                     "Arrival", "${users[index].arrivee}"); */
                                 /* getDirection(users[index].departLatLng!,
                                     users[index].arriveeLatLng!); */
-                                /* getdirection(list[index].depart,list[index].arrival)
-                                * ajouterMarkers(list[index].departlatlng,"starting",list[index].departname)
-                                * ajouterMarkers(list[index].arrivallatlng,"arrival",list[index].arrivalname)*/
+
                               });
                             },
                             itemBuilder: (BuildContext context, int index) {
@@ -382,8 +388,7 @@ class _TripSuggestPageState extends State<TripSuggestPage> {
                                       Row(
                                         children: [
                                           const CircleAvatar(
-                                            backgroundImage: AssetImage(
-                                                "Assets/Images/logo_background.png"),
+                                            backgroundImage: AssetImage("Assets/Images/logo_background.png"),
                                             radius: 40,
                                           ),
                                           const SizedBox(width: 8),
@@ -393,9 +398,8 @@ class _TripSuggestPageState extends State<TripSuggestPage> {
                                             children: [
                                               SizedBox(
                                                 width: largeur * 0.30,
-                                                child: AutoSizeText(
-                                                  //    "${users[index].name} ${users[index].familyName}",
-                                                  "hgdfsq fzdscq",
+                                                child:  AutoSizeText(
+                                                  "${ListeTrip.liste[0].familyName} ${ListeTrip.liste[0].name}",
                                                   style: const TextStyle(
                                                     fontFamily: 'Montserrat',
                                                     fontWeight: FontWeight.w700,
@@ -408,8 +412,7 @@ class _TripSuggestPageState extends State<TripSuggestPage> {
                                               SizedBox(
                                                 width: largeur * 0.14,
                                                 child: AutoSizeText(
-                                                  // "${users[index].statu}",
-                                                  "fdvcqsx",
+                                                 "${ListeTrip.liste[0].statu}",
                                                   style: const TextStyle(
                                                     fontFamily: 'Montserrat',
                                                     fontWeight: FontWeight.w500,
@@ -422,8 +425,7 @@ class _TripSuggestPageState extends State<TripSuggestPage> {
                                           ),
                                           SizedBox(width: largeur * 0.15),
                                           RatingBarIndicator(
-                                            rating:
-                                                5, // users[index].prcnt! * 5 / 100,
+                                            rating: ListeTrip.liste[0].prcnt! ,
                                             itemCount: 5,
                                             itemSize: 12.0,
                                             unratedColor:
@@ -439,24 +441,29 @@ class _TripSuggestPageState extends State<TripSuggestPage> {
                                       ),
 
                                       ///BOX TRIP
-                                      Row(
-                                        children: [
-                                          SizedBox(width: largeur * 0.2),
-                                          InfoTripBox(
-                                            arrival:
-                                                '${ListeTrip.liste[0].arrivee}',
-                                            departure:
-                                                '${ListeTrip.liste[0].depart}',
-                                          ),
-                                        ],
+                                      SizedBox(
+                                        width: double.infinity, // Provide width constraints
+
+                                        child: Row(
+                                          children: [
+                                            SizedBox(width: largeur * 0.2),
+                                            Expanded(
+                                              child: InfoTripBox(
+                                                arrival: '${ListeTrip.liste[0].arrivee}',
+                                                departure: '${ListeTrip.liste[0].depart}',
+                                              ),
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                       SizedBox(height: hauteur * 0.03),
 
                                       /// Row DATE TIME SEATS CAR
                                       Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                         children: [
                                           SizedBox(
-                                            width: largeur * 0.18,
+                                            width: largeur * 0.25,
                                             child: Column(
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.start,
@@ -471,20 +478,21 @@ class _TripSuggestPageState extends State<TripSuggestPage> {
                                                   ),
                                                 ),
                                                 AutoSizeText(
-                                                  "bgdfvsc", // users[index].date!,
+                                                  '${ListeTrip.liste[0].date}', // users[index].date!,
                                                   style: const TextStyle(
                                                     fontFamily: 'Montserrat',
                                                     fontWeight: FontWeight.w500,
                                                     fontSize: 10,
                                                     color: bleu_bg,
                                                   ),
+                                                  maxLines: 1,
+
                                                 )
                                               ],
                                             ),
                                           ),
-                                          SizedBox(width: largeur * 0.1),
                                           SizedBox(
-                                            width: largeur * 0.1,
+                                            width: largeur * 0.15,
                                             child: Column(
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.start,
@@ -499,18 +507,19 @@ class _TripSuggestPageState extends State<TripSuggestPage> {
                                                   ),
                                                 ),
                                                 AutoSizeText(
-                                                  'gfdqx', //      "${users[index].time}",
+                                                  '${ListeTrip.liste[0].time}', //      "${users[index].time}",
                                                   style: const TextStyle(
                                                     fontFamily: 'Montserrat',
                                                     fontWeight: FontWeight.w500,
                                                     fontSize: 10,
                                                     color: bleu_bg,
                                                   ),
+                                                  maxLines: 1,
+
                                                 )
                                               ],
                                             ),
                                           ),
-                                          SizedBox(width: largeur * 0.1),
                                           SizedBox(
                                             width: largeur * 0.1,
                                             child: Column(
@@ -527,25 +536,26 @@ class _TripSuggestPageState extends State<TripSuggestPage> {
                                                   ),
                                                 ),
                                                 AutoSizeText(
-                                                  "gbvfdcs", //  "${i}/${users[index].seats}",
+                                                  '${ListeTrip.liste[0].seats}', //  "${i}/${users[index].seats}",
                                                   style: const TextStyle(
                                                     fontFamily: 'Montserrat',
                                                     fontWeight: FontWeight.w500,
                                                     fontSize: 10,
                                                     color: bleu_bg,
                                                   ),
+                                                  maxLines: 1,
+
                                                 )
                                               ],
                                             ),
                                           ),
-                                          SizedBox(width: largeur * 0.1),
                                           SizedBox(
                                             width: largeur * 0.15,
                                             child: Column(
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.start,
-                                              children: [
-                                                const AutoSizeText(
+                                              children: const [
+                                                AutoSizeText(
                                                   "Car",
                                                   style: TextStyle(
                                                     fontFamily: 'Montserrat',
@@ -555,20 +565,22 @@ class _TripSuggestPageState extends State<TripSuggestPage> {
                                                   ),
                                                 ),
                                                 AutoSizeText(
-                                                  "dscqx", // "${users[index].carName}",
-                                                  style: const TextStyle(
+                                                  "Porche",
+                                                  style: TextStyle(
                                                     fontFamily: 'Montserrat',
                                                     fontWeight: FontWeight.w500,
                                                     fontSize: 10,
                                                     color: bleu_bg,
                                                   ),
+                                                  maxLines: 1,
+
                                                 )
                                               ],
                                             ),
                                           ),
                                         ],
                                       ),
-                                      SizedBox(height: hauteur * 0.02),
+                                      SizedBox(height: hauteur * 0.01),
 
                                       ///Preferences
                                       Row(
@@ -603,7 +615,7 @@ class _TripSuggestPageState extends State<TripSuggestPage> {
                                           )
                                         ],
                                       ),
-                                      SizedBox(height: hauteur * 0.02),
+                                      SizedBox(height: hauteur * 0.01),
 
                                       /// Price
                                       Container(
@@ -628,29 +640,33 @@ class _TripSuggestPageState extends State<TripSuggestPage> {
                                                     fontSize: 10,
                                                     color: bleu_bg,
                                                   ),
+                                                  maxLines: 1,
                                                 ),
                                                 SizedBox(width: largeur * 0.01),
-                                                AutoSizeText(
-                                                  "cdqxw", //  "(${users[index].methode})",
+                                                 AutoSizeText(
+                                                  '${ListeTrip.liste[0].methode}',
                                                   style: const TextStyle(
                                                     fontFamily: 'Montserrat',
                                                     fontWeight: FontWeight.w500,
                                                     fontSize: 10,
                                                     color: bleu_bg,
                                                   ),
+                                                  maxLines: 1,
+
                                                 ),
                                               ],
                                             ),
                                             SizedBox(
                                                 width: largeur * 0.14,
                                                 child: AutoSizeText(
-                                                  "100 DA", //    "${users[index].price} DA",
+                                                  '${ListeTrip.liste[0].price} Da' ,
                                                   style: const TextStyle(
                                                     fontFamily: 'Montserrat',
                                                     fontWeight: FontWeight.w700,
                                                     fontSize: 10,
                                                     color: bleu_bg,
                                                   ),
+                                                  maxLines: 1,
                                                 )),
                                           ],
                                         ),
@@ -692,6 +708,7 @@ class _TripSuggestPageState extends State<TripSuggestPage> {
                                           ),
                                         ],
                                       )
+
                                     ],
                                   ),
                                 ),
@@ -729,7 +746,7 @@ class _TripSuggestPageState extends State<TripSuggestPage> {
                   ),
                   espaceicontext: 5.0,
                   fct: () {
-                    Navigator.pop(context);
+                    toHome();
                   }),
             ),
           )

@@ -55,7 +55,7 @@ class _SearchTripPageState extends State<SearchTripPage> {
     Variables.locationNamea = "Search places";
     Variables.debut = const PointLatLng(36.72376684085901, 2.991892973393687);
     Variables.fin = const PointLatLng(36.72376684085901, 2.991892973393687);
-    Variables.polylineCoordinates = [];
+    Variables.polylineCoordinates.clear();
     Variables.created = false;
     super.initState();
   }
@@ -67,8 +67,7 @@ class _SearchTripPageState extends State<SearchTripPage> {
   /// +Fire base (pour stocker dans firebase on choisit la collection Trips)
   final docTrips = FirebaseFirestore.instance.collection("Trips");
   final auth = FirebaseAuth.instance; // pour l'utilisateur
-  DocumentReference DocRef =
-      FirebaseFirestore.instance.collection("Trips").doc("Prefrences");
+  DocumentReference DocRef = FirebaseFirestore.instance.collection("Trips").doc("Prefrences");
 
   /// +Map variables
   Set<Marker> markers = Set(); //markers for google map
@@ -90,8 +89,7 @@ class _SearchTripPageState extends State<SearchTripPage> {
   int i = 0;
 
   //String? date = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day,).toString();
-  String? date =
-      "${DateTime.now().day} - ${DateTime.now().month} - ${DateTime.now().year}";
+  String? date = "${DateTime.now().day} - ${DateTime.now().month} - ${DateTime.now().year}";
 
   String? time = "00:00";
   String? minute;
@@ -112,9 +110,7 @@ class _SearchTripPageState extends State<SearchTripPage> {
   void getAllDocs() {}
 
   List<String> polylineCoordinatesToString(List<LatLng> polylineCoordinates) {
-    return polylineCoordinates
-        .map((LatLng latLng) => '${latLng.latitude},${latLng.longitude}')
-        .toList();
+    return polylineCoordinates.map((LatLng latLng) => '${latLng.latitude},${latLng.longitude}').toList();
   }
 
   ajouterMarkers(PointLatLng point, String title, String snippet) async {
@@ -133,8 +129,7 @@ class _SearchTripPageState extends State<SearchTripPage> {
 
   ///-----------------------------< get Direction (draw polyline between two point and put markers) >---------------------------///
   getDirection(PointLatLng depart, PointLatLng arrival) async {
-    print(
-        '***********************************************************************************************\n inside debut get direction    ----- ');
+    print('***********************************************************************************************\n inside debut get direction    ----- ');
 
     List<LatLng> polylineCoordinates = [];
 
@@ -153,7 +148,7 @@ class _SearchTripPageState extends State<SearchTripPage> {
       print(result.errorMessage);
     }
 
-    //polulineCoordinates is the List of longitute and latidtude.
+    //polylineCoordinates is the List of longitute and latidtude.
     double totalDistance = 0;
     for (var i = 0; i < Variables.polylineCoordinates.length - 1; i++) {
       totalDistance += calculateDistance(
@@ -167,8 +162,7 @@ class _SearchTripPageState extends State<SearchTripPage> {
       Variables.distance = totalDistance;
     });
     addPolyLine(Variables.polylineCoordinates);
-    print(
-        '***********************************************************************************************\n inside fin get direction    ----- ');
+    print('***********************************************************************************************\n inside fin get direction    ----- ');
   }
 
   ///+++++++++++++++++++++++++++++< Add Polyline >++++++++++++++++++++++++++++++///
@@ -273,116 +267,123 @@ class _SearchTripPageState extends State<SearchTripPage> {
   List<TripUser> liste = [];
   TripUser trip = TripUser();
 
-  Future<void> searchTrip(String conducteur, PointLatLng one, PointLatLng two,
-      String depart, String arrivee, String date, String heure) async {
-    print(
-        '================ Debut de fonction searchTrip ======================');
-    if (depart == "Current Location") {
-      Position positione = await determinePosition();
-      Variables.fin = PointLatLng(positione.latitude, positione.longitude);
-    }
-    ;
-    if (arrivee == "Current Location") {
-      Position positione = await determinePosition();
-      Variables.debut = PointLatLng(positione.latitude, positione.longitude);
-    }
-    ;
+  Future<void> searchTrip(String conducteur, PointLatLng one, PointLatLng two, String depart, String arrivee, String date, String heure) async {
 
-    setState(() {});
+    print('================ Debut de fonction searchTrip ======================');
+
     getDirection(one, two); //fetch direction polylines from Google API
 
     ajouterMarkers(one, "Starting Location", depart);
 
     ajouterMarkers(two, "Arrival Location", arrivee);
 
-    mapController?.animateCamera(CameraUpdate.newCameraPosition(
-        CameraPosition(target: LatLng(one.latitude, one.longitude), zoom: 17)));
-    /* Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => FindTripPage(
-                  markers: markers,
-                  mapController: mapController,
-                  polylinePoints: polylinePoints,
-                  polylines: polylines,
-                  distance: distance,
-                )));*/
-    print('***************** Avant fire base *****************');
+    mapController?.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(target: LatLng(one.latitude, one.longitude), zoom: 17)));
+
+
     firestore.collection('Trips').get().then((QuerySnapshot querySnapshot) {
       int index = 0;
-      querySnapshot.docs.forEach((DocumentSnapshot documentSnapshot) {
-        print('+++++ debut de fire base -----');
-        print('------ Comparison de date -----');
+      int v = 0;
+      querySnapshot.docs.forEach((DocumentSnapshot documentSnapshot) async {
+        print('index = $index');
+        print('v = $v');
+        v++;
+
         if (date == documentSnapshot.get('Date')) {
-          print('+les dates sont egales');
+          print('date equals and v == $v');
+
           var polylineCoordinate = documentSnapshot.get('polyline');
-          var dapart = documentSnapshot.get('Depart');
-          print('depart $depart');
 
-          /* var arrivee = documentSnapshot.get('Arrivee');
-          //
-          var time = documentSnapshot.get('heure'); */
 
-          //  print('Depart : $depart \n arivee: $arrivee \n time: $time \n');
+          print("length de polylines deéfire base ===  ${polylineCoordinate.length} \n");
 
-          print("length ===  ${polylineCoordinate.length} \n");
           count = 0;
-          print(
-              "=============== Avant la comparison de polylines =================");
-          List<String> rechercheArray =
-              polylineCoordinatesToString(Variables.polylineCoordinates);
 
-          print(
-              'Recherche array qui contiebt variable.coordinates : \n $rechercheArray \n');
-          print(
-              "=============== Debut la comparison de polylines =================");
+          List<String> rechercheArray = polylineCoordinatesToString(Variables.polylineCoordinates);
 
-          for (String point1 in rechercheArray) {
-            if (polylineCoordinate.contains(point1)) {
-              count++;
-            }
-          }
-          print(
-              "=============== Fin la comparison de polylines =================");
+
+
+          for (String point1 in rechercheArray) {if (polylineCoordinate.contains(point1)) {count++;}}
+
 
           print('+Count $count');
 
           double percent = count / Variables.polylineCoordinates.length;
           print("+ percent = $percent");
-          print("9bel4");
           if (percent >= 0.4) {
-            print('prcnt > 40');
-            trip.depart = depart.toString();
-            //  GeoPoint geoPoint = documentSnapshot.data()!['Arrivee_LatLng'] as GeoPoint;
-            /*   GeoPoint geoPoint =
-                documentSnapshot.data()!['Arrivee_LatLng'] as GeoPoint;
- */
-            GeoPoint geoPointData = documentSnapshot.get("Arrivee_LatLng");
+            print('prcnt > 40 and v == $v');
 
+
+            GeoPoint geoPointData = documentSnapshot.get("Depart_LatLng");
             GeoPoint geoPoint = geoPointData;
-            trip.arrivee = documentSnapshot.get('Arrivee').toString();
-            trip.departLatLng =
-                (PointLatLng(geoPoint.latitude, geoPoint.longitude));
-            ListeTrip.liste.add(trip);
+            trip.departLatLng = (PointLatLng(geoPoint.latitude, geoPoint.longitude));
+             geoPoint = documentSnapshot.get("Arrivee_LatLng");
+            trip.arriveeLatLng = (PointLatLng(geoPoint.latitude, geoPoint.longitude));
 
-            // un pourcentage pour savoir si le trajet de l'utilisateur est inclut
-            // dans le trajet du conducteur (celui qui a crée le trajet)
-            print("9bel5");
-            print(
-                "List ======================== \n${ListeTrip.liste[index].depart} ,${ListeTrip.liste[index].arrivee} ,${ListeTrip.liste[index].departLatLng} \nFin list======================");
+
+            trip.arrivee = documentSnapshot.get('Arrivee').toString();
+            trip.depart = documentSnapshot.get('Depart').toString();
+            trip.price = documentSnapshot.get('Price').toString();
+            trip.methode = documentSnapshot.get('methode').toString();
+            trip.seats = documentSnapshot.get('Places').toString();
+            trip.time = documentSnapshot.get('Heure').toString();
+            trip.date = documentSnapshot.get('Date').toString();
+            String uid = documentSnapshot.get('Conducteur').toString();
+
+            try {
+              DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance.collection('Users').doc(uid).get();
+
+              if (documentSnapshot.exists) {
+                var userData = documentSnapshot.data() as Map<String, dynamic>; // Explicitly cast to the appropriate type
+                // Do something with the user data
+                trip.name = userData['Name'].toString();
+                trip.familyName = userData['FamilyName'].toString();
+                trip.statu = userData['Status'].toString();
+                trip.carName = userData['hasCar'].toString();
+
+                print(userData);
+              } else {
+                print('User not found');
+              }
+            } catch (e) {
+              print('Error getting user information: $e');
+            }
+
+            // print('*****************************************************************************************************\n\n');
+            // print('avant linsertion dans la list trip = ${trip.date}${trip.time}${trip.seats}${trip.methode}${trip.arrivee}${trip.depart}${trip.price}');
+            // print('*****************************************************************************************************\n\n');
+
+
+
+            ListeTrip.liste.add(trip);
+            print("List ======================== \n\n${ListeTrip.liste[index].depart} ,${ListeTrip.liste[index].arrivee} ,${ListeTrip.liste[index].departLatLng} ${ListeTrip.liste[index].methode} ,${ListeTrip.liste[index].time} \n\nFin list======================");
             index++;
           } else {
+
             print('--------- No prcnt = $percent =====================');
           }
-          print(
-              '***********************************************************************************************\n after fire store    ----- ');
+
         }
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder:
+                    (context) => /*SearchResult() */
+                TripSuggestPage(
+                  markers: markers,
+                  mapController: mapController,
+                  polylinePoints:
+                  polylinePoints,
+                  polylines: polylines,
+                  distance: distance,
+                )));
       });
     }).catchError((error) {
       print('Failed to retrieve documents: $error');
     });
-    print('***************** Avant fire base *****************');
-    print('================ Fin de fonction searchTrip ======================');
+
+
+    print('***************** Aftert fire base *****************');
+    print('================ Fin de fonction searchTrip et list == ${ListeTrip.liste[0].depart} ======================');
   }
 
   @override
@@ -897,7 +898,7 @@ class _SearchTripPageState extends State<SearchTripPage> {
                                        ],
                                      );
                                    });} */
-                                Navigator.push(
+                              /*  Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                         builder:
@@ -910,6 +911,7 @@ class _SearchTripPageState extends State<SearchTripPage> {
                                                   polylines: polylines,
                                                   distance: distance,
                                                 )));
+                                */
                               },
                               weight: FontWeight.w700),
                           SizedBox(height: hauteur * 0.05),
@@ -944,9 +946,7 @@ class _SearchTripPageState extends State<SearchTripPage> {
                         icon: "arrow_left", largeur: 30, hauteur: 30),
                   ),
                   espaceicontext: 5.0,
-                  fct: () {
-                    Navigator.pop(context);
-                  }),
+                  fct: () {Navigator.pop(context);}),
             ),
           )
         ],

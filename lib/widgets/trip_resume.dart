@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:esiway/widgets/constant.dart';
 import 'package:esiway/widgets/rich_text.dart';
 import 'package:flutter/material.dart';
@@ -173,7 +174,7 @@ class InfoTripBox extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
+              AutoSizeText(
                 "$departure",
                 style: TextStyle(
                   fontSize: 12,
@@ -188,7 +189,7 @@ class InfoTripBox extends StatelessWidget {
               SizedBox(
                 height: 17,
               ),
-              Text(
+              AutoSizeText(
                 '$arrival',
                 style: TextStyle(
                   fontSize: 12,

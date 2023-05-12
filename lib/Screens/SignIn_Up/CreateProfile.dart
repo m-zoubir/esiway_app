@@ -341,6 +341,7 @@ class _CreateProfileState extends State<CreateProfile> with UserValidation {
                                 "Name": _nameController.text,
                                 "FamilyName": _familynameController.text,
                                 "hasCar": false,
+                                "Rate": 2.5,
                               }).then((value) => Navigator.of(context).push(
                                         MaterialPageRoute(builder: (context) {
                                           return Driver();

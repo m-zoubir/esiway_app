@@ -216,57 +216,59 @@ class OngoingTrip extends StatelessWidget {
                                                       hauteur: 18),
                                                 ),
                                               ),
-                                              // FirebaseAuth.instance.currentUser!.uid ==
-                                              //         Conducteur
-                                              //     ? Container()
-                                              //     :
-                                              Container(
-                                                width: screenWidth * 0.11,
-                                                height: screenHeight * 0.05,
-                                                margin:
-                                                    EdgeInsets.only(right: 2),
-                                                decoration: BoxDecoration(
-                                                  color: orange,
-                                                  borderRadius:
-                                                      BorderRadius.all(
-                                                          Radius.circular(6)),
-                                                  boxShadow: [
-                                                    BoxShadow(
-                                                      offset: Offset(0, 0),
-                                                      blurRadius: 4,
-                                                      color: bleu_bg
-                                                          .withOpacity(0.15),
+                                              FirebaseAuth.instance.currentUser!
+                                                          .uid ==
+                                                      Conducteur
+                                                  ? Container()
+                                                  : Container(
+                                                      width: screenWidth * 0.11,
+                                                      height:
+                                                          screenHeight * 0.05,
+                                                      margin: EdgeInsets.only(
+                                                          right: 2),
+                                                      decoration: BoxDecoration(
+                                                        color: orange,
+                                                        borderRadius:
+                                                            BorderRadius.all(
+                                                                Radius.circular(
+                                                                    6)),
+                                                        boxShadow: [
+                                                          BoxShadow(
+                                                            offset:
+                                                                Offset(0, 0),
+                                                            blurRadius: 4,
+                                                            color: bleu_bg
+                                                                .withOpacity(
+                                                                    0.15),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      child: IconButton(
+                                                        onPressed: () {
+                                                          Navigator.of(context).push(
+                                                              MaterialPageRoute(
+                                                                  builder:
+                                                                      (context) =>
+                                                                          Home(
+                                                                            uid:
+                                                                                Conducteur,
+                                                                            name:
+                                                                                "${data["Name"]} ${data["FamilyName"]}",
+                                                                            rating:
+                                                                                data["Rate"],
+                                                                            imageUrl: data.containsKey("ProfilePicture")
+                                                                                ? data["ProfilePicture"]
+                                                                                : null,
+                                                                          )));
+                                                        },
+                                                        color: orange,
+                                                        iconSize: 30,
+                                                        icon: Icons_ESIWay(
+                                                            icon: 'star',
+                                                            largeur: 18,
+                                                            hauteur: 18),
+                                                      ),
                                                     ),
-                                                  ],
-                                                ),
-                                                child: IconButton(
-                                                  onPressed: () {
-                                                    Navigator.of(context).push(
-                                                        MaterialPageRoute(
-                                                            builder:
-                                                                (context) =>
-                                                                    Home(
-                                                                      uid:
-                                                                          Conducteur,
-                                                                      name:
-                                                                          "${data["Name"]} ${data["FamilyName"]}",
-                                                                      rating: data[
-                                                                          "Rate"],
-                                                                      imageUrl: data.containsKey(
-                                                                              "ProfilePicture")
-                                                                          ? data[
-                                                                              "ProfilePicture"]
-                                                                          : null,
-                                                                    )));
-                                                  },
-                                                  color: orange,
-                                                  iconSize: 30,
-                                                  icon: Icons_ESIWay(
-                                                      icon: 'star',
-                                                      largeur: 18,
-                                                      hauteur: 18),
-                                                ),
-                                              ),
                                             ],
                                           ),
                                         ],

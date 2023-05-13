@@ -67,7 +67,8 @@ class _SearchTripPageState extends State<SearchTripPage> {
   /// +Fire base (pour stocker dans firebase on choisit la collection Trips)
   final docTrips = FirebaseFirestore.instance.collection("Trips");
   final auth = FirebaseAuth.instance; // pour l'utilisateur
-  DocumentReference DocRef = FirebaseFirestore.instance.collection("Trips").doc("Prefrences");
+  DocumentReference DocRef =
+      FirebaseFirestore.instance.collection("Trips").doc("Prefrences");
 
   /// +Map variables
   Set<Marker> markers = Set(); //markers for google map
@@ -89,7 +90,8 @@ class _SearchTripPageState extends State<SearchTripPage> {
   int i = 0;
 
   //String? date = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day,).toString();
-  String? date = "${DateTime.now().day} - ${DateTime.now().month} - ${DateTime.now().year}";
+  String? date =
+      "${DateTime.now().day} - ${DateTime.now().month} - ${DateTime.now().year}";
 
   String? time = "00:00";
   String? minute;
@@ -110,7 +112,9 @@ class _SearchTripPageState extends State<SearchTripPage> {
   void getAllDocs() {}
 
   List<String> polylineCoordinatesToString(List<LatLng> polylineCoordinates) {
-    return polylineCoordinates.map((LatLng latLng) => '${latLng.latitude},${latLng.longitude}').toList();
+    return polylineCoordinates
+        .map((LatLng latLng) => '${latLng.latitude},${latLng.longitude}')
+        .toList();
   }
 
   ajouterMarkers(PointLatLng point, String title, String snippet) async {
@@ -129,7 +133,8 @@ class _SearchTripPageState extends State<SearchTripPage> {
 
   ///-----------------------------< get Direction (draw polyline between two point and put markers) >---------------------------///
   getDirection(PointLatLng depart, PointLatLng arrival) async {
-    print('***********************************************************************************************\n inside debut get direction    ----- ');
+    print(
+        '***********************************************************************************************\n inside debut get direction    ----- ');
 
     List<LatLng> polylineCoordinates = [];
 
@@ -162,7 +167,8 @@ class _SearchTripPageState extends State<SearchTripPage> {
       Variables.distance = totalDistance;
     });
     addPolyLine(Variables.polylineCoordinates);
-    print('***********************************************************************************************\n inside fin get direction    ----- ');
+    print(
+        '***********************************************************************************************\n inside fin get direction    ----- ');
   }
 
   ///+++++++++++++++++++++++++++++< Add Polyline >++++++++++++++++++++++++++++++///
@@ -267,9 +273,10 @@ class _SearchTripPageState extends State<SearchTripPage> {
   List<TripUser> liste = [];
   TripUser trip = TripUser();
 
-  Future<void> searchTrip(String conducteur, PointLatLng one, PointLatLng two, String depart, String arrivee, String date, String heure) async {
-
-    print('================ Debut de fonction searchTrip ======================');
+  Future<void> searchTrip(String conducteur, PointLatLng one, PointLatLng two,
+      String depart, String arrivee, String date, String heure) async {
+    print(
+        '================ Debut de fonction searchTrip ======================');
 
     getDirection(one, two); //fetch direction polylines from Google API
 
@@ -277,8 +284,8 @@ class _SearchTripPageState extends State<SearchTripPage> {
 
     ajouterMarkers(two, "Arrival Location", arrivee);
 
-    mapController?.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(target: LatLng(one.latitude, one.longitude), zoom: 17)));
-
+    mapController?.animateCamera(CameraUpdate.newCameraPosition(
+        CameraPosition(target: LatLng(one.latitude, one.longitude), zoom: 17)));
 
     firestore.collection('Trips').get().then((QuerySnapshot querySnapshot) {
       int index = 0;
@@ -293,17 +300,19 @@ class _SearchTripPageState extends State<SearchTripPage> {
 
           var polylineCoordinate = documentSnapshot.get('polyline');
 
-
-          print("length de polylines deéfire base ===  ${polylineCoordinate.length} \n");
+          print(
+              "length de polylines deéfire base ===  ${polylineCoordinate.length} \n");
 
           count = 0;
 
-          List<String> rechercheArray = polylineCoordinatesToString(Variables.polylineCoordinates);
+          List<String> rechercheArray =
+              polylineCoordinatesToString(Variables.polylineCoordinates);
 
-
-
-          for (String point1 in rechercheArray) {if (polylineCoordinate.contains(point1)) {count++;}}
-
+          for (String point1 in rechercheArray) {
+            if (polylineCoordinate.contains(point1)) {
+              count++;
+            }
+          }
 
           print('+Count $count');
 
@@ -312,13 +321,13 @@ class _SearchTripPageState extends State<SearchTripPage> {
           if (percent >= 0.4) {
             print('prcnt > 40 and v == $v');
 
-
             GeoPoint geoPointData = documentSnapshot.get("Depart_LatLng");
             GeoPoint geoPoint = geoPointData;
-            trip.departLatLng = (PointLatLng(geoPoint.latitude, geoPoint.longitude));
-             geoPoint = documentSnapshot.get("Arrivee_LatLng");
-            trip.arriveeLatLng = (PointLatLng(geoPoint.latitude, geoPoint.longitude));
-
+            trip.departLatLng =
+                (PointLatLng(geoPoint.latitude, geoPoint.longitude));
+            geoPoint = documentSnapshot.get("Arrivee_LatLng");
+            trip.arriveeLatLng =
+                (PointLatLng(geoPoint.latitude, geoPoint.longitude));
 
             trip.arrivee = documentSnapshot.get('Arrivee').toString();
             trip.depart = documentSnapshot.get('Depart').toString();
@@ -327,13 +336,19 @@ class _SearchTripPageState extends State<SearchTripPage> {
             trip.seats = documentSnapshot.get('Places').toString();
             trip.time = documentSnapshot.get('Heure').toString();
             trip.date = documentSnapshot.get('Date').toString();
-            String uid = documentSnapshot.get('Conducteur').toString();
 
+            String uid = documentSnapshot.get('Conducteur').toString();
+            trip.conducteur = uid;
             try {
-              DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance.collection('Users').doc(uid).get();
+              DocumentSnapshot documentSnapshot = await FirebaseFirestore
+                  .instance
+                  .collection('Users')
+                  .doc(uid)
+                  .get();
 
               if (documentSnapshot.exists) {
-                var userData = documentSnapshot.data() as Map<String, dynamic>; // Explicitly cast to the appropriate type
+                var userData = documentSnapshot.data() as Map<String,
+                    dynamic>; // Explicitly cast to the appropriate type
                 // Do something with the user data
                 trip.name = userData['Name'].toString();
                 trip.familyName = userData['FamilyName'].toString();
@@ -352,38 +367,33 @@ class _SearchTripPageState extends State<SearchTripPage> {
             // print('avant linsertion dans la list trip = ${trip.date}${trip.time}${trip.seats}${trip.methode}${trip.arrivee}${trip.depart}${trip.price}');
             // print('*****************************************************************************************************\n\n');
 
-
-
             ListeTrip.liste.add(trip);
-            print("List ======================== \n\n${ListeTrip.liste[index].depart} ,${ListeTrip.liste[index].arrivee} ,${ListeTrip.liste[index].departLatLng} ${ListeTrip.liste[index].methode} ,${ListeTrip.liste[index].time} \n\nFin list======================");
+            print(
+                "List ======================== \n\n${ListeTrip.liste[index].depart} ,${ListeTrip.liste[index].arrivee} ,${ListeTrip.liste[index].departLatLng} ${ListeTrip.liste[index].methode} ,${ListeTrip.liste[index].time} \n\nFin list======================");
             index++;
           } else {
-
             print('--------- No prcnt = $percent =====================');
           }
-
         }
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder:
-                    (context) => /*SearchResult() */
-                TripSuggestPage(
-                  markers: markers,
-                  mapController: mapController,
-                  polylinePoints:
-                  polylinePoints,
-                  polylines: polylines,
-                  distance: distance,
-                )));
+                builder: (context) => /*SearchResult() */
+                    TripSuggestPage(
+                      markers: markers,
+                      mapController: mapController,
+                      polylinePoints: polylinePoints,
+                      polylines: polylines,
+                      distance: distance,
+                    )));
       });
     }).catchError((error) {
       print('Failed to retrieve documents: $error');
     });
 
-
     print('***************** Aftert fire base *****************');
-    print('================ Fin de fonction searchTrip et list == ${ListeTrip.liste[0].depart} ======================');
+    print(
+        '================ Fin de fonction searchTrip et list == ${ListeTrip.liste[0].depart} ======================');
   }
 
   @override
@@ -898,7 +908,7 @@ class _SearchTripPageState extends State<SearchTripPage> {
                                        ],
                                      );
                                    });} */
-                              /*  Navigator.push(
+                                /*  Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                         builder:
@@ -946,7 +956,9 @@ class _SearchTripPageState extends State<SearchTripPage> {
                         icon: "arrow_left", largeur: 30, hauteur: 30),
                   ),
                   espaceicontext: 5.0,
-                  fct: () {Navigator.pop(context);}),
+                  fct: () {
+                    Navigator.pop(context);
+                  }),
             ),
           )
         ],

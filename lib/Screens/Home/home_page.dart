@@ -367,7 +367,7 @@ class _HomePageState extends State<HomePage> {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => Notifpage()));
+                                      builder: (context) => NotifPage()));
                             },
                             style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.white,

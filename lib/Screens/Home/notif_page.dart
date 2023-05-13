@@ -1,193 +1,109 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:esiway/Screens/Profile/profile_screen.dart';
+import 'package:esiway/Auth.dart';
+import 'package:esiway/Screens/Chat/ChatServices.dart';
 import 'package:esiway/widgets/accept_notif.dart';
-import 'package:esiway/widgets/constant.dart';
-import 'package:esiway/widgets/icons_ESIWay.dart';
-import 'package:esiway/widgets/login_text.dart';
 import 'package:esiway/widgets/notif.dart';
-import 'package:esiway/widgets/notif_list.dart';
-import 'package:esiway/widgets/our_prefixeIconButton.dart';
 import 'package:esiway/widgets/refuse_notif.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
-import 'home_page.dart';
-
-class Notifpage extends StatefulWidget {
-  //List<Map<String, dynamic>>? dataNotif = [];
-  Notifpage({Key? key}) : super(key: key);
+class NotifPage extends StatefulWidget {
+  const NotifPage({Key? key});
 
   @override
-  State<Notifpage> createState() => _NotifpageState();
+  State<NotifPage> createState() => _NotifPageState();
 }
 
-class _NotifpageState extends State<Notifpage> {
-  @override
-  void initState() {
-    super.initState();
-    readCollection();
-  }
-
-  List<Map<String, dynamic>>? dataList = [];
-  final FirebaseFirestore firestore = FirebaseFirestore.instance;
-  Future<void> readCollection() async {
-    print(dataList);
-    try {
-      QuerySnapshot snapshot =
-          await firestore.collection('Notifications').get();
-
-      List<DocumentSnapshot> docs = snapshot.docs;
-      dataList =
-          docs.map((doc) => doc.data()).cast<Map<String, dynamic>>().toList();
-
-      // Set the state to rebuild the widget and display the retrieved data
-    } catch (e) {
-      print('Error reading collection: $e');
-    }
-  }
-
-  final String today = 'Today';
-
-  final String month = 'This month';
-
-  final String notif = 'Notifications';
-
-  /*   Container(
-      margin: EdgeInsets.only(left: 32),
-      child: Text(
-        'Today',
-        style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-            color: bleu_bg,
-            fontFamily: 'mont'),
-      ),
-    ), */
-
+class _NotifPageState extends State<NotifPage> {
   @override
   Widget build(BuildContext context) {
-    var largeur = MediaQuery.of(context).size.width;
-    var hauteur = MediaQuery.of(context).size.height;
-    //   addToEndOfArray('newElemen 1');
+    final currentUserUID = AuthService()
+        .auth
+        .currentUser!
+        .uid; // Replace with your logic to get the current user's UID
 
     return Scaffold(
       appBar: AppBar(
-        elevation: 2,
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        centerTitle: true,
-        leading: IconButton(
-          icon: Transform.scale(
-            scale: 0.9,
-            child: Icons_ESIWay(icon: "arrow_left", largeur: 50, hauteur: 50),
-          ),
-          onPressed: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) {
-                  return HomePage();
-                },
-              ),
-            );
-          },
-          color: vert,
-        ),
-        title: Text(
-          "Notifications",
-          style: TextStyle(
-            color: bleu_bg,
-            fontSize: 20.0,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
+        title: const Text('Notification'),
       ),
-      body: /* SafeArea(
-        child: Container(
-          color: Colors.white,
-          child: Column(
-            children: [
-              Padding(
-                padding:
-                    EdgeInsets.only(left: largeur * 0.05, top: hauteur * 0.04),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    OurPrefixeIconButton(
-                        size: const Size(73, 34),
-                        color: Colors.white,
-                        radius: 10,
-                        text: "Back",
-                        textcolor: const Color(0xFF20236C),
-                        weight: FontWeight.w600,
-                        fontsize: 14,
-                        iconName: "arrow_left",
-                        espaceicontext: 0.0,
-                        fct: () {}),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 32, top: 20),
-                child: Row(
-                  children: [
-                    MyText(
-                      text: notif,
-                      weight: FontWeight.bold,
-                      fontsize: 24,
-                      color: bleu_bg,
-                      largeur: 0.5 * largeur,
-                    )
-                  ],
-                ),
-                //   ),
-
-                // Text(
-                //   textAlign: TextAlign.start,
-                //   'Notifcations',
-                //   style: TextStyle(
-                //       fontSize: 24,
-                //       fontWeight: FontWeight.bold,
-                //       color: BLUE,
-                //       fontFamily: 'mont'),
-              ),
-              MyWidget(
-                notiflist: notifList,
-              ),
-              /////////////////////////////////////////////////////////////////
-            ],
-          ),
-        ),
-      ), */
-          Column(
+      body: Column(
         children: [
-          // other widgets
-          Expanded(
-            child: ListView.builder(
-              itemCount: dataList?.length,
-              itemBuilder: (context, index) {
-                Map<String, dynamic> data = dataList![index];
-                return Notif();
-              },
+          const Text(
+            'My List:',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
             ),
           ),
+          Expanded(
+            child: StreamBuilder<QuerySnapshot>(
+                stream: FirebaseFirestore.instance
+                    .collection('Notifications')
+                    .orderBy('date', descending: true)
+                    .snapshots(),
+                builder: (BuildContext context,
+                    AsyncSnapshot<QuerySnapshot> snapshot) {
+                  if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}');
+                  }
+
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Text('Loading...');
+                  }
+
+                  final List<DocumentSnapshot> documents = snapshot.data!.docs;
+
+                  return ListView.builder(
+                      itemCount: documents.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        final document = documents[index];
+
+                        // Exclude notifications with the current user's UID
+                        if (document['uid'] != currentUserUID) {
+                          return SizedBox
+                              .shrink(); // Return an empty widget to skip rendering
+                        }
+
+                        // Retrieve user_name from the 'Users' collection based on a condition
+                        return FutureBuilder<DocumentSnapshot>(
+                            future: FirebaseFirestore.instance
+                                .collection('Users')
+                                .doc(document['uid'])
+                                .get(),
+                            builder: (BuildContext context,
+                                AsyncSnapshot<DocumentSnapshot> userSnapshot) {
+                              if (userSnapshot.hasError) {
+                                return Text('Error: ${userSnapshot.error}');
+                              }
+
+                              if (userSnapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return const Text('Loading...');
+                              }
+
+                              final userDocument = userSnapshot.data!;
+                              final user_name = userDocument['Name'];
+                              final profilePictureExists =
+                                  userDocument['ProfilePicture'] != "null";
+                              final profilePicture = profilePictureExists
+                                  ? userDocument['ProfilePicture']
+                                  : 'Assets/Images/appicon2.png';
+
+                              return document['type'] == 0
+                                  ? AcceptB(
+                                      user_name: user_name ?? '',
+                                      path: profilePicture,
+                                    )
+                                  : (document['type'] == 1
+                                      ? RefuseB(
+                                          user_name: user_name ?? '',
+                                        )
+                                      : Notif(user_name: user_name ?? ''));
+                            });
+                      });
+                }),
+          ),
         ],
-      ),
-      /*  dataList!.isNotEmpty
-              ? ListView.builder(
-                  itemCount: dataList!.length,
-                  itemBuilder: (context, index) {
-                    Map<String, dynamic> data = dataList![index];
-                    print("object ==== ${data['type']}");
-                    return (data['type'] == 0)
-                        ? AcceptB()
-                        : ((data['type'] == 1) ? RefuseB() : Notif());
-                  },
-                )
-              : Center(child: CircularProgressIndicator()), */
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          readCollection();
-        },
-        child: Icon(Icons.refresh),
       ),
     );
   }

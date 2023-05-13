@@ -1,6 +1,9 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:esiway/Screens/Home/home_page.dart';
 import 'package:esiway/Screens/Profile/user_car_info.dart';
+import 'package:esiway/Screens/Trips/mytrips.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import '../../widgets/Tripswidget/infoTrip.dart';
@@ -16,9 +19,11 @@ class RequestInfo extends StatefulWidget {
   List<dynamic>? copassager;
   String preferences;
   String price;
+  String tripuid;
   String departure;
   String arrival;
   RequestInfo({
+    required this.tripuid,
     required this.arrival,
     required this.departure,
     required this.price,
@@ -71,6 +76,7 @@ class _RequestInfoState extends State<RequestInfo> {
         arrival: widget.arrival);
     return Scaffold(
       bottomNavigationBar: NavShape(
+        uidtrip: widget.tripuid,
         buttonText: 'Cancel',
         buttonColor: bleu_ciel,
       ),
@@ -401,9 +407,14 @@ class Preferences extends StatelessWidget {
 }
 
 class NavShape extends StatelessWidget {
-  NavShape({super.key, required this.buttonText, required this.buttonColor});
+  NavShape(
+      {super.key,
+      required this.buttonText,
+      required this.buttonColor,
+      required this.uidtrip});
   final String buttonText;
   final Color buttonColor;
+  final String uidtrip;
 
   @override
   Widget build(BuildContext context) {
@@ -439,7 +450,23 @@ class NavShape extends StatelessWidget {
                   builder: (context) => CustomAlertDialog(
                     question: 'Are you sure you want to cancel the trip',
                     greentext: 'Back',
-                    redfct: () {},
+                    redfct: () {
+                      FirebaseFirestore.instance
+                          .collection('Users')
+                          .doc(FirebaseAuth.instance.currentUser!.uid)
+                          .update({
+                        "Trip": FieldValue.arrayRemove([uidtrip]),
+                      });
+                      FirebaseFirestore.instance
+                          .collection('Users')
+                          .doc(FirebaseAuth.instance.currentUser!.uid)
+                          .collection("chat")
+                          .doc(uidtrip)
+                          .delete();
+
+                      Navigator.of(context).push(
+                          MaterialPageRoute(builder: (context) => MyTrips()));
+                    },
                     greenfct: () {
                       Navigator.of(context).pop();
                     },

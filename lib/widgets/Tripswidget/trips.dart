@@ -6,6 +6,7 @@ class Trip {
   final String arrival;
   final String date;
   final String uid;
+  String tripuid;
   String price;
   String preferences;
   List<dynamic>? passager;
@@ -13,6 +14,7 @@ class Trip {
   Trip(
       {required this.departure,
       required this.passager,
+      required this.tripuid,
       required this.price,
       required this.preferences,
       required this.arrival,
@@ -49,6 +51,7 @@ class MyTripsCard extends StatelessWidget {
       child: Row(
         children: trips
             .map((trip) => AllMyTrips(
+                  tripuid: trip.tripuid,
                   price: trip.price,
                   preferences: trip.preferences,
                   passager: trip.passager,

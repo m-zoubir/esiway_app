@@ -128,6 +128,7 @@ class _MyTripsScreenState extends State<MyTripsScreen> {
           if (element["Conducteur"] ==
               "${FirebaseAuth.instance.currentUser!.uid}")
             suggestedtrip.add(Trip(
+              tripuid: id,
               passager:
                   element["Passenger"] == null ? [] : element["Passenger"],
               departure: element["Depart"],
@@ -139,6 +140,7 @@ class _MyTripsScreenState extends State<MyTripsScreen> {
             ));
           else
             reservedTrips.add(Trip(
+              tripuid: id,
               passager:
                   element["Passenger"] == null ? [] : element["Passenger"],
               uid: element["Conducteur"],

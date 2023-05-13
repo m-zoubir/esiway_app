@@ -21,9 +21,11 @@ class AllMyTrips extends StatelessWidget {
       required this.passager,
       required this.preferences,
       required this.price,
+      required this.tripuid,
       required this.uid});
 
   String uid;
+  String tripuid;
   String price;
   List<dynamic>? passager;
   String preferences;
@@ -124,6 +126,7 @@ class AllMyTrips extends StatelessWidget {
                               price: price,
                               uid: uid,
                               departure: departure,
+                              tripuid: tripuid,
                               arrival: arrival,
                               preferences: preferences,
                               copassager: passager,
@@ -135,6 +138,7 @@ class AllMyTrips extends StatelessWidget {
                     MaterialPageRoute(
                         builder: (context) => RequestInfo(
                               price: price,
+                              tripuid: tripuid,
                               uid: uid,
                               departure: departure,
                               arrival: arrival,

@@ -50,7 +50,7 @@ class _TripSuggestPageState extends State<TripSuggestPage> {
   void initState() {
     // TODO: implement initState
     print("in find Trip notre liste equal = ");
-    print(ListeTrip.liste[0].name);
+    // print(ListeTrip.liste[0].name);
     print('lenth = ${ListeTrip.liste.length}');
     print('in findtrip mor lprint de notre liste');
     Variables.locationName = "Search places";
@@ -278,7 +278,7 @@ class _TripSuggestPageState extends State<TripSuggestPage> {
                   ),
                   color: Color(0xFFF9F8FF)),
               width: largeur,
-              height: hauteur * 0.545,
+              height: hauteur * 0.8,
               child: SingleChildScrollView(
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -325,8 +325,8 @@ class _TripSuggestPageState extends State<TripSuggestPage> {
 
                         ///Sugestion trips box
                         SizedBox(
-                          width: largeur * 0.88,
-                          height: hauteur * 0.43,
+                          width: largeur * 0.9,
+                          height: hauteur * 0.7,
                           child: PageView.builder(
                             itemCount: ListeTrip
                                 .liste.length, //ListeTrip.liste.length,
@@ -337,7 +337,11 @@ class _TripSuggestPageState extends State<TripSuggestPage> {
                                 mapController?.animateCamera(
                                     CameraUpdate.newCameraPosition(
                                         CameraPosition(
-                                            target: LatLng(ListeTrip.liste[0].departLatLng!.latitude, ListeTrip.liste[0].departLatLng!.longitude),
+                                            target: LatLng(
+                                                ListeTrip.liste[0].departLatLng!
+                                                    .latitude,
+                                                ListeTrip.liste[0].departLatLng!
+                                                    .longitude),
                                             zoom: 12)));
                                 ajouterMarkers(ListeTrip.liste[0].departLatLng!,
                                     "Departure", ListeTrip.liste[0].depart!);
@@ -346,7 +350,6 @@ class _TripSuggestPageState extends State<TripSuggestPage> {
                                     "Arrival", "${users[index].arrivee}"); */
                                 /* getDirection(users[index].departLatLng!,
                                     users[index].arriveeLatLng!); */
-
                               });
                             },
                             itemBuilder: (BuildContext context, int index) {
@@ -374,7 +377,7 @@ class _TripSuggestPageState extends State<TripSuggestPage> {
                                             children: [
                                               SizedBox(
                                                 width: largeur * 0.30,
-                                                child:  AutoSizeText(
+                                                child: AutoSizeText(
                                                   "${ListeTrip.liste[0].familyName} ${ListeTrip.liste[0].name}",
                                                   style: const TextStyle(
                                                     fontFamily: 'Montserrat',
@@ -388,7 +391,7 @@ class _TripSuggestPageState extends State<TripSuggestPage> {
                                               SizedBox(
                                                 width: largeur * 0.14,
                                                 child: AutoSizeText(
-                                                 "${ListeTrip.liste[0].statu}",
+                                                  "${ListeTrip.liste[0].statu}",
                                                   style: const TextStyle(
                                                     fontFamily: 'Montserrat',
                                                     fontWeight: FontWeight.w500,
@@ -401,7 +404,7 @@ class _TripSuggestPageState extends State<TripSuggestPage> {
                                           ),
                                           SizedBox(width: largeur * 0.15),
                                           RatingBarIndicator(
-                                            rating: ListeTrip.liste[0].prcnt! ,
+                                            rating: ListeTrip.liste[0].prcnt!,
                                             itemCount: 5,
                                             itemSize: 12.0,
                                             unratedColor:
@@ -426,8 +429,10 @@ class _TripSuggestPageState extends State<TripSuggestPage> {
                                             SizedBox(width: largeur * 0.2),
                                             Expanded(
                                               child: InfoTripBox(
-                                                arrival: '${ListeTrip.liste[0].arrivee}',
-                                                departure: '${ListeTrip.liste[0].depart}',
+                                                arrival:
+                                                    '${ListeTrip.liste[0].arrivee}',
+                                                departure:
+                                                    '${ListeTrip.liste[0].depart}',
                                               ),
                                             ),
                                           ],
@@ -617,7 +622,7 @@ class _TripSuggestPageState extends State<TripSuggestPage> {
                                                   maxLines: 1,
                                                 ),
                                                 SizedBox(width: largeur * 0.01),
-                                                 AutoSizeText(
+                                                AutoSizeText(
                                                   '${ListeTrip.liste[0].methode}',
                                                   style: const TextStyle(
                                                     fontFamily: 'Montserrat',
@@ -632,7 +637,7 @@ class _TripSuggestPageState extends State<TripSuggestPage> {
                                             SizedBox(
                                                 width: largeur * 0.14,
                                                 child: AutoSizeText(
-                                                  '${ListeTrip.liste[0].price} Da' ,
+                                                  '${ListeTrip.liste[0].price} Da',
                                                   style: const TextStyle(
                                                     fontFamily: 'Montserrat',
                                                     fontWeight: FontWeight.w700,

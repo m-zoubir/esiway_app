@@ -1,5 +1,4 @@
 import 'dart:core';
-
 import 'dart:math';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -8,7 +7,6 @@ import 'package:esiway/Screens/Home/tripSuggestions.dart';
 import 'package:esiway/widgets/prefixe_icon_button.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:geocoding/geocoding.dart';
-
 import '../../../widgets/constant.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_google_places/flutter_google_places.dart';
@@ -377,7 +375,6 @@ class _SearchTripPageState extends State<SearchTripPage> {
                 '*****************************************************************************************************\n\n');
 
             TripUser test;
-
             ListeTrip.liste.add(trip);
             print('Trip attribu avant l\'affectation  ${trip.name}');
             // ListeTrip.liste[index] = trip;
@@ -385,7 +382,7 @@ class _SearchTripPageState extends State<SearchTripPage> {
             print(
                 "List ======================== \n\n${ListeTrip.liste[index].depart} ,${ListeTrip.liste[index].arrivee} ,${ListeTrip.liste[index].departLatLng} ${ListeTrip.liste[index].methode} ,${ListeTrip.liste[index].time} \n\nFin list======================");
             index++;
-            print('indexxx ==           $index');
+            print('index ==           $index');
           } else {
             v++;
 
@@ -410,8 +407,7 @@ class _SearchTripPageState extends State<SearchTripPage> {
     });
 
     print('***************** Aftert fire base *****************');
-    print(
-        '================ Fin de fonction searchTrip et list == ${ListeTrip.liste[0].depart} ======================');
+    // print('================ Fin de fonction searchTrip et list == ${ListeTrip.liste[0].depart} ======================');
   }
 
   @override

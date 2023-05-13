@@ -1,6 +1,11 @@
+import 'dart:async';
 import 'dart:math';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:esiway/widgets/alertdialog.dart';
 import 'package:esiway/widgets/our_prefixeIconButton.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_google_places/flutter_google_places.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
@@ -18,6 +23,7 @@ import '../../../widgets/constant.dart';
 
 import '../../widgets/bottom_navbar.dart';
 import '../../widgets/our_text_field.dart';
+import '../Profile/car_information_screen.dart';
 import 'createTrip_Page.dart';
 import 'notif_page.dart';
 import 'searchTrip_page.dart';
@@ -32,6 +38,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   @override
+  bool? hascar;
   String? date;
   void initState() {
     // TODO: implement initState
@@ -50,6 +57,25 @@ class _HomePageState extends State<HomePage> {
         markers.clear();
       }
     }
+
+//user information to know if he has a car
+    User? currentuser = FirebaseAuth.instance.currentUser!;
+
+    FirebaseFirestore.instance
+        .collection('Users')
+        .doc(currentuser.uid)
+        .get()
+        .then((DocumentSnapshot<Map<String, dynamic>> snapshot) {
+      if (snapshot.exists) {
+        hascar = snapshot.data()!['hasCar'];
+      } else {
+        print('Document does not exist!');
+      }
+    }).catchError((error) {
+      hascar = false;
+      print('Error getting document: $error');
+    });
+
     super.initState();
   }
 //======================================================================================================//
@@ -268,7 +294,6 @@ class _HomePageState extends State<HomePage> {
     var largeur = MediaQuery.of(context).size.width;
     var hauteur = MediaQuery.of(context).size.height;
     var dropdownValue = "-1"; // drop down value
-
     return Scaffold(
       bottomNavigationBar: BottomNavBar(currentindex: 0),
       body: Stack(
@@ -394,16 +419,64 @@ class _HomePageState extends State<HomePage> {
             right: 20,
             child: ElevatedButton(
               onPressed: () async {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => CreateTripPage(
-                              markers: markers,
-                              mapController: mapController,
-                              polylinePoints: polylinePoints,
-                              polylines: polylines,
-                              distance: distance,
-                            )));
+                if (hascar == true) {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => CreateTripPage(
+                                markers: markers,
+                                mapController: mapController,
+                                polylinePoints: polylinePoints,
+                                polylines: polylines,
+                                distance: distance,
+                              )));
+                } else {
+                  //********************************************************************* */
+                  // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  //     backgroundColor: Colors.white,
+                  //     duration: Duration(
+                  //       seconds: 3,
+                  //     ),
+                  //     margin:
+                  //         EdgeInsets.symmetric(vertical: 30, horizontal: 20),
+                  //     padding: EdgeInsets.all(12),
+                  //     behavior: SnackBarBehavior.floating,
+                  //     elevation: 2,
+                  //     content: Center(
+                  //       child: Text(
+                  //         "You must have a car!",
+                  //         style: TextStyle(
+                  //           color: Colors.red,
+                  //           fontSize: 12,
+                  //           fontFamily: "Montserrat",
+                  //         ),
+                  //       ),
+                  //     )));
+
+                  //********************************************************************* */
+
+                  showDialog(
+                      context: context,
+                      builder: (context) => CustomAlertDialog(
+                          greentext: "Add",
+                          question:
+                              "You must have a car!\nDo you want to add a car?",
+                          redtext: "Back",
+                          greenfct: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) {
+                                  return CarInfo();
+                                },
+                              ),
+                            );
+                          },
+                          redfct: () {
+                            Navigator.pop(context);
+                          }));
+                  //********************************************************************* */
+                }
+
                 /* showDialog(
                     context: context,
                     builder: (context) {

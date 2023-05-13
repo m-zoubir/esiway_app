@@ -1,3 +1,5 @@
+import 'dart:core';
+
 import 'dart:math';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -152,7 +154,8 @@ class _SearchTripPageState extends State<SearchTripPage> {
     } else {
       print(result.errorMessage);
     }
-
+    print(
+        '/////////////////////////////////////\n dakhel getdirection  variables polyloinecoord ${Variables.polylineCoordinates} \n\n\n');
     //polylineCoordinates is the List of longitute and latidtude.
     double totalDistance = 0;
     for (var i = 0; i < Variables.polylineCoordinates.length - 1; i++) {
@@ -275,10 +278,12 @@ class _SearchTripPageState extends State<SearchTripPage> {
 
   Future<void> searchTrip(String conducteur, PointLatLng one, PointLatLng two,
       String depart, String arrivee, String date, String heure) async {
+    ListeTrip.liste.clear();
+    Variables.polylineCoordinates.clear();
     print(
         '================ Debut de fonction searchTrip ======================');
 
-    getDirection(one, two); //fetch direction polylines from Google API
+    await getDirection(one, two); //fetch direction polylines from Google API
 
     ajouterMarkers(one, "Starting Location", depart);
 
@@ -293,7 +298,6 @@ class _SearchTripPageState extends State<SearchTripPage> {
       querySnapshot.docs.forEach((DocumentSnapshot documentSnapshot) async {
         print('index = $index');
         print('v = $v');
-        v++;
 
         if (date == documentSnapshot.get('Date')) {
           print('date equals and v == $v');
@@ -320,6 +324,8 @@ class _SearchTripPageState extends State<SearchTripPage> {
           print("+ percent = $percent");
           if (percent >= 0.4) {
             print('prcnt > 40 and v == $v');
+
+            v++;
 
             GeoPoint geoPointData = documentSnapshot.get("Depart_LatLng");
             GeoPoint geoPoint = geoPointData;
@@ -363,18 +369,30 @@ class _SearchTripPageState extends State<SearchTripPage> {
               print('Error getting user information: $e');
             }
 
-            // print('*****************************************************************************************************\n\n');
-            // print('avant linsertion dans la list trip = ${trip.date}${trip.time}${trip.seats}${trip.methode}${trip.arrivee}${trip.depart}${trip.price}');
-            // print('*****************************************************************************************************\n\n');
+            print(
+                '*****************************************************************************************************\n\n');
+            print(
+                'avant linsertion dans la list trip = ${trip.date}${trip.time}${trip.seats}${trip.methode}${trip.arrivee}${trip.depart}${trip.price}');
+            print(
+                '*****************************************************************************************************\n\n');
+
+            TripUser test;
 
             ListeTrip.liste.add(trip);
+            print('Trip attribu avant l\'affectation  ${trip.name}');
+            // ListeTrip.liste[index] = trip;
+
             print(
                 "List ======================== \n\n${ListeTrip.liste[index].depart} ,${ListeTrip.liste[index].arrivee} ,${ListeTrip.liste[index].departLatLng} ${ListeTrip.liste[index].methode} ,${ListeTrip.liste[index].time} \n\nFin list======================");
             index++;
+            print('indexxx ==           $index');
           } else {
-            print('--------- No prcnt = $percent =====================');
+            v++;
+
+            print('--------- No prcnt < 40% = $percent =====================');
           }
         }
+
         Navigator.push(
             context,
             MaterialPageRoute(
@@ -874,13 +892,13 @@ class _SearchTripPageState extends State<SearchTripPage> {
                               text: "Search",
                               textcolor: const Color(0xFF20236C),
                               fontsize: 20,
-                              fct: () {
+                              fct: () async {
                                 // if((locationName == "Search places") || (locationNamea == "Search places")) {
                                 //Variables.created = true;
                                 // search trip
                                 print(
                                     '---- Button search inn search pag clicked --------');
-                                searchTrip(
+                                await searchTrip(
                                     auth.currentUser!.uid,
                                     debut,
                                     fin,

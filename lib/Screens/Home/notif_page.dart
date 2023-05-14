@@ -1,10 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:esiway/Auth.dart';
-import 'package:esiway/Screens/Chat/ChatServices.dart';
 import 'package:esiway/widgets/accept_notif.dart';
 import 'package:esiway/widgets/notif.dart';
 import 'package:esiway/widgets/refuse_notif.dart';
-import 'package:firebase_core/firebase_core.dart';
+
 import 'package:flutter/material.dart';
 
 class NotifPage extends StatefulWidget {
@@ -17,10 +16,8 @@ class NotifPage extends StatefulWidget {
 class _NotifPageState extends State<NotifPage> {
   @override
   Widget build(BuildContext context) {
-    final currentUserUID = AuthService()
-        .auth
-        .currentUser!
-        .uid; // Replace with your logic to get the current user's UID
+    final currentUserUID =
+        AuthService().auth.currentUser!.uid; //  to get the current user's UID
 
     return Scaffold(
       appBar: AppBar(
@@ -59,7 +56,8 @@ class _NotifPageState extends State<NotifPage> {
                         final document = documents[index];
 
                         // Exclude notifications with the current user's UID
-                        if (document['uid'] != currentUserUID) {
+                        if ((document['uid'] != currentUserUID) ||
+                            (document['show'] == false)) {
                           return SizedBox
                               .shrink(); // Return an empty widget to skip rendering
                         }
@@ -68,7 +66,7 @@ class _NotifPageState extends State<NotifPage> {
                         return FutureBuilder<DocumentSnapshot>(
                             future: FirebaseFirestore.instance
                                 .collection('Users')
-                                .doc(document['uid'])
+                                .doc(document['conducteur'])
                                 .get(),
                             builder: (BuildContext context,
                                 AsyncSnapshot<DocumentSnapshot> userSnapshot) {
@@ -88,7 +86,7 @@ class _NotifPageState extends State<NotifPage> {
                               final profilePicture = profilePictureExists
                                   ? userDocument['ProfilePicture']
                                   : 'Assets/Images/appicon2.png';
-
+                              print(document.id);
                               return document['type'] == 0
                                   ? AcceptB(
                                       user_name: user_name ?? '',
@@ -98,7 +96,12 @@ class _NotifPageState extends State<NotifPage> {
                                       ? RefuseB(
                                           user_name: user_name ?? '',
                                         )
-                                      : Notif(user_name: user_name ?? ''));
+                                      : Notif(
+                                          user_name: user_name ?? '',
+                                          doc: document.id.toString(),
+                                          passengerUid:
+                                              userDocument.id.toString(),
+                                        ));
                             });
                       });
                 }),

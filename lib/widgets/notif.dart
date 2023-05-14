@@ -1,14 +1,45 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:esiway/Auth.dart';
 import 'package:esiway/widgets/constant.dart';
 import 'package:flutter/material.dart';
 
-class Notif extends StatelessWidget {
+class Notif extends StatefulWidget {
   final String user_name;
+  final String doc;
+  final String passengerUid;
   //final String path;
 
   const Notif({
     required this.user_name,
+    required this.doc,
+    required this.passengerUid,
     //required this.path
   });
+
+  @override
+  State<Notif> createState() => _NotifState();
+}
+
+class _NotifState extends State<Notif> {
+  bool requestAccepted = false;
+  bool requestRefused = false;
+  Future<void> addFieldToDocument(String documentPath) async {
+    print("id =======  $documentPath");
+    print("user uid =======  ${widget.passengerUid}");
+
+    try {
+      // Get a reference to the document
+      DocumentReference documentRef = FirebaseFirestore.instance
+          .collection('Notifications')
+          .doc(documentPath);
+
+      // Update the document with the new field
+      await documentRef.update({'show': false});
+    } catch (e) {
+      print('Error adding field to document: $e');
+      // Handle any errors that occur
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +83,7 @@ class Notif extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    user_name,
+                    widget.user_name,
                     style: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
@@ -61,7 +92,11 @@ class Notif extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    'requested to go with you',
+                    requestRefused
+                        ? 'Request refused'
+                        : (requestAccepted
+                            ? 'Request accepted'
+                            : 'Requested to go with you'),
                     style: TextStyle(
                       fontSize: 10,
                       fontWeight: FontWeight.w500,
@@ -72,34 +107,40 @@ class Notif extends StatelessWidget {
                 ],
               ),
             ),
-            Expanded(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  ElevatedButton(
-                    onPressed: () {},
-                    child: Text(
-                      "Refuse",
-                      style: TextStyle(
-                        fontFamily: 'Montserrat',
-                        fontWeight: FontWeight.bold,
-                        fontSize: 12,
-                        color: bleu_bg,
-                      ),
-                    ),
-                    style: ElevatedButton.styleFrom(
-                      primary: vert.withOpacity(0.19),
-                      minimumSize: Size(largeur * 0.1833,
-                          hauteur * 0.035), // Set width and height here
-                      // Background color
-                    ),
-                  ),
-                  Container(
-                    margin: EdgeInsets.fromLTRB(4, 0, 12, 0),
-                    child: ElevatedButton(
-                      onPressed: () {},
+            if (!requestAccepted && !requestRefused)
+              Expanded(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () {
+                        setState(() {
+                          requestRefused = true;
+                          addFieldToDocument(
+                              widget.doc); // this notif wont be shown anymore
+
+                          {
+                            // une notification sera envoyé au conducteur de type 2
+
+                            /*     final json = {
+                                                    "uid": AuthService() 
+                                                        .auth
+                                                        .currentUser!
+                                                        .uid,
+                                                    "type": 2,
+                                                    "date": DateTime.now(),
+                                                    "conducteur": ListeTrip
+                                                        .liste[index]
+                                                        .conducteur,
+                                                    "show": true,
+                                                  };
+
+                                                  await docNotif.add(json); */
+                          }
+                        });
+                      },
                       child: Text(
-                        "Accept",
+                        "Refuse",
                         style: TextStyle(
                           fontFamily: 'Montserrat',
                           fontWeight: FontWeight.bold,
@@ -108,14 +149,42 @@ class Notif extends StatelessWidget {
                         ),
                       ),
                       style: ElevatedButton.styleFrom(
-                        primary: orange, // Background color
-                        minimumSize: Size(66, 28),
+                        primary: vert.withOpacity(0.19),
+                        minimumSize: Size(largeur * 0.1833,
+                            hauteur * 0.035), // Set width and height here
+                        // Background color
                       ),
                     ),
-                  ),
-                ],
+                    Container(
+                      margin: EdgeInsets.fromLTRB(4, 0, 12, 0),
+                      child: ElevatedButton(
+                        onPressed: () {
+                          print("accept");
+                          setState(() {
+                            requestAccepted = true;
+                            addFieldToDocument(
+                                widget.doc); // this notif wont be shown anymore
+                            // the trip will be written dans la bdd du passager
+                          });
+                        },
+                        child: Text(
+                          "Accept",
+                          style: TextStyle(
+                            fontFamily: 'Montserrat',
+                            fontWeight: FontWeight.bold,
+                            fontSize: 12,
+                            color: bleu_bg,
+                          ),
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          primary: orange, // Background color
+                          minimumSize: Size(66, 28),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            )
           ]),
         ),
       ],

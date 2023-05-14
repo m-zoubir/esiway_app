@@ -1,5 +1,6 @@
+// ignore: file_names
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
+
 import 'package:flutter/material.dart';
 
 class AuthService {
@@ -13,10 +14,9 @@ class AuthService {
   Future<bool> logIn({required String email, required String password}) async {
     try {
       await auth.signInWithEmailAndPassword(email: email, password: password);
-      print(" login");
+
       return true;
     } on FirebaseException catch (e) {
-      print("false login ");
       return false;
     }
   }

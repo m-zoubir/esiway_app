@@ -50,7 +50,8 @@ class _TripSuggestPageState extends State<TripSuggestPage> {
   void initState() {
     // TODO: implement initState
     print("in find Trip notre liste equal = ");
-    // print(ListeTrip.liste[0].name);
+    print(ListeTrip.liste[0].name);
+        print(ListeTrip.liste[1].name);
     print('lenth = ${ListeTrip.liste.length}');
     print('in findtrip mor lprint de notre liste');
     Variables.locationName = "Search places";
@@ -676,9 +677,9 @@ class _TripSuggestPageState extends State<TripSuggestPage> {
                                                     "type": 2,
                                                     "date": DateTime.now(),
                                                     "conducteur": ListeTrip
-                                                        .liste[0].conducteur,
-
-                                                    //prefrences
+                                                        .liste[index]
+                                                        .conducteur,
+                                                    "show": true,
                                                   };
 
                                                   await docNotif.add(json);

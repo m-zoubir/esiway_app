@@ -1,7 +1,7 @@
-import 'dart:ui';
+// ignore: file_names
 import 'package:esiway/widgets/alertdialog.dart';
 import 'package:esiway/widgets/bottom_navbar.dart';
-import 'package:firebase_core/firebase_core.dart';
+
 import 'package:intl/intl.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -14,6 +14,7 @@ import 'ChatServices.dart';
 import 'Chatting.dart';
 import 'GroupeImage.dart';
 
+// ignore: camel_case_types
 class Chat_secreen extends StatefulWidget {
   const Chat_secreen({super.key});
 
@@ -21,6 +22,7 @@ class Chat_secreen extends StatefulWidget {
   State<Chat_secreen> createState() => _Chat_secreenState();
 }
 
+// ignore: camel_case_types
 class _Chat_secreenState extends State<Chat_secreen> {
   String? imageUrl;
 
@@ -45,7 +47,7 @@ class _Chat_secreenState extends State<Chat_secreen> {
 
   void back() {
     Navigator.of(context)
-        .push(MaterialPageRoute(builder: (context) => HomePage()));
+        .push(MaterialPageRoute(builder: (context) => const HomePage()));
   }
 
   @override
@@ -83,7 +85,7 @@ class _Chat_secreenState extends State<Chat_secreen> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Container(
-                              margin: EdgeInsets.only(left: 20),
+                              margin: const EdgeInsets.only(left: 20),
                               width: 80,
                               height: 35,
                               child: PrefixeIconButton(
@@ -91,12 +93,12 @@ class _Chat_secreenState extends State<Chat_secreen> {
                                   color: Colors.white,
                                   radius: 8,
                                   text: "Back",
-                                  textcolor: Color(0xFF20236C),
+                                  textcolor: const Color(0xFF20236C),
                                   weight: FontWeight.w600,
                                   fontsize: 14,
                                   icon: Transform.scale(
                                     scale: 0.75,
-                                    child: Icons_ESIWay(
+                                    child: const Icons_ESIWay(
                                         icon: "arrow_left",
                                         largeur: 30,
                                         hauteur: 30),

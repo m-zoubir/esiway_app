@@ -161,7 +161,7 @@ class _ChangePasswordState extends State<ChangePassword> with UserValidation {
                       });
                     } else {
                       setState(() {
-                        confirmpasswordvalidate = false;
+                        newpassordvalidate = false;
                       });
                     }
 

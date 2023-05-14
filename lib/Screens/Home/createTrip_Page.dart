@@ -78,6 +78,7 @@ class _CreateTripPageState extends State<CreateTripPage> {
   final docUsers = FirebaseFirestore.instance.collection("Users");
   final auth = FirebaseAuth.instance; // pour l'utilisateur
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
+  String prefrence = "";
 
   /// +Map variables
   Set<Marker> markers = Set(); //markers for google map
@@ -148,7 +149,8 @@ class _CreateTripPageState extends State<CreateTripPage> {
       String heure,
       String price,
       String places,
-      String methode) async {
+      String methode,
+      String prefrence) async {
     markers.clear();
     Variables.polylineCoordinates.clear();
     List<LatLng> polylineCoordinates = [];
@@ -192,7 +194,7 @@ class _CreateTripPageState extends State<CreateTripPage> {
       "Places": places,
       "methode": methode,
       "polyline": addPolylineCoordinates(Variables.polylineCoordinates),
-      //prefrences
+      "prefrences": prefrence,
     };
 
     await docTrips.doc("${auth.currentUser?.uid}_$date-$heure").set(json);
@@ -337,7 +339,8 @@ class _CreateTripPageState extends State<CreateTripPage> {
       String heure,
       String price,
       String places,
-      String methode) async {
+      String methode,
+      prefrence) async {
     if (depart == "Current Location") {
       Position positione = await determinePosition();
       Variables.fin = PointLatLng(positione.latitude, positione.longitude);
@@ -352,7 +355,7 @@ class _CreateTripPageState extends State<CreateTripPage> {
 
     setState(() {});
     getDirection(conducteur, one, two, depart, arrivee, date, heure, price,
-        places, methode); //fetch direction polylines from Google API
+        places, methode, prefrence); //fetch direction polylines from Google API
     ajouterMarkers(one, "Starting Location", depart);
     ajouterMarkers(two, "Arrival Location", arrivee);
     mapController?.animateCamera(CameraUpdate.newCameraPosition(
@@ -1188,6 +1191,19 @@ class _CreateTripPageState extends State<CreateTripPage> {
                                 fontsize: 20,
                                 weight: FontWeight.w700,
                                 fct: () async {
+                                  if (talking == true) {
+                                    prefrence = prefrence + "Talking";
+                                  }
+                                  if (bags == true) {
+                                    prefrence = prefrence + " Bags";
+                                  }
+                                  if (smoking == true) {
+                                    prefrence = prefrence + " Smoking";
+                                  }
+                                  if (animals == true) {
+                                    prefrence = prefrence + " Animals";
+                                  }
+                                  print(prefrence);
                                   //if ((locationName == "Search places") || (locationNamea == "Search places")) {
                                   Variables.created = true;
                                   print("date is :   $date");
@@ -1201,7 +1217,8 @@ class _CreateTripPageState extends State<CreateTripPage> {
                                       time!,
                                       pricecontroller.text.trim(),
                                       seats!,
-                                      methode);
+                                      methode,
+                                      prefrence);
 
                                   final FirebaseFirestore firestore =
                                       FirebaseFirestore.instance;

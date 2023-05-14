@@ -135,7 +135,7 @@ class _MyTripsScreenState extends State<MyTripsScreen> {
               arrival: element["Arrivee"],
               date: element["Date"],
               price: element["Price"],
-              preferences: "          ",
+              preferences: element["Preferences"],
               uid: element["Conducteur"],
             ));
           else
@@ -148,7 +148,7 @@ class _MyTripsScreenState extends State<MyTripsScreen> {
               arrival: element["Arrivee"],
               date: element["Date"],
               price: element["Price"],
-              preferences: "    ",
+              preferences: element["Preferences"],
             ));
         }
       });

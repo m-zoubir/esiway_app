@@ -94,10 +94,15 @@ class _CreateTripPageState extends State<CreateTripPage> {
   String? locationName;
   String? locationNamea;
   List<Placemark>? placemarks;
-
+  String Bags_string = '';
+  String Talking_string = '';
+  String Other_string = '';
+  String Animals_string = '';
+  String Smooking_string = '';
   String paimentMethode = "";
   String methode = "";
   DateTime selectedDate = DateTime.now();
+  DateTime timestamp = DateTime.now();
   static bool bags = false;
   static bool talking = false;
   static bool animals = false;
@@ -192,6 +197,12 @@ class _CreateTripPageState extends State<CreateTripPage> {
       "Places": places,
       "methode": methode,
       "polyline": addPolylineCoordinates(Variables.polylineCoordinates),
+      "time": timestamp,
+      "Preferences": Bags_string +
+          Animals_string +
+          Smooking_string +
+          Talking_string +
+          Other_string,
       //prefrences
     };
 
@@ -292,6 +303,9 @@ class _CreateTripPageState extends State<CreateTripPage> {
     if (picked != null) {
       setState(() {
         TimeNow = picked;
+        timestamp = DateTime(timestamp.year, timestamp.month, timestamp.day,
+            TimeNow.hour, TimeNow.minute);
+        print(timestamp);
         minute =
             TimeNow.minute >= 10 ? "${TimeNow.minute}" : "0${TimeNow.minute}";
         hour = TimeNow.hour >= 10 ? "${TimeNow.hour}" : "0${TimeNow.hour}";
@@ -314,6 +328,9 @@ class _CreateTripPageState extends State<CreateTripPage> {
     if (picked != null) {
       setState(() {
         selectedDate = picked;
+        timestamp = DateTime(selectedDate.year, selectedDate.month,
+            selectedDate.day, timestamp.hour, timestamp.minute);
+        print(timestamp);
         date =
             "${selectedDate.day} - ${selectedDate.month} - ${selectedDate.year}";
       });
@@ -1001,6 +1018,12 @@ class _CreateTripPageState extends State<CreateTripPage> {
                                     fontsize: 12,
                                     fct: () {
                                       bags = !bags;
+
+                                      if (bags == true)
+                                        Bags_string = "Bags ";
+                                      else
+                                        Bags_string = "";
+
                                       setState(() {});
                                     },
                                     blur: 18),
@@ -1014,7 +1037,12 @@ class _CreateTripPageState extends State<CreateTripPage> {
                                     textcolor: bleu_bg,
                                     fontsize: 12,
                                     fct: () {
-                                      (talking = !talking);
+                                      talking = !talking;
+
+                                      if (talking == true)
+                                        Talking_string = "Talking ";
+                                      else
+                                        Talking_string = "";
                                       setState(() {});
                                     },
                                     blur: 18),
@@ -1028,7 +1056,11 @@ class _CreateTripPageState extends State<CreateTripPage> {
                                     textcolor: bleu_bg,
                                     fontsize: 12,
                                     fct: () {
-                                      (animals = !animals);
+                                      animals = !animals;
+                                      if (animals == true)
+                                        Animals_string = "Animals ";
+                                      else
+                                        Animals_string = "";
                                       setState(() {});
                                     },
                                     blur: 18),
@@ -1048,6 +1080,10 @@ class _CreateTripPageState extends State<CreateTripPage> {
                                     fontsize: 12,
                                     fct: () {
                                       smoking = !smoking;
+                                      if (smoking == true)
+                                        Smooking_string = "Smoking ";
+                                      else
+                                        Smooking_string = "";
                                       setState(() {});
                                     },
                                     blur: 18),
@@ -1062,7 +1098,11 @@ class _CreateTripPageState extends State<CreateTripPage> {
                                     textcolor: bleu_bg,
                                     fontsize: 12,
                                     fct: () {
-                                      (others = !others);
+                                      others = !others;
+                                      if (others == true)
+                                        Other_string = "Other ";
+                                      else
+                                        Other_string = "";
                                       setState(() {});
                                     },
                                     blur: 18),

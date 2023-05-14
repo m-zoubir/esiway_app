@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:esiway/Auth.dart';
+import 'package:esiway/Screens/Chat/ChatServices.dart';
 import 'package:esiway/widgets/constant.dart';
 import 'package:flutter/material.dart';
 
@@ -7,12 +8,14 @@ class Notif extends StatefulWidget {
   final String user_name;
   final String doc;
   final String passengerUid;
+  final String tripUid;
   //final String path;
 
   const Notif({
-    required this.user_name,
-    required this.doc,
-    required this.passengerUid,
+    required this.user_name, //
+    required this.doc, // uid du document dans la collection Notifications
+    required this.passengerUid, // le uid du passager
+    required this.tripUid, // le uid du document de la collection Trips
     //required this.path
   });
 
@@ -23,9 +26,35 @@ class Notif extends StatefulWidget {
 class _NotifState extends State<Notif> {
   bool requestAccepted = false;
   bool requestRefused = false;
+
+  void _handleRefuseButton() async {
+    // une notification sera envoyé au passager de type 1
+    final json = {
+      "uid": widget.passengerUid,
+      "type": 1,
+      "date": DateTime.now(),
+      "show": true,
+      "conducteur": "${AuthService().auth.currentUser!.uid}",
+    };
+
+    await FirebaseFirestore.instance.collection("Notifications").add(json);
+  }
+
+  void _handleAcceptButton() async {
+    // une notification sera envoyé au passager de type 1
+    final json = {
+      "uid": widget.passengerUid,
+      "type": 0,
+      "date": DateTime.now(),
+      "show": true,
+      "conducteur": "${AuthService().auth.currentUser!.uid}",
+    };
+
+    await FirebaseFirestore.instance.collection("Notifications").add(json);
+  }
+
   Future<void> addFieldToDocument(String documentPath) async {
     print("id =======  $documentPath");
-    print("user uid =======  ${widget.passengerUid}");
 
     try {
       // Get a reference to the document
@@ -116,28 +145,28 @@ class _NotifState extends State<Notif> {
                       onPressed: () {
                         setState(() {
                           requestRefused = true;
+                          _handleRefuseButton();
+
+                          addFieldToDocument(widget.doc);
+                        });
+                        /*    // une notification sera envoyé au passager de type 1
+                        final json = {
+                          "uid": widget.passengerUid,
+                          "type": 1,
+                          "date": DateTime.now(),
+                          "show": true,
+                          "conducteur":
+                              "${AuthService().auth.currentUser!.uid}",
+                        };
+
+                        await FirebaseFirestore.instance
+                            .collection("Notifications")
+                            .add(json);
+                        setState(() async {
+                          requestRefused = true;
                           addFieldToDocument(
                               widget.doc); // this notif wont be shown anymore
-
-                          {
-                            // une notification sera envoyé au conducteur de type 2
-
-                            /*     final json = {
-                                                    "uid": AuthService() 
-                                                        .auth
-                                                        .currentUser!
-                                                        .uid,
-                                                    "type": 2,
-                                                    "date": DateTime.now(),
-                                                    "conducteur": ListeTrip
-                                                        .liste[index]
-                                                        .conducteur,
-                                                    "show": true,
-                                                  };
-
-                                                  await docNotif.add(json); */
-                          }
-                        });
+                        }); */
                       },
                       child: Text(
                         "Refuse",
@@ -159,12 +188,27 @@ class _NotifState extends State<Notif> {
                       margin: EdgeInsets.fromLTRB(4, 0, 12, 0),
                       child: ElevatedButton(
                         onPressed: () {
-                          print("accept");
                           setState(() {
                             requestAccepted = true;
+                            _handleAcceptButton();
+
                             addFieldToDocument(
                                 widget.doc); // this notif wont be shown anymore
                             // the trip will be written dans la bdd du passager
+
+                            DocumentReference docRefUser = firestore
+                                .collection('Users')
+                                .doc('${widget.passengerUid}');
+
+                            // Update the array field with the new element
+                            docRefUser.update({
+                              'Trip':
+                                  FieldValue.arrayUnion(['${widget.tripUid}']),
+                            }).then((value) {
+                              print('Element added successfully!');
+                            }).catchError((error) {
+                              print('Failed to add element: $error');
+                            });
                           });
                         },
                         child: Text(
@@ -193,166 +237,3 @@ class _NotifState extends State<Notif> {
         );
   }
 }
-
-
-
-
-
-
-
-
-/* import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-
-class Notif extends StatelessWidget {
-  const Notif({Key? key}) : super(key: key);
-  static const bleu = Color(0xff20236C);
-  static const blanc = Color(0xffF9F8FF);
-  static const vert = Color(0xffAED6DC);
-  static const rose = Color(0xffFFA18E);
-  final String user_name = 'Yasmine Zaidi';
-  final String path = "Assets/Images/slider1.png";
-  final String accept = 'Accept';
-  final String request = 'requested to go with youuuu';
-  final String refuse = 'Refuse';
-  final String refused = '';
-  final String acceptes = '';
-  final String more = 'See more';
-  final String search = 'Search';
-
-  @override
-  Widget build(BuildContext context) {
-    var largeur = MediaQuery.of(context).size.width;
-    var hauteur = MediaQuery.of(context).size.height;
-    return Container(
-        child: Column(
-      crossAxisAlignment: CrossAxisAlignment.end,
-      children: <Widget>[
-        // Container(
-        //     child: Text(
-        //       'Notifcations',
-        //       style: TextStyle(
-        //           fontSize: 24,
-        //           fontWeight: FontWeight.bold,
-        //           color: bleu,
-        //           fontFamily: 'mont'),
-        //     ),
-        //     margin: EdgeInsets.fromLTRB(23, 85, 0, 0)),
-        // Container(
-        //   child: Text(
-        //     'Today',
-        //     style: TextStyle(
-        //         fontSize: 20,
-        //         fontWeight: FontWeight.bold,
-        //         color: bleu,
-        //         fontFamily: 'mont'),
-        //   ),
-        //   padding: EdgeInsets.fromLTRB(23, 12, 0, 0),
-        // ),
-        Container(
-          width: largeur * 0.925,
-          height: hauteur * 0.0975,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(5),
-            color: Colors.white,
-            boxShadow: [
-              BoxShadow(
-                color: bleu.withOpacity(0.15),
-                spreadRadius: 1,
-                blurRadius: 4,
-                offset: Offset(0, 0),
-              ),
-            ],
-          ),
-          margin: EdgeInsets.fromLTRB(12, 14, 12, 20),
-          child: Row(children: <Widget>[
-            Container(
-                margin: EdgeInsets.fromLTRB(13, 16, 5, 16),
-                child: CircleAvatar(
-                  backgroundImage: AssetImage(path),
-                  radius: largeur * 0.06,
-                )),
-            Container(
-              margin: EdgeInsets.fromLTRB(0, 12, 0, 12),
-              constraints: const BoxConstraints(
-                maxWidth: 100,
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    user_name,
-                    style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w600,
-                        color: bleu,
-                        fontFamily: 'Montserrat'),
-                  ),
-                  Text(
-                    request,
-                    style: TextStyle(
-                      fontSize: 10,
-                      fontWeight: FontWeight.w500,
-                      color: bleu.withOpacity(0.8),
-                      fontFamily: 'Montserrat',
-                    ),
-                  )
-                ],
-              ),
-            ),
-            Expanded(
-              child: Container(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    ElevatedButton(
-                      onPressed: () {},
-                      child: Text(
-                        refuse,
-                        style: TextStyle(
-                          fontFamily: 'Montserrat',
-                          fontWeight: FontWeight.bold,
-                          fontSize: 12,
-                          color: bleu,
-                        ),
-                      ),
-                      style: ElevatedButton.styleFrom(
-                        primary: vert.withOpacity(0.19),
-                        minimumSize: Size(largeur * 0.1833,
-                            hauteur * 0.035), // Set width and height here
-                        // Background color
-                      ),
-                    ),
-                    Container(
-                      margin: EdgeInsets.fromLTRB(4, 0, 12, 0),
-                      child: ElevatedButton(
-                        onPressed: () {},
-                        child: Text(
-                          accept,
-                          style: TextStyle(
-                            fontFamily: 'Montserrat',
-                            fontWeight: FontWeight.bold,
-                            fontSize: 12,
-                            color: bleu,
-                          ),
-                        ),
-                        style: ElevatedButton.styleFrom(
-                          primary: rose, // Background color
-                          minimumSize: Size(66, 28),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            )
-          ]),
-        ),
-      ],
-    )
-        ////add here an element for list view
-        );
-  }
-}
- */

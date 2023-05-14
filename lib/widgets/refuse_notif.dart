@@ -1,3 +1,4 @@
+import 'package:esiway/Screens/Home/home_page.dart';
 import 'package:esiway/widgets/constant.dart';
 import 'package:flutter/material.dart';
 
@@ -79,7 +80,12 @@ class RefuseB extends StatelessWidget {
                     margin: EdgeInsets.fromLTRB(4, 0, 12, 0),
                     padding: EdgeInsets.zero,
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => HomePage()));
+                      },
                       child: Text(
                         "Search",
                         style: TextStyle(

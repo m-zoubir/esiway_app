@@ -1,11 +1,15 @@
+import 'package:esiway/Screens/Trips/mytrips.dart';
 import 'package:esiway/widgets/constant.dart';
 import 'package:flutter/material.dart';
 
 class AcceptB extends StatelessWidget {
   final String user_name;
-  final String path;
+  //final String path;
 
-  const AcceptB({required this.user_name, required this.path});
+  const AcceptB({
+    required this.user_name,
+    //required this.path
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +39,7 @@ class AcceptB extends StatelessWidget {
             Container(
               margin: EdgeInsets.fromLTRB(13, 16, 5, 16),
               child: CircleAvatar(
-                backgroundImage: AssetImage(path),
+                //    backgroundImage: AssetImage(path),
                 radius: largeur * 0.06,
               ),
             ),
@@ -77,7 +81,10 @@ class AcceptB extends StatelessWidget {
                     margin: EdgeInsets.fromLTRB(4, 0, 12, 0),
                     padding: EdgeInsets.zero,
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) => MyTrips()));
+                      },
                       child: Text(
                         "more",
                         style: TextStyle(

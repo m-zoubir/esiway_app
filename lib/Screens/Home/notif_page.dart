@@ -81,26 +81,28 @@ class _NotifPageState extends State<NotifPage> {
 
                               final userDocument = userSnapshot.data!;
                               final user_name = userDocument['Name'];
-                              final profilePictureExists =
-                                  userDocument['ProfilePicture'] != "null";
-                              final profilePicture = profilePictureExists
-                                  ? userDocument['ProfilePicture']
-                                  : 'Assets/Images/appicon2.png';
+                             // final profilePictureExists = userDocument['ProfilePicture'] != "null";
+                           //   final profilePicture = profilePictureExists ? userDocument['ProfilePicture']
+                                 // : 'Assets/Images/appicon2.png';
                               print(document.id);
-                              return document['type'] == 0
+                              return document['type'] ==
+                                      0 // pour les notification "X person accepted your ride request"
                                   ? AcceptB(
                                       user_name: user_name ?? '',
-                                      path: profilePicture,
+                                     // path: profilePicture,
                                     )
-                                  : (document['type'] == 1
+                                  : (document['type'] ==
+                                          1 // pour les notification "X person refused your ride request"
                                       ? RefuseB(
                                           user_name: user_name ?? '',
                                         )
                                       : Notif(
+                                          // pour les notification "X person wants to go with you "
                                           user_name: user_name ?? '',
                                           doc: document.id.toString(),
                                           passengerUid:
                                               userDocument.id.toString(),
+                                          tripUid: document['tripUid'],
                                         ));
                             });
                       });

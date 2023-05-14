@@ -340,6 +340,7 @@ class _SearchTripPageState extends State<SearchTripPage> {
             trip.seats = documentSnapshot.get('Places').toString();
             trip.time = documentSnapshot.get('Heure').toString();
             trip.date = documentSnapshot.get('Date').toString();
+            trip.tripUid = documentSnapshot.id.toString();
 
             String uid = documentSnapshot.get('Conducteur').toString();
             trip.conducteur = uid;
@@ -394,7 +395,7 @@ class _SearchTripPageState extends State<SearchTripPage> {
             context,
             MaterialPageRoute(
                 builder: (context) => /*SearchResult() */
-                    TripSuggestPage(
+                    FindTripPage(
                       markers: markers,
                       mapController: mapController,
                       polylinePoints: polylinePoints,

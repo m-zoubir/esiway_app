@@ -49,11 +49,7 @@ class _TripSuggestPageState extends State<TripSuggestPage> {
 
   void initState() {
     // TODO: implement initState
-    print("in find Trip notre liste equal = ");
-    print(ListeTrip.liste[0].name);
-        print(ListeTrip.liste[1].name);
-    print('lenth = ${ListeTrip.liste.length}');
-    print('in findtrip mor lprint de notre liste');
+
     Variables.locationName = "Search places";
     Variables.locationNamea = "Search places";
     Variables.debut = const PointLatLng(36.72376684085901, 2.991892973393687);
@@ -680,6 +676,8 @@ class _TripSuggestPageState extends State<TripSuggestPage> {
                                                         .liste[index]
                                                         .conducteur,
                                                     "show": true,
+                                                    "tripUid":
+                                                        '${ListeTrip.liste[index].tripUid}',
                                                   };
 
                                                   await docNotif.add(json);

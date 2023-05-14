@@ -88,7 +88,8 @@ class _LogInPageState extends State<LogInPage> with UserValidation {
                               hinttext: "Email",
                               validate: emailvalidate,
                               title: "Email",
-                              error: "Is not esi mail",
+                              error:
+                                  "Email incorrect , please enter your esi email",
                               textfieldcontroller: emailcontroller,
                               iconName: "email",
                             ),
@@ -97,7 +98,7 @@ class _LogInPageState extends State<LogInPage> with UserValidation {
                               controller: passwordcontroller,
                               validate: passwordvalidate,
                               title: 'Password',
-                              error: 'Password empty',
+                              error: 'Value can\'t be empty',
                               bottomheigh: 0,
                             ),
                             Row(

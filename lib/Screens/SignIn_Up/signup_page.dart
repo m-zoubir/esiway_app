@@ -121,14 +121,16 @@ class _SignUpPageState extends State<SignUpPage> with UserValidation {
                                 hinttext: "Enter your email",
                                 validate: emailvalidate,
                                 title: "Email",
-                                error: "It's not esi mail",
+                                error:
+                                    "Email incorrect , please use your esi email",
                                 textfieldcontroller: emailcontroller,
                                 iconName: "email",
                               ),
                               MyPasswordField(
                                 controller: passwordcontroller,
                                 title: "Password",
-                                error: "At least 6 characters",
+                                error:
+                                    "At least 8 charactes with numbers , lowercase and uppercase letters",
                                 validate: passwordvalidate,
                               ),
                               MyPasswordField(
@@ -139,7 +141,7 @@ class _SignUpPageState extends State<SignUpPage> with UserValidation {
                               ),
                               Text_Field(
                                 type: TextInputType.phone,
-                                hinttext: "+213 |",
+                                hinttext: "Enter your phone number",
                                 validate: phonevalidate,
                                 bottomheigh:
                                     MediaQuery.of(context).size.height * 0.01,

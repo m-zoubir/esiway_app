@@ -101,13 +101,16 @@ class _ChangePasswordState extends State<ChangePassword> with UserValidation {
           padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 20),
           child: Column(
             children: [
-              Text(
-                "Create a password with at least 6 letters and \nshould include numbers. You will need this \npassword to log into your account ",
-                style: TextStyle(
-                  color: bleu_bg,
-                  fontFamily: "Montserrat",
-                  fontWeight: FontWeight.w400,
-                  fontSize: 13,
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: Text(
+                  "Create a password with at least 8 characters that should include uppercase letters, lowercase letters, and numbers. You will need this password to log into your account ",
+                  style: TextStyle(
+                    color: bleu_bg,
+                    fontFamily: "Montserrat",
+                    fontWeight: FontWeight.w400,
+                    fontSize: 13,
+                  ),
                 ),
               ),
               SizedBox(
@@ -125,7 +128,8 @@ class _ChangePasswordState extends State<ChangePassword> with UserValidation {
                 controller: newpassword,
                 bottomheigh: 14,
                 title: "New password",
-                error: "At least 6 characters",
+                error:
+                    "At least 8 charactes with numbers , lowercase and uppercase letters",
                 validate: newpassordvalidate,
                 hinttext: "New password",
               ),

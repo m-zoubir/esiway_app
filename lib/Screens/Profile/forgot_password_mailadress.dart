@@ -88,7 +88,7 @@ class _MailAdressState extends State<MailAdress> with UserValidation {
                 hinttext: "Enter your email",
                 validate: emailvalidate,
                 title: "Enter  your email",
-                error: "Not esi mail",
+                error: "Email incorrect , please enter your esi email",
                 textfieldcontroller: email,
                 iconName: "email",
               ),

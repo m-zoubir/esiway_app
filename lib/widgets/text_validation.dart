@@ -19,5 +19,5 @@ mixin UserValidation {
 
   bool isPassword(String? value) =>
       value!.isNotEmpty &&
-      RegExp(r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{6,}$').hasMatch(value);
+      RegExp(r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$').hasMatch(value);
 }

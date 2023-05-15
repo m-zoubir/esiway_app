@@ -5,7 +5,6 @@ import 'package:esiway/Screens/Profile/user_car_info.dart';
 import 'package:esiway/widgets/constant.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import '../../widgets/Tripswidget/infoTrip.dart';
 import '../../widgets/Tripswidget/onGoingBox.dart';
@@ -18,6 +17,8 @@ class OngoingTrip extends StatelessWidget {
       : super(key: key);
   String Conducteur;
   String uid;
+  List<LatLng> coordonates = [];
+  List coordonatesString = [];
 
   @override
   Widget build(BuildContext context) {
@@ -51,6 +52,19 @@ class OngoingTrip extends StatelessWidget {
                         Map data1 = documentSnapshot1.data() as Map;
                         GeoPoint depart = data1["Depart_LatLng"];
                         GeoPoint arrivee = data1["Arrivee_LatLng"];
+                        double lat;
+                        double lng;
+                        coordonatesString = data1["polyline"];
+                        coordonatesString.forEach((element) {
+                          lat = double.parse(
+                              element.substring(0, element.indexOf(",")));
+                          lng = double.parse(
+                              element.substring(element.indexOf(",") + 1));
+                          print(lat);
+                          print(lng);
+                          print("----");
+                          coordonates.add(LatLng(lat, lng));
+                        });
 
                         return Scaffold(
                           body: SafeArea(
@@ -74,14 +88,14 @@ class OngoingTrip extends StatelessWidget {
                                         position: LatLng(arrivee.latitude,
                                             arrivee.longitude)),
                                   },
-                                  // polylines: {
-                                  //   Polyline(
-                                  //     polylineId: PolylineId("Route"),
-                                  //     color: bleu_bg.withOpacity(0.9),
-                                  //     points: data1["polyline"],
-                                  //     width: 5,
-                                  //   ),
-                                  // },
+                                  polylines: {
+                                    Polyline(
+                                      polylineId: PolylineId("Route"),
+                                      color: bleu_bg.withOpacity(0.9),
+                                      points: coordonates,
+                                      width: 5,
+                                    ),
+                                  },
                                 ),
                                 Column(
                                   mainAxisAlignment:

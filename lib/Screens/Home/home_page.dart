@@ -39,6 +39,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   bool? hascar;
+  String? imageUrl;
   String? date;
   void initState() {
     // TODO: implement initState
@@ -68,6 +69,9 @@ class _HomePageState extends State<HomePage> {
         .then((DocumentSnapshot<Map<String, dynamic>> snapshot) {
       if (snapshot.exists) {
         hascar = snapshot.data()!['hasCar'];
+        imageUrl = snapshot.data()!.containsKey("ProfilePicture") == true
+            ? snapshot.data()!["ProfilePicture"]
+            : null;
       } else {
         print('Document does not exist!');
       }
@@ -392,7 +396,9 @@ class _HomePageState extends State<HomePage> {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => NotifPage()));
+                                      builder: (context) => NotifPage(
+                                            imageUrl: imageUrl,
+                                          )));
                             },
                             style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.white,

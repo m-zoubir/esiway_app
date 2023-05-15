@@ -198,12 +198,12 @@ class _CreateTripPageState extends State<CreateTripPage> {
       "methode": methode,
       "polyline": addPolylineCoordinates(Variables.polylineCoordinates),
       "time": timestamp,
+      "Passenger": [],
       "Preferences": Bags_string +
           Animals_string +
           Smooking_string +
           Talking_string +
           Other_string,
-      //prefrences
     };
 
     await docTrips.doc("${auth.currentUser?.uid}_$date-$heure").set(json);

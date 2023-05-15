@@ -17,6 +17,7 @@ class TripUser {
   String? seats;
   String? price;
   String? methode;
+  String? tripUid;
 
   // Constructor
   /* TripUser({

@@ -1,12 +1,17 @@
+import 'package:auto_size_text/auto_size_text.dart';
+import 'package:esiway/Screens/Home/home_page.dart';
+import 'package:esiway/Screens/Trips/rating.dart';
 import 'package:esiway/widgets/constant.dart';
+import 'package:esiway/widgets/simple_button.dart';
 import 'package:flutter/material.dart';
 
 class RefuseB extends StatelessWidget {
   final String user_name;
-  //final String path;
+  String? path;
 
-  const RefuseB({
-    required this.user_name, // required this.path
+  RefuseB({
+    required this.user_name,
+    required this.path, // required this.path
   });
 
   @override
@@ -14,214 +19,92 @@ class RefuseB extends StatelessWidget {
     var largeur = MediaQuery.of(context).size.width;
     var hauteur = MediaQuery.of(context).size.height;
     return Container(
-        child: Column(
-      crossAxisAlignment: CrossAxisAlignment.end,
-      children: <Widget>[
+      height: 82,
+      margin: EdgeInsets.only(bottom: 14, left: 5, right: 5, top: 5),
+      padding: EdgeInsets.only(bottom: 5, left: 10, right: 10, top: 5),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(5),
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: bleu_bg.withOpacity(0.15),
+            spreadRadius: 1,
+            blurRadius: 4,
+            offset: Offset(0, 0),
+          ),
+        ],
+      ),
+      child: Row(children: <Widget>[
         Container(
-          width: largeur * 0.925,
-          height: hauteur * 0.0975,
+          height: 55,
+          width: 55,
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(5),
-            color: Colors.white,
-            boxShadow: [
-              BoxShadow(
-                color: bleu_bg.withOpacity(0.15),
-                spreadRadius: 1,
-                blurRadius: 4,
-                offset: Offset(0, 0),
+              border: Border.all(width: 1, color: Colors.white),
+              shape: BoxShape.circle,
+              image: path == null
+                  ? DecorationImage(
+                      image: AssetImage("Assets/Images/photo_profile.png"),
+                      fit: BoxFit.cover,
+                    )
+                  : DecorationImage(
+                      image: NetworkImage(path!),
+                      fit: BoxFit.cover,
+                    )),
+        ),
+        SizedBox(
+          width: 10,
+        ),
+        Container(
+          width: largeur * 0.45,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                user_name,
+                style: TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600,
+                  color: bleu_bg,
+                  fontFamily: 'Montserrat',
+                ),
+                overflow: TextOverflow.fade,
+              ),
+              Text(
+                "has refused your ride request",
+                style: TextStyle(
+                  fontSize: 10,
+                  fontWeight: FontWeight.w500,
+                  color: bleu_bg.withOpacity(0.8),
+                  fontFamily: 'Montserrat',
+                ),
+                overflow: TextOverflow.fade,
               ),
             ],
           ),
-          margin: EdgeInsets.fromLTRB(12, 14, 12, 20),
-          child: Row(children: <Widget>[
-            Container(
-              margin: EdgeInsets.fromLTRB(13, 16, 5, 16),
-              child: CircleAvatar(
-                //   backgroundImage: AssetImage(path),
-                radius: largeur * 0.06,
-              ),
-            ),
-            Container(
-              margin: EdgeInsets.fromLTRB(0, 12, 0, 12),
-              constraints: const BoxConstraints(
-                maxWidth: 200,
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    user_name,
-                    style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                      color: bleu_bg,
-                      fontFamily: 'Montserrat',
-                    ),
-                  ),
-                  Text(
-                    "has refused your ride request",
-                    style: TextStyle(
-                      fontSize: 10,
-                      fontWeight: FontWeight.w500,
-                      color: bleu_bg.withOpacity(0.8),
-                      fontFamily: 'Montserrat',
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Expanded(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Container(
-                    margin: EdgeInsets.fromLTRB(4, 0, 12, 0),
-                    padding: EdgeInsets.zero,
-                    child: ElevatedButton(
-                      onPressed: () {},
-                      child: Text(
-                        "Search",
-                        style: TextStyle(
-                          fontFamily: 'Montserrat',
-                          fontWeight: FontWeight.bold,
-                          fontSize: 12,
-                          color: bleu_bg,
-                        ),
-                      ),
-                      style: ElevatedButton.styleFrom(
-                        primary: orange, // Background color
-                        minimumSize: Size(66, 28),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            )
-          ]),
         ),
-      ],
-    )
-        ////add here an element for list view
-        );
-  }
-}
-
-
-
-
-
-
-
-/* import 'package:esiway/widgets/constant.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-
-class AcceptB extends StatelessWidget {
-  const AcceptB({Key? key}) : super(key: key);
-
-  final String user_name = 'Yasmine Zaidi';
-  final String path = "Assets/Images/slider1.png";
-  final String request = 'requested to go with youuuu';
-  final String refuse = 'Refuse';
-  final String refused = 'has refused your ride request ';
-  final String accepted = 'has accepted your ride request ';
-  final String more = 'See more';
-  final String search = 'Search';
-
-  @override
-  Widget build(BuildContext context) {
-    var largeur = MediaQuery.of(context).size.width;
-    var hauteur = MediaQuery.of(context).size.height;
-    return Container(
-        child: Column(
-      crossAxisAlignment: CrossAxisAlignment.end,
-      children: <Widget>[
         Container(
-          width: largeur * 0.925,
-          height: hauteur * 0.0975,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(5),
-            color: Colors.white,
-            boxShadow: [
-              BoxShadow(
-                color: bleu_bg.withOpacity(0.15),
-                spreadRadius: 1,
-                blurRadius: 4,
-                offset: Offset(0, 0),
-              ),
-            ],
-          ),
-          margin: EdgeInsets.fromLTRB(12, 14, 12, 20),
-          child: Row(children: <Widget>[
-            Container(
-                margin: EdgeInsets.fromLTRB(13, 16, 5, 16),
-                child: CircleAvatar(
-                  backgroundImage: AssetImage(path),
-                  radius: largeur * 0.06,
-                )),
-            Container(
-              margin: EdgeInsets.fromLTRB(0, 12, 0, 12),
-              constraints: const BoxConstraints(
-                maxWidth: 200,
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    user_name,
-                    style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w600,
-                        color: bleu_bg,
-                        fontFamily: 'Montserrat'),
-                  ),
-                  Text(
-                    accepted,
-                    style: TextStyle(
-                      fontSize: 10,
-                      fontWeight: FontWeight.w500,
-                      color: bleu_bg.withOpacity(0.8),
-                      fontFamily: 'Montserrat',
-                    ),
-                  )
-                ],
-              ),
+          decoration:
+              BoxDecoration(borderRadius: BorderRadius.circular(5), boxShadow: [
+            BoxShadow(
+              color: bleu_bg.withOpacity(0.2),
             ),
-            Expanded(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Container(
-                    margin: EdgeInsets.fromLTRB(4, 0, 12, 0),
-                    padding: EdgeInsets.zero,
-                    child: ElevatedButton(
-                      onPressed: () {},
-                      child: Text(
-                        more,
-                        style: TextStyle(
-                          fontFamily: 'Montserrat',
-                          fontWeight: FontWeight.bold,
-                          fontSize: 12,
-                          color: bleu_bg,
-                        ),
-                      ),
-                      style: ElevatedButton.styleFrom(
-                        primary: orange, // Background color
-                        minimumSize: Size(66, 28),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            )
           ]),
-        ),
-      ],
-    )
-        ////add here an element for list view
-        );
+          width: 75,
+          height: 30,
+          child: SimpleButton(
+              backgroundcolor: orange,
+              size: Size(75, 30),
+              radius: 5,
+              text: "Search",
+              textcolor: bleu_bg,
+              fontsize: 13,
+              fct: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => HomePage()));
+              }),
+        )
+      ]),
+    );
   }
 }
- */

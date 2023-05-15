@@ -26,14 +26,9 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   double rating = 2.5;
-  Future<void> back() async {
-    await FirebaseFirestore.instance
-        .collection("Users")
-        .doc(widget.uid)
-        .update({
-      "Rate": (rating + widget.rating) / 2,
-    }).then((value) => Navigator.of(context)
-            .push(MaterialPageRoute(builder: (context) => HomePage())));
+  void back() {
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (context) => HomePage()));
   }
 
   late String Name;

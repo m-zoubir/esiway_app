@@ -16,8 +16,8 @@ class PageOne extends StatelessWidget {
           children: [
             ElevatedButton(
                 onPressed: () async {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => NotifPage()));
+                  // Navigator.push(context,
+                  //     MaterialPageRoute(builder: (context) => NotifPage()));
                 },
                 child: Text(AuthService().auth.currentUser!.email!)),
             ElevatedButton(

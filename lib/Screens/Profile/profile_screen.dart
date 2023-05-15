@@ -190,13 +190,6 @@ class _ProfileState extends State<Profile> with UserValidation {
                       scale: 0.7,
                     ),
                     Listbox(
-                      onPressed: () {},
-                      subtitle: "{Home , work , ...}",
-                      title: "My adresses",
-                      iconName: "home",
-                      scale: 0.65,
-                    ),
-                    Listbox(
                       onPressed: () {
                         Navigator.of(context).push(MaterialPageRoute(
                             builder: (context) => HistoryScreen()));

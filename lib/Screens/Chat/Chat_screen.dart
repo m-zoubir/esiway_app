@@ -254,11 +254,12 @@ class _nameState extends State<name> {
                                 Navigator.pop(context);
                               },
                               redfct: () {
-                                // leaveChatRoomFirestore(
-                                //     chatId,
-                                //     widget
-                                //         .usedId); // Call your leaveChatRoomFirestore function here
-                                // Navigator.of(context).pop();
+                                leaveChatRoomFirestore(
+                                    chatId,
+                                    FirebaseAuth.instance.currentUser!
+                                        .uid); // Call your leaveChatRoomFirestore function here
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) => Chat_secreen()));
                               },
                             );
                           });

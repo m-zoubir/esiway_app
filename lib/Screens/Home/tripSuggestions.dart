@@ -3,6 +3,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:esiway/Auth.dart';
 import 'package:esiway/Screens/Chat/ChatServices.dart';
+import 'package:esiway/Screens/Chat/Chatting.dart';
 import 'package:esiway/Screens/Home/liste.dart';
 import 'package:esiway/widgets/icons_ESIWay.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -693,7 +694,23 @@ class _TripSuggestPageState extends State<TripSuggestPage> {
                                               }),
                                           ElevatedButton(
                                             onPressed: () {
-                                              /*    Navigator.push(context,MaterialPageRoute(builder: (context) => Notifpage())); */
+                                              joinChatRoomFirestore(
+                                                ListeTrip.liste[index].tripUid!,
+                                                AuthService()
+                                                    .auth
+                                                    .currentUser!
+                                                    .uid,
+                                              );
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          Groupe_Chat(
+                                                              chatId: ListeTrip
+                                                                  .liste[index]
+                                                                  .tripUid!,
+                                                              ChatName:
+                                                                  '${ListeTrip.liste[index].depart}-${ListeTrip.liste[index]..arrivee}')));
                                             },
                                             style: ElevatedButton.styleFrom(
                                               backgroundColor: orange,

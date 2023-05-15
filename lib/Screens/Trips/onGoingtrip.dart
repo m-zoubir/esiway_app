@@ -19,30 +19,6 @@ class OngoingTrip extends StatelessWidget {
   String Conducteur;
   String uid;
 
-  List<LatLng> PolyLinesCoordinates = [];
-  Future<void> getPolylinePoints(LatLng point1, LatLng point2) async {
-    PolylinePoints polylinePoints = PolylinePoints();
-    PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
-      APIKEY,
-      PointLatLng(
-        point1.latitude,
-        point1.longitude,
-      ),
-      PointLatLng(
-        point2.latitude,
-        point2.longitude,
-      ),
-    );
-
-    if (result.points.isNotEmpty) {
-      PolyLinesCoordinates = [];
-      result.points.forEach((PointLatLng point) {
-        return PolyLinesCoordinates.add(
-            LatLng(point.latitude, point.longitude));
-      });
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -73,25 +49,38 @@ class OngoingTrip extends StatelessWidget {
                       try {
                         DocumentSnapshot documentSnapshot1 = snapshot1.data!;
                         Map data1 = documentSnapshot1.data() as Map;
+                        GeoPoint depart = data1["Depart_LatLng"];
+                        GeoPoint arrivee = data1["Arrivee_LatLng"];
+
                         return Scaffold(
                           body: SafeArea(
                             child: Stack(
                               children: [
                                 GoogleMap(
                                   initialCameraPosition: CameraPosition(
-                                    target: LocationEsi,
-                                    zoom: 10.0,
+                                    target: LatLng(
+                                        depart.latitude, depart.longitude),
+                                    zoom: 14.0,
                                   ),
-                                  // markers: {
-                                  //   Marker(markerId: MarkerId("${data1["Depart"]}") ,position: LatLng(latitude, longitude) ) ,
-                                  //   Marker(markerId: MarkerId("${data1["Arrivee"]}") ,position: LatLng(latitude, longitude) ) ,
-                                  // },
+                                  markers: {
+                                    Marker(
+                                        markerId:
+                                            MarkerId("${data1["Depart"]}"),
+                                        position: LatLng(
+                                            depart.latitude, depart.longitude)),
+                                    Marker(
+                                        markerId:
+                                            MarkerId("${data1["Arrivee"]}"),
+                                        position: LatLng(arrivee.latitude,
+                                            arrivee.longitude)),
+                                  },
                                   // polylines: {
-                                  //   Polyline(polylineId: PolylineId("Trip") , geodesic: false,
-                                  //   points: PolyLinesCoordinates,
-                                  //   color: bleu_bg.withOpacity(0.9),
-                                  //   width: 5,
-                                  // ),
+                                  //   Polyline(
+                                  //     polylineId: PolylineId("Route"),
+                                  //     color: bleu_bg.withOpacity(0.9),
+                                  //     points: data1["polyline"],
+                                  //     width: 5,
+                                  //   ),
                                   // },
                                 ),
                                 Column(

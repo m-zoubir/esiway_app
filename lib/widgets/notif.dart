@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:esiway/Screens/Chat/ChatServices.dart';
 import 'package:esiway/widgets/constant.dart';
 import 'package:esiway/widgets/simple_button.dart';
 import 'package:flutter/material.dart';
@@ -160,7 +161,7 @@ class _NotifState extends State<Notif> {
                 text: "Accept",
                 textcolor: bleu_bg,
                 fontsize: 10,
-                fct: () {
+                fct: () async {
                   setState(() {
                     requestAccepted = true;
                     _handleAcceptButton();
@@ -179,6 +180,40 @@ class _NotifState extends State<Notif> {
                     }).catchError((error) {
                       print('Failed to add element: $error');
                     });
+                  });
+                  Map data = {};
+                  // add passsenger to the chat
+                  joinChatRoomFirestore(widget.tripUid, widget.passengerUid);
+                  // fech user data
+                  FirebaseFirestore.instance
+                      .collection('Users')
+                      .doc(widget.passengerUid)
+                      .get()
+                      .then((DocumentSnapshot<Map<String, dynamic>> snapshot) {
+                    if (snapshot.exists) {
+                      data["Name"] = snapshot.data()!['Name'];
+                      data["FamilyName"] = snapshot.data()!['FamilyName'];
+
+                      data["ProfilePicture"] =
+                          snapshot.data()!.containsKey('ProfilePicture')
+                              ? snapshot.data()!["ProfilePicture"]
+                              : null;
+                    } else {
+                      print('Document does not exist!');
+                    }
+                  }).catchError((error) {
+                    print('Error getting document: $error');
+                  });
+                  // add the passenger info to Passengerarray
+                  FirebaseFirestore.instance
+                      .collection('Trips')
+                      .doc('${widget.tripUid}')
+                      .update({
+                    'Passenger': FieldValue.arrayUnion([data]),
+                  }).then((value) {
+                    print('Element added successfully!');
+                  }).catchError((error) {
+                    print('Failed to add element: $error');
                   });
                 }),
           ),

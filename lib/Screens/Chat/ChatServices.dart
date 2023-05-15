@@ -68,6 +68,9 @@ Future<void> joinChatRoomFirestore(String chatId, String userId) async {
       .collection('chat')
       .doc(chatId)
       .set({});
+  Timer(Duration(seconds: 3), () {
+    print("Chat Created ");
+  });
 }
 
 /*

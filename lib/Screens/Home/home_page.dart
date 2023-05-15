@@ -378,6 +378,7 @@ class _HomePageState extends State<HomePage> {
                               iconName: "search",
                               espaceicontext: largeur * 0.05,
                               fct: () {
+                                print("gone to search page ");
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(

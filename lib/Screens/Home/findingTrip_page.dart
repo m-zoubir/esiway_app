@@ -39,7 +39,7 @@ class _FindTripPageState extends State<FindTripPage> {
     Variables.polylineCoordinates = [];
     Variables.created = false;
     super.initState();
-    Timer(Duration(seconds: 2), () {
+    Timer(Duration(seconds: 6), () {
       Navigator.push(
           context,
           MaterialPageRoute(

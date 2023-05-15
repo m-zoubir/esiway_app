@@ -1229,8 +1229,10 @@ class _CreateTripPageState extends State<CreateTripPage> {
                                       methode,
                                       prefrence);
 
-                                  final FirebaseFirestore firestore =
-                                      FirebaseFirestore.instance;
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => HomePage()));
                                   // }
                                   /*else {
                                     showDialog(

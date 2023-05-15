@@ -533,34 +533,6 @@ class _TripSuggestPageState extends State<TripSuggestPage> {
                                               ],
                                             ),
                                           ),
-                                          SizedBox(
-                                            width: largeur * 0.15,
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: const [
-                                                AutoSizeText(
-                                                  "Car",
-                                                  style: TextStyle(
-                                                    fontFamily: 'Montserrat',
-                                                    fontWeight: FontWeight.w600,
-                                                    fontSize: 12,
-                                                    color: bleu_bg,
-                                                  ),
-                                                ),
-                                                AutoSizeText(
-                                                  "Porche",
-                                                  style: TextStyle(
-                                                    fontFamily: 'Montserrat',
-                                                    fontWeight: FontWeight.w500,
-                                                    fontSize: 10,
-                                                    color: bleu_bg,
-                                                  ),
-                                                  maxLines: 1,
-                                                )
-                                              ],
-                                            ),
-                                          ),
                                         ],
                                       ),
                                       SizedBox(height: hauteur * 0.01),
@@ -694,6 +666,42 @@ class _TripSuggestPageState extends State<TripSuggestPage> {
                                               }),
                                           ElevatedButton(
                                             onPressed: () {
+                                              ListeTrip.liste
+                                                  .forEach((tripUser) {
+                                                print(
+                                                    'Conducteur: ${tripUser.conducteur}');
+                                                print('Name: ${tripUser.name}');
+                                                print(
+                                                    'Family Name: ${tripUser.familyName}');
+                                                print(
+                                                    'Status: ${tripUser.statu}');
+                                                print(
+                                                    'Percentage: ${tripUser.prcnt}');
+                                                print(
+                                                    'Car Name: ${tripUser.carName}');
+                                                print(
+                                                    'Departure: ${tripUser.depart}');
+                                                print(
+                                                    'Arrival: ${tripUser.arrivee}');
+                                                print(
+                                                    'Departure LatLng: ${tripUser.departLatLng}');
+                                                print(
+                                                    'Arrival LatLng: ${tripUser.arriveeLatLng}');
+                                                print('Date: ${tripUser.date}');
+                                                print('Time: ${tripUser.time}');
+                                                print(
+                                                    'Seats: ${tripUser.seats}');
+                                                print(
+                                                    'Price: ${tripUser.price}');
+                                                print(
+                                                    'Method: ${tripUser.methode}');
+                                                print(
+                                                    'Trip UID: ${tripUser.tripUid}');
+                                                print(
+                                                    'Preferences: ${tripUser.preferences}');
+                                                print(
+                                                    '----------------------------');
+                                              });
                                               joinChatRoomFirestore(
                                                 ListeTrip.liste[index].tripUid!,
                                                 AuthService()

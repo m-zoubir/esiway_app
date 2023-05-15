@@ -28,10 +28,7 @@ class _NotifPageState extends State<NotifPage> {
   Widget build(BuildContext context) {
     var largeur = MediaQuery.of(context).size.width;
     var hauteur = MediaQuery.of(context).size.height;
-    final currentUserUID = AuthService()
-        .auth
-        .currentUser!
-        .uid; // Replace with your logic to get the current user's UID
+
     return Scaffold(
       backgroundColor: const Color(0xFFF9F8FF),
       body: Column(
@@ -172,11 +169,105 @@ class _NotifListState extends State<NotifList> {
                 itemCount: documents.length,
                 itemBuilder: (BuildContext context, int index) {
                   final document = documents[index];
-                  if ((document['uid'] != currentuser!.uid) ||
+                  if (((document['uid'] != currentuser!.uid) &&
+                          ((document['type'] != 2))) ||
+                      ((document['uid'] == currentuser!.uid) &&
+                          (document['type'] == 2)) ||
                       (document['show'] == false)) {
+                    // les notifs de l'utilisateur actuel
                     return Container(); // Return an empty widget to skip rendering
                   }
                   return FutureBuilder<DocumentSnapshot>(
+                    future: FirebaseFirestore.instance
+                        .collection('Users')
+                        .doc(document['conducteur'])
+                        .get(),
+                    builder: (BuildContext context,
+                        AsyncSnapshot<DocumentSnapshot> userSnapshot) {
+                      if (userSnapshot.hasError) {
+                        return Text('Error: ${userSnapshot.error}');
+                      }
+
+                      if (userSnapshot.connectionState ==
+                          ConnectionState.waiting) {
+                        return const Text('Loading...');
+                      }
+
+                      DocumentSnapshot userDocument = userSnapshot.data!;
+                      Map data = userDocument.data() as Map;
+
+                      print(document.id);
+
+                      // Accessing another document from the "Users" collection
+                      return FutureBuilder<DocumentSnapshot>(
+                        future: FirebaseFirestore.instance
+                            .collection('Users')
+                            .doc(document[
+                                'uid']) // Acceder au information du passager
+                            .get(),
+                        builder: (BuildContext context,
+                            AsyncSnapshot<DocumentSnapshot>
+                                anotherUserSnapshot) {
+                          if (anotherUserSnapshot.hasError) {
+                            return Text('Error: ${anotherUserSnapshot.error}');
+                          }
+
+                          if (anotherUserSnapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const Text('Loading...');
+                          }
+
+                          DocumentSnapshot anotherUserDocument =
+                              anotherUserSnapshot.data!;
+                          Map anotherData = anotherUserDocument.data() as Map;
+
+                          // Render your widget with the data from both documents
+                          return document['type'] ==
+                                  0 // pour les notification "X person accepted your ride request"
+                              ? AcceptB(
+                                  user_name: data["Name"],
+                                  path: data.containsKey("ProfilePicture")
+                                      ? data["ProfilePicture"]
+                                      : null,
+                                )
+                              : (document['type'] ==
+                                      1 // pour les notification "X person refused your ride request"
+                                  ? RefuseB(
+                                      user_name: data["Name"],
+                                      path: data.containsKey("ProfilePicture")
+                                          ? data["ProfilePicture"]
+                                          : null,
+                                    )
+                                  : Notif(
+                                      // pour les notification "X person wants to go with you "
+                                      user_name: anotherData["Name"],
+                                      path: data.containsKey("ProfilePicture")
+                                          ? data["ProfilePicture"]
+                                          : null,
+                                      doc: document.id.toString(),
+                                      passengerUid:
+                                          anotherUserDocument.id.toString(),
+                                      tripUid: document['tripUid'],
+                                    )); /*  YourWidget(
+                            user_name: data["Name"],
+                            another_user_name: anotherData["Name"],
+                            path: data.containsKey("ProfilePicture")
+                                ? data["ProfilePicture"]
+                                : null,
+                            another_path:
+                                anotherData.containsKey("ProfilePicture")
+                                    ? anotherData["ProfilePicture"]
+                                    : null,
+                            doc: document.id.toString(),
+                            passengerUid: userDocument.id.toString(),
+                            tripUid: document['tripUid'],
+                          ); */
+                        },
+                      );
+                    },
+                  );
+
+                  /*  return FutureBuilder<DocumentSnapshot>(
                       future: FirebaseFirestore.instance
                           .collection('Users')
                           .doc(document['conducteur'])
@@ -196,6 +287,7 @@ class _NotifListState extends State<NotifList> {
                         Map data = userDocument.data() as Map;
 
                         print(document.id);
+
                         return document['type'] ==
                                 0 // pour les notification "X person accepted your ride request"
                             ? AcceptB(
@@ -222,7 +314,7 @@ class _NotifListState extends State<NotifList> {
                                     passengerUid: userDocument.id.toString(),
                                     tripUid: document['tripUid'],
                                   ));
-                      });
+                      }); */
                 });
           }
           return Center(

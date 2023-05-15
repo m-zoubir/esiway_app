@@ -338,13 +338,15 @@ class _TripSuggestPageState extends State<TripSuggestPage> {
                                     CameraUpdate.newCameraPosition(
                                         CameraPosition(
                                             target: LatLng(
-                                                ListeTrip.liste[0].departLatLng!
-                                                    .latitude,
-                                                ListeTrip.liste[0].departLatLng!
-                                                    .longitude),
+                                                ListeTrip.liste[index]
+                                                    .departLatLng!.latitude,
+                                                ListeTrip.liste[index]
+                                                    .departLatLng!.longitude),
                                             zoom: 12)));
-                                ajouterMarkers(ListeTrip.liste[0].departLatLng!,
-                                    "Departure", ListeTrip.liste[0].depart!);
+                                ajouterMarkers(
+                                    ListeTrip.liste[index].departLatLng!,
+                                    "Departure",
+                                    ListeTrip.liste[index].depart!);
 
                                 /*   ajouterMarkers(users[index].arriveeLatLng!,
                                     "Arrival", "${users[index].arrivee}"); */
@@ -378,7 +380,7 @@ class _TripSuggestPageState extends State<TripSuggestPage> {
                                               SizedBox(
                                                 width: largeur * 0.30,
                                                 child: AutoSizeText(
-                                                  "${ListeTrip.liste[0].familyName} ${ListeTrip.liste[0].name}",
+                                                  "${ListeTrip.liste[index].familyName} ${ListeTrip.liste[index].name}",
                                                   style: const TextStyle(
                                                     fontFamily: 'Montserrat',
                                                     fontWeight: FontWeight.w700,
@@ -391,7 +393,7 @@ class _TripSuggestPageState extends State<TripSuggestPage> {
                                               SizedBox(
                                                 width: largeur * 0.14,
                                                 child: AutoSizeText(
-                                                  "${ListeTrip.liste[0].statu}",
+                                                  "${ListeTrip.liste[index].statu}",
                                                   style: const TextStyle(
                                                     fontFamily: 'Montserrat',
                                                     fontWeight: FontWeight.w500,
@@ -404,7 +406,8 @@ class _TripSuggestPageState extends State<TripSuggestPage> {
                                           ),
                                           SizedBox(width: largeur * 0.15),
                                           RatingBarIndicator(
-                                            rating: ListeTrip.liste[0].prcnt!,
+                                            rating:
+                                                ListeTrip.liste[index].prcnt!,
                                             itemCount: 5,
                                             itemSize: 12.0,
                                             unratedColor:
@@ -581,8 +584,8 @@ class _TripSuggestPageState extends State<TripSuggestPage> {
                                                     ),
                                                   )),
                                               SizedBox(height: hauteur * 0.005),
-                                              const AutoSizeText(
-                                                "Talking,Bgs,Smoking,Animals,other",
+                                              AutoSizeText(
+                                                "${ListeTrip.liste[index].preferences}",
                                                 style: TextStyle(
                                                   fontFamily: 'Montserrat',
                                                   fontWeight: FontWeight.w500,
@@ -676,7 +679,11 @@ class _TripSuggestPageState extends State<TripSuggestPage> {
                                                     "type": 2,
                                                     "date": DateTime.now(),
                                                     "conducteur": ListeTrip
-                                                        .liste[0].conducteur,
+                                                        .liste[index]
+                                                        .conducteur,
+                                                    "show": true,
+                                                    "tripUid":
+                                                        '${ListeTrip.liste[index].tripUid}',
 
                                                     //prefrences
                                                   };

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:esiway/Screens/Home/tripSuggestions.dart';
 import 'package:esiway/Screens/Home/variables.dart';
 import 'package:esiway/widgets/icons_ESIWay.dart';
 import 'package:esiway/widgets/prefixe_icon_button.dart';
@@ -38,8 +39,8 @@ class _FindTripPageState extends State<FindTripPage> {
     Variables.polylineCoordinates = [];
     Variables.created = false;
     super.initState();
-    Timer(Duration(seconds: 8), () {
-      /*   Navigator.push(
+    Timer(Duration(seconds: 2), () {
+      Navigator.push(
           context,
           MaterialPageRoute(
               builder: (context) => TripSuggestPage(
@@ -48,7 +49,7 @@ class _FindTripPageState extends State<FindTripPage> {
                     polylinePoints: widget.polylinePoints,
                     polylines: widget.polylines,
                     distance: widget.distance,
-                  ))); */
+                  )));
     });
   }
 

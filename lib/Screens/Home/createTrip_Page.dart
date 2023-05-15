@@ -78,6 +78,7 @@ class _CreateTripPageState extends State<CreateTripPage> {
   final docUsers = FirebaseFirestore.instance.collection("Users");
   final auth = FirebaseAuth.instance; // pour l'utilisateur
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
+  String prefrence = "";
 
   /// +Map variables
   Set<Marker> markers = Set(); //markers for google map
@@ -94,11 +95,7 @@ class _CreateTripPageState extends State<CreateTripPage> {
   String? locationName;
   String? locationNamea;
   List<Placemark>? placemarks;
-  String Bags_string = '';
-  String Talking_string = '';
-  String Other_string = '';
-  String Animals_string = '';
-  String Smooking_string = '';
+
   String paimentMethode = "";
   String methode = "";
   DateTime selectedDate = DateTime.now();
@@ -153,7 +150,8 @@ class _CreateTripPageState extends State<CreateTripPage> {
       String heure,
       String price,
       String places,
-      String methode) async {
+      String methode,
+      String prefrence) async {
     markers.clear();
     Variables.polylineCoordinates.clear();
     List<LatLng> polylineCoordinates = [];
@@ -197,13 +195,9 @@ class _CreateTripPageState extends State<CreateTripPage> {
       "Places": places,
       "methode": methode,
       "polyline": addPolylineCoordinates(Variables.polylineCoordinates),
+      "prefrences": prefrence,
       "time": timestamp,
       "Passenger": [],
-      "Preferences": Bags_string +
-          Animals_string +
-          Smooking_string +
-          Talking_string +
-          Other_string,
     };
 
     await docTrips.doc("${auth.currentUser?.uid}_$date-$heure").set(json);
@@ -354,7 +348,8 @@ class _CreateTripPageState extends State<CreateTripPage> {
       String heure,
       String price,
       String places,
-      String methode) async {
+      String methode,
+      prefrence) async {
     if (depart == "Current Location") {
       Position positione = await determinePosition();
       Variables.fin = PointLatLng(positione.latitude, positione.longitude);
@@ -369,7 +364,7 @@ class _CreateTripPageState extends State<CreateTripPage> {
 
     setState(() {});
     getDirection(conducteur, one, two, depart, arrivee, date, heure, price,
-        places, methode); //fetch direction polylines from Google API
+        places, methode, prefrence); //fetch direction polylines from Google API
     ajouterMarkers(one, "Starting Location", depart);
     ajouterMarkers(two, "Arrival Location", arrivee);
     mapController?.animateCamera(CameraUpdate.newCameraPosition(
@@ -1018,12 +1013,6 @@ class _CreateTripPageState extends State<CreateTripPage> {
                                     fontsize: 12,
                                     fct: () {
                                       bags = !bags;
-
-                                      if (bags == true)
-                                        Bags_string = "Bags ";
-                                      else
-                                        Bags_string = "";
-
                                       setState(() {});
                                     },
                                     blur: 18),
@@ -1037,12 +1026,7 @@ class _CreateTripPageState extends State<CreateTripPage> {
                                     textcolor: bleu_bg,
                                     fontsize: 12,
                                     fct: () {
-                                      talking = !talking;
-
-                                      if (talking == true)
-                                        Talking_string = "Talking ";
-                                      else
-                                        Talking_string = "";
+                                      (talking = !talking);
                                       setState(() {});
                                     },
                                     blur: 18),
@@ -1056,11 +1040,7 @@ class _CreateTripPageState extends State<CreateTripPage> {
                                     textcolor: bleu_bg,
                                     fontsize: 12,
                                     fct: () {
-                                      animals = !animals;
-                                      if (animals == true)
-                                        Animals_string = "Animals ";
-                                      else
-                                        Animals_string = "";
+                                      (animals = !animals);
                                       setState(() {});
                                     },
                                     blur: 18),
@@ -1080,10 +1060,6 @@ class _CreateTripPageState extends State<CreateTripPage> {
                                     fontsize: 12,
                                     fct: () {
                                       smoking = !smoking;
-                                      if (smoking == true)
-                                        Smooking_string = "Smoking ";
-                                      else
-                                        Smooking_string = "";
                                       setState(() {});
                                     },
                                     blur: 18),
@@ -1098,11 +1074,7 @@ class _CreateTripPageState extends State<CreateTripPage> {
                                     textcolor: bleu_bg,
                                     fontsize: 12,
                                     fct: () {
-                                      others = !others;
-                                      if (others == true)
-                                        Other_string = "Other ";
-                                      else
-                                        Other_string = "";
+                                      (others = !others);
                                       setState(() {});
                                     },
                                     blur: 18),
@@ -1228,6 +1200,19 @@ class _CreateTripPageState extends State<CreateTripPage> {
                                 fontsize: 20,
                                 weight: FontWeight.w700,
                                 fct: () async {
+                                  if (talking == true) {
+                                    prefrence = prefrence + "Talking";
+                                  }
+                                  if (bags == true) {
+                                    prefrence = prefrence + " Bags";
+                                  }
+                                  if (smoking == true) {
+                                    prefrence = prefrence + " Smoking";
+                                  }
+                                  if (animals == true) {
+                                    prefrence = prefrence + " Animals";
+                                  }
+                                  print(prefrence);
                                   //if ((locationName == "Search places") || (locationNamea == "Search places")) {
                                   Variables.created = true;
                                   print("date is :   $date");
@@ -1241,7 +1226,8 @@ class _CreateTripPageState extends State<CreateTripPage> {
                                       time!,
                                       pricecontroller.text.trim(),
                                       seats!,
-                                      methode);
+                                      methode,
+                                      prefrence);
 
                                   final FirebaseFirestore firestore =
                                       FirebaseFirestore.instance;

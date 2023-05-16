@@ -45,7 +45,7 @@ class _Chat_secreenState extends State<Chat_secreen> {
 
   void back() {
     Navigator.of(context)
-        .push(MaterialPageRoute(builder: (context) => HomePage()));
+        .push(MaterialPageRoute(builder: (context) => const HomePage()));
   }
 
   @override
@@ -83,7 +83,7 @@ class _Chat_secreenState extends State<Chat_secreen> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Container(
-                              margin: EdgeInsets.only(left: 20),
+                              margin: const EdgeInsets.only(left: 20),
                               width: 80,
                               height: 35,
                               child: PrefixeIconButton(
@@ -91,12 +91,12 @@ class _Chat_secreenState extends State<Chat_secreen> {
                                   color: Colors.white,
                                   radius: 8,
                                   text: "Back",
-                                  textcolor: Color(0xFF20236C),
+                                  textcolor: const Color(0xFF20236C),
                                   weight: FontWeight.w600,
                                   fontsize: 14,
                                   icon: Transform.scale(
                                     scale: 0.75,
-                                    child: Icons_ESIWay(
+                                    child: const Icons_ESIWay(
                                         icon: "arrow_left",
                                         largeur: 30,
                                         hauteur: 30),
@@ -116,7 +116,7 @@ class _Chat_secreenState extends State<Chat_secreen> {
                                   ),
                                   shape: BoxShape.circle,
                                   image: imageUrl == null
-                                      ? DecorationImage(
+                                      ? const DecorationImage(
                                           image: AssetImage(
                                               "Assets/Images/photo_profile.png"),
                                           fit: BoxFit.cover,
@@ -175,7 +175,7 @@ class _Chat_secreenState extends State<Chat_secreen> {
               bottomNavigationBar: BottomNavBar(currentindex: 2),
             );
           }
-          return CircularProgressIndicator();
+          return const CircularProgressIndicator();
         });
   }
 }
@@ -204,11 +204,11 @@ class _nameState extends State<name> {
             .snapshots(),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           if (snapshot.hasError) {
-            return Center(child: const Text('Something went wrong'));
+            return const Center(child: Text('Something went wrong'));
           }
 
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return CircularProgressIndicator();
+            return const CircularProgressIndicator();
           }
           if (snapshot.hasData && snapshot.data != null) {
             final chatDocs = snapshot.data!.docs;
@@ -259,7 +259,7 @@ class _nameState extends State<name> {
                                     FirebaseAuth.instance.currentUser!
                                         .uid); // Call your leaveChatRoomFirestore function here
                                 Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) => Chat_secreen()));
+                                    builder: (context) => const Chat_secreen()));
                               },
                             );
                           });
@@ -272,8 +272,8 @@ class _nameState extends State<name> {
                           height: 95,
                           width: largeur,
                           margin:
-                              EdgeInsets.only(bottom: 10, left: 10, right: 10),
-                          padding: EdgeInsets.symmetric(
+                              const EdgeInsets.only(bottom: 10, left: 10, right: 10),
+                          padding: const EdgeInsets.symmetric(
                               horizontal: 15, vertical: 15),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(16.0),
@@ -426,13 +426,13 @@ class _nameState extends State<name> {
                                                   width: largeur * 0.505,
                                                   child: Text(
                                                     chatName,
-                                                    style: TextStyle(
+                                                    style: const TextStyle(
                                                       fontFamily:
                                                           'Montserrat-Bold',
                                                       fontWeight:
                                                           FontWeight.bold,
                                                       fontSize: 15,
-                                                      color: const Color(
+                                                      color: Color(
                                                           0xFF20236C),
                                                     ),
                                                     overflow:
@@ -463,7 +463,7 @@ class _nameState extends State<name> {
                                                 ),
                                               ],
                                             ),
-                                            SizedBox(height: 10),
+                                            const SizedBox(height: 10),
                                             StreamBuilder<DocumentSnapshot>(
                                               stream: FirebaseFirestore.instance
                                                   .collection("Users")
@@ -478,7 +478,7 @@ class _nameState extends State<name> {
 
                                                 if (snapshot.connectionState ==
                                                     ConnectionState.waiting) {
-                                                  return CircularProgressIndicator();
+                                                  return const CircularProgressIndicator();
                                                 }
                                                 if (snapshot.connectionState ==
                                                     ConnectionState.waiting) {
@@ -501,26 +501,23 @@ class _nameState extends State<name> {
                                                       documentSnapshot =
                                                       snapshot.data;
                                                   try {
-                                                    data = documentSnapshot
-                                                        .data() as Map;
+                                                    data = documentSnapshot.data() as Map;
 
                                                     return Row(
                                                       children: [
                                                         Row(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .start,
+                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                           children: [
                                                             Text(
                                                               '${data["Name"]} : ',
-                                                              style: TextStyle(
+                                                              style: const TextStyle(
                                                                 fontFamily:
                                                                     'Montserrat',
                                                                 fontWeight:
                                                                     FontWeight
                                                                         .w600,
                                                                 fontSize: 13,
-                                                                color: const Color(
+                                                                color: Color(
                                                                     0xFF20236C),
                                                               ),
                                                               overflow:
@@ -537,14 +534,14 @@ class _nameState extends State<name> {
                                                               child: Text(
                                                                 "$lastMessage",
                                                                 style:
-                                                                    TextStyle(
+                                                                    const TextStyle(
                                                                   fontFamily:
                                                                       'Montserrat',
                                                                   fontWeight:
                                                                       FontWeight
                                                                           .w400,
                                                                   fontSize: 12,
-                                                                  color: const Color(
+                                                                  color: Color(
                                                                       0xFF20236C),
                                                                 ),
                                                                 overflow:
@@ -554,21 +551,11 @@ class _nameState extends State<name> {
                                                             ),
                                                           ],
                                                         ),
-                                                        SizedBox(
-                                                          width: largeur * 0.03,
+                                                        Transform.scale(
+                                                          scale: 1,
+                                                          child: const Icons_ESIWay(icon: "open_chat", largeur: 24, hauteur: 24),
                                                         ),
-                                                        Row(
-                                                          children: [
-                                                            Transform.scale(
-                                                              scale: 1,
-                                                              child: Icons_ESIWay(
-                                                                  icon:
-                                                                      "open_chat",
-                                                                  largeur: 24,
-                                                                  hauteur: 24),
-                                                            ),
-                                                          ],
-                                                        ),
+
                                                       ],
                                                     );
                                                   } catch (e) {
@@ -584,14 +571,14 @@ class _nameState extends State<name> {
                                         print(e);
                                       }
                                     }
-                                    return CircularProgressIndicator();
+                                    return const CircularProgressIndicator();
                                   }),
                             ],
                           ),
                         ),
-                        SizedBox(height: 3),
+                        const SizedBox(height: 3),
                         SvgPicture.asset("Assets/Icons/Line.svg"),
-                        SizedBox(height: 10),
+                        const SizedBox(height: 10),
                       ],
                     ),
 //****************************************************************************************************************************************************** */

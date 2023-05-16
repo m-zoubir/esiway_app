@@ -4,7 +4,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:esiway/Screens/Chat/ChatServices.dart';
 import 'package:esiway/widgets/prefixe_icon_button.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:geocoding/geocoding.dart';
 import '../../../widgets/constant.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_google_places/flutter_google_places.dart';
@@ -44,10 +43,7 @@ class _CreateTripPageState extends State<CreateTripPage> {
     List<String> /*  List<Map<String, dynamic>>  */ serializedCoordinates =
         polylineCoordinates.map((coordinate) {
       return '${coordinate.latitude},${coordinate.longitude}';
-      /*  {
-          'latitude': coordinate.latitude,
-          'longitude': coordinate.longitude
-        }; */
+
     }).toList();
 
     return serializedCoordinates;
@@ -94,7 +90,6 @@ class _CreateTripPageState extends State<CreateTripPage> {
   LatLng? location;
   String? locationName;
   String? locationNamea;
-  List<Placemark>? placemarks;
 
   String paimentMethode = "";
   String methode = "";
@@ -108,8 +103,7 @@ class _CreateTripPageState extends State<CreateTripPage> {
   String? seats = "4";
   int i = 0;
 
-  String? date =
-      "${DateTime.now().day} - ${DateTime.now().month} - ${DateTime.now().year}";
+  String? date = "${DateTime.now().day} - ${DateTime.now().month} - ${DateTime.now().year}";
 
   String? time = "00:00";
   String? minute;
@@ -154,7 +148,6 @@ class _CreateTripPageState extends State<CreateTripPage> {
       String prefrence) async {
     markers.clear();
     Variables.polylineCoordinates.clear();
-    List<LatLng> polylineCoordinates = [];
 
     PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
       APIKEY,
@@ -353,22 +346,19 @@ class _CreateTripPageState extends State<CreateTripPage> {
     if (depart == "Current Location") {
       Position positione = await determinePosition();
       Variables.fin = PointLatLng(positione.latitude, positione.longitude);
-    }
-    ;
+    };
 
     if (arrivee == "Current Location") {
       Position positione = await determinePosition();
       Variables.debut = PointLatLng(positione.latitude, positione.longitude);
-    }
-    ;
+
+    };
 
     setState(() {});
-    getDirection(conducteur, one, two, depart, arrivee, date, heure, price,
-        places, methode, prefrence); //fetch direction polylines from Google API
+    getDirection(conducteur, one, two, depart, arrivee, date, heure, price, places, methode, prefrence); //fetch direction polylines from Google API
     ajouterMarkers(one, "Starting Location", depart);
     ajouterMarkers(two, "Arrival Location", arrivee);
-    mapController?.animateCamera(CameraUpdate.newCameraPosition(
-        CameraPosition(target: LatLng(one.latitude, one.longitude), zoom: 17)));
+    mapController?.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(target: LatLng(one.latitude, one.longitude), zoom: 17)));
   }
 
   @override
@@ -385,7 +375,7 @@ class _CreateTripPageState extends State<CreateTripPage> {
             zoomGesturesEnabled: true, //enable Zoom in, out on map
             initialCameraPosition: CameraPosition(
               //innital position in map
-              target: startLocation, //initial position
+              target: LocationEsi, //initial position
               zoom: 14.0, //initial zoom level
             ),
             markers: widget.markers, //markers to show on map
@@ -430,12 +420,16 @@ class _CreateTripPageState extends State<CreateTripPage> {
                             SizedBox(
                                 width: largeur * 0.55,
                                 height: hauteur * 0.025,
-                                child: MyText(
-                                    text: "Departure",
-                                    weight: FontWeight.w700,
-                                    fontsize: 14,
-                                    color: const Color(0xff20236C),
-                                    largeur: largeur * 0.55)),
+                             child: const AutoSizeText(
+                                  "Departure",
+                                  style: TextStyle(
+                                    fontFamily: 'Montserrat',
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 14,
+                                    color: bleu_bg,
+                                  ),
+                             ),
+                            ),
                             SizedBox(height: hauteur * 0.005),
 
                             /// +Departure Filed
@@ -571,13 +565,16 @@ class _CreateTripPageState extends State<CreateTripPage> {
                             SizedBox(
                                 width: largeur * 0.139,
                                 height: hauteur * 0.025,
-                                child: MyText(
-                                  text: "Arrival",
-                                  weight: FontWeight.w700,
-                                  fontsize: 14,
-                                  color: const Color(0xff20236C),
-                                  largeur: largeur * 0.139,
-                                )),
+                                child: const AutoSizeText(
+                                  "Arrival",
+                                  style: TextStyle(
+                                    fontFamily: 'Montserrat',
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 14,
+                                    color: bleu_bg,
+                                  ),
+                                ),
+                            ),
                             SizedBox(height: hauteur * 0.005),
 
                             /// +Arrival Filed
@@ -643,8 +640,7 @@ class _CreateTripPageState extends State<CreateTripPage> {
                                                 CameraPosition(
                                                     target: newlatlang,
                                                     zoom: 17)));
-                                      }
-                                      ;
+                                      };
                                       setState(() {});
                                     },
                                     child: Row(
@@ -675,11 +671,8 @@ class _CreateTripPageState extends State<CreateTripPage> {
                                   InkWell(
                                       onTap: () {
                                         setState(() {
-                                          Variables.locationNamea =
-                                              "Ecole Nationale Supérieure d'Informatique (Ex. INI)";
-                                          fin = PointLatLng(
-                                              LocationEsi.latitude,
-                                              LocationEsi.longitude);
+                                          Variables.locationNamea = "Ecole Nationale Supérieure d'Informatique (Ex. INI)";
+                                          fin = PointLatLng(LocationEsi.latitude, LocationEsi.longitude);
                                         });
                                       },
                                       child: Image(
@@ -693,11 +686,8 @@ class _CreateTripPageState extends State<CreateTripPage> {
 
                                   ///Current location
                                   InkWell(
-                                      onTap: () {
-                                        setState(() {
-                                          Variables.locationNamea =
-                                              "Current Location";
-                                        });
+                                      onTap: () async{
+                                        setState(() {Variables.locationNamea = "Current Location";});
                                       },
                                       child: Icon(
                                         Icons.my_location,
@@ -721,13 +711,15 @@ class _CreateTripPageState extends State<CreateTripPage> {
                                     SizedBox(
                                         width: largeur * 0.11,
                                         height: hauteur * 0.025,
-                                        child: MyText(
-                                          text: "Date",
-                                          weight: FontWeight.w700,
-                                          fontsize: 14,
-                                          color: const Color(0xff20236C),
-                                          largeur: largeur * 0.11,
-                                        )),
+                                        child: const AutoSizeText(
+                                          "Date",
+                                          style: TextStyle(
+                                            fontFamily: 'Montserrat',
+                                            fontWeight: FontWeight.w700,
+                                            fontSize: 14,
+                                            color: bleu_bg,
+                                          ),
+                                        ),),
                                     SizedBox(height: hauteur * 0.005),
 
                                     /// +Date Filed
@@ -740,12 +732,7 @@ class _CreateTripPageState extends State<CreateTripPage> {
                                         width: largeur * 0.5,
                                         child: Container(
                                             decoration: BoxDecoration(
-                                                boxShadow: const [
-                                                  BoxShadow(
-                                                      blurRadius: 18,
-                                                      color: Color.fromRGBO(
-                                                          32, 35, 108, 0.15))
-                                                ],
+                                                boxShadow: const [BoxShadow(blurRadius: 18, color: Color.fromRGBO(32, 35, 108, 0.15))],
                                                 color: Colors.white,
                                                 borderRadius:
                                                     BorderRadius.circular(5)),
@@ -764,17 +751,20 @@ class _CreateTripPageState extends State<CreateTripPage> {
                                                       largeur: 20,
                                                       hauteur: 20),
                                                 ),
-                                                MyText(
-                                                  text: date!,
-                                                  weight: FontWeight.w500,
-                                                  fontsize: 14,
-                                                  color:
-                                                      const Color(0xFF20236C),
-                                                  largeur: largeur * 0.2,
+
+                                                SizedBox(
+                                                  width:largeur * 0.24,
+                                                  child: AutoSizeText(
+                                                    date!,
+                                                    style: const TextStyle(
+                                                      fontFamily: 'Montserrat',
+                                                      fontWeight: FontWeight.w500,
+                                                      fontSize: 14,
+                                                      color: bleu_bg,
+                                                    ),
+                                                  ),
                                                 ),
-                                                const SizedBox(
-                                                  width: 5,
-                                                ),
+                                                const SizedBox(width: 5),
                                               ],
                                             )),
                                       ),
@@ -1109,6 +1099,7 @@ class _CreateTripPageState extends State<CreateTripPage> {
                                   child: DropdownButtonFormField(
                                     borderRadius: BorderRadius.circular(10),
                                     value: dropdownValue,
+
                                     icon: const Icon(
                                         Icons.arrow_drop_down_rounded,
                                         color: Color(0xFF72D2C2)),
@@ -1200,20 +1191,11 @@ class _CreateTripPageState extends State<CreateTripPage> {
                                 fontsize: 20,
                                 weight: FontWeight.w700,
                                 fct: () async {
-                                  if (talking == true) {
-                                    prefrence = prefrence + "Talking";
-                                  }
-                                  if (bags == true) {
-                                    prefrence = prefrence + " Bags";
-                                  }
-                                  if (smoking == true) {
-                                    prefrence = prefrence + " Smoking";
-                                  }
-                                  if (animals == true) {
-                                    prefrence = prefrence + " Animals";
-                                  }
-                                  print(prefrence);
-                                  //if ((locationName == "Search places") || (locationNamea == "Search places")) {
+                                  if (talking == true) {prefrence = prefrence + "Talking";}
+                                  if (bags == true) {prefrence = prefrence + " Bags";}
+                                  if (smoking == true) {prefrence = prefrence + " Smoking";}
+                                  if (animals == true) {prefrence = prefrence + " Animals";}
+
                                   Variables.created = true;
                                   print("date is :   $date");
                                   createTrip(
@@ -1232,52 +1214,8 @@ class _CreateTripPageState extends State<CreateTripPage> {
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (context) => HomePage()));
-                                  // }
-                                  /*else {
-                                    showDialog(
-                                        context: context,
-                                        builder: (context) {
-                                          return AlertDialog(
-                                            title: const Text(
-                                              'Alert!',
-                                              style: TextStyle(
-                                                fontFamily: 'Montserrat',
-                                                fontWeight: FontWeight.w700,
-                                                fontSize: 16,
-                                                color: bleu_bg,
-                                              ),
-                                            ),
-                                            content: const Text(
-                                              'You must entre an adress?',
-                                              style: TextStyle(
-                                                fontFamily: 'Montserrat',
-                                                fontWeight: FontWeight.w500,
-                                                fontSize: 14,
-                                                color: bleu_bg,
-                                              ),
-                                            ),
-                                            backgroundColor:
-                                                const Color.fromARGB(
-                                                    0xFF, 0xB0, 0xD3, 0xD7),
-                                            actions: [
-                                              TextButton(
-                                                onPressed: () {
-                                                  Navigator.pop(context);
-                                                },
-                                                child: const Text('OK',
-                                                    style: TextStyle(
-                                                      fontFamily: 'Montserrat',
-                                                      fontWeight:
-                                                          FontWeight.w700,
-                                                      fontSize: 14,
-                                                      color: bleu_bg,
-                                                    )),
-                                              ),
-                                            ],
-                                          );
-                                        });
-                                  };*/
+                                          builder: (context) => const HomePage()));
+
                                 }),
 
                             SizedBox(height: hauteur * 0.05),

@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 
 class MyText extends StatelessWidget {
@@ -19,7 +20,7 @@ class MyText extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: largeur,
-      child: Text(
+      child: AutoSizeText(
         text,
         style: TextStyle(
           fontFamily: 'Montserrat',

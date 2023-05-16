@@ -30,7 +30,7 @@
         </intent>
     </queries>
    <application
-        android:label="esiway"
+        android:label="ESI Way"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

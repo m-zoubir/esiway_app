@@ -106,7 +106,7 @@ class ChatAppBar extends StatelessWidget implements PreferredSizeWidget {
           ),
         ),
         Positioned(
-          top: hauteur * 0.067,
+          top: hauteur * 0.04,
           left: largeur * 0.70,
           child: //9,
 

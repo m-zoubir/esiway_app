@@ -343,7 +343,7 @@ class _nameState extends State<name> {
                                             children: [
                                               SizedBox(
                                                 width: largeur * 0.15, //98,
-                                                height: hauteur * 0.08, //9,
+                                                height: hauteur * 0.09, //9,
                                                 child: GroupChatImage(
                                                   chatId: chatId,
                                                   width: largeur * 0.04, //98,
@@ -423,7 +423,7 @@ class _nameState extends State<name> {
                                               children: [
 //****************************************************************************************************************************************************** */
                                                 Container(
-                                                  width: largeur * 0.505,
+                                                  width: largeur * 0.45,
                                                   child: Text(
                                                     chatName,
                                                     style: TextStyle(
@@ -442,7 +442,7 @@ class _nameState extends State<name> {
                                                 ),
 //****************************************************** ************************************************************************************************ */
                                                 SizedBox(
-                                                    width: largeur * 0.005),
+                                                    width: largeur * 0.079),
 //****************************************************************************************************************************************************** */
                                                 Container(
                                                   child: Text(
@@ -506,44 +506,23 @@ class _nameState extends State<name> {
 
                                                     return Row(
                                                       children: [
-                                                        Row(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .start,
-                                                          children: [
-                                                            Text(
-                                                              '${data["Name"]} : ',
-                                                              style: TextStyle(
-                                                                fontFamily:
-                                                                    'Montserrat',
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w600,
-                                                                fontSize: 13,
-                                                                color: const Color(
-                                                                    0xFF20236C),
-                                                              ),
-                                                              overflow:
-                                                                  TextOverflow
-                                                                      .ellipsis,
-                                                            ),
-                                                            SizedBox(
-                                                              width: largeur *
-                                                                      0.35 -
-                                                                  24 -
-                                                                  data["Name"]
-                                                                      .toString()
-                                                                      .length,
-                                                              child: Text(
-                                                                "$lastMessage",
+                                                        Container(
+                                                          width: largeur * 0.45,
+                                                          child: Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .spaceBetween,
+                                                            children: [
+                                                              Text(
+                                                                '${data["Name"]} : ',
                                                                 style:
                                                                     TextStyle(
                                                                   fontFamily:
                                                                       'Montserrat',
                                                                   fontWeight:
                                                                       FontWeight
-                                                                          .w400,
-                                                                  fontSize: 12,
+                                                                          .w600,
+                                                                  fontSize: 13,
                                                                   color: const Color(
                                                                       0xFF20236C),
                                                                 ),
@@ -551,12 +530,32 @@ class _nameState extends State<name> {
                                                                     TextOverflow
                                                                         .ellipsis,
                                                               ),
-                                                            ),
-                                                          ],
+                                                              Expanded(
+                                                                child: Text(
+                                                                  "$lastMessage",
+                                                                  style:
+                                                                      TextStyle(
+                                                                    fontFamily:
+                                                                        'Montserrat',
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w400,
+                                                                    fontSize:
+                                                                        12,
+                                                                    color: const Color(
+                                                                        0xFF20236C),
+                                                                  ),
+                                                                  overflow:
+                                                                      TextOverflow
+                                                                          .ellipsis,
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
                                                         ),
                                                         SizedBox(
-                                                          width: largeur * 0.03,
-                                                        ),
+                                                            width:
+                                                                largeur * 0.09),
                                                         Row(
                                                           children: [
                                                             Transform.scale(

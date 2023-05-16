@@ -6,6 +6,7 @@ class MyText extends StatelessWidget {
   final String text;
   final FontWeight weight;
   final double fontsize;
+  final int line;
   final Color color;
   const MyText({
     super.key,
@@ -14,6 +15,7 @@ class MyText extends StatelessWidget {
     required this.weight,
     required this.fontsize,
     required this.color,
+    this.line = 2,
   });
 
   @override
@@ -28,7 +30,7 @@ class MyText extends StatelessWidget {
           fontSize: fontsize,
           color: color,
         ),
-        maxLines: 2,
+        maxLines: line,
       ),
     );
   }

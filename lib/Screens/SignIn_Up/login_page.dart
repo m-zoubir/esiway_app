@@ -77,6 +77,7 @@ class _LogInPageState extends State<LogInPage> with UserValidation {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             MyText(
+                                line: 1,
                                 largeur: largeur,
                                 text: "Welcome",
                                 weight: FontWeight.w700,

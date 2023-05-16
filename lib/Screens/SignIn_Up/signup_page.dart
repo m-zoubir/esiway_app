@@ -79,7 +79,7 @@ class _SignUpPageState extends State<SignUpPage> with UserValidation {
                             children: [
                               Container(
                                 height: 35,
-                                width: 80,
+                                width: 86,
                                 child: PrefixeIconButton(
                                     size: const Size(73, 34),
                                     color: Colors.white,
@@ -110,6 +110,7 @@ class _SignUpPageState extends State<SignUpPage> with UserValidation {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               MyText(
+                                  line: 1,
                                   largeur: largeur * 0.6,
                                   text: "Sign Up",
                                   weight: FontWeight.w700,

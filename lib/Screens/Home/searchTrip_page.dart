@@ -339,10 +339,23 @@ class _SearchTripPageState extends State<SearchTripPage> {
             trip.seats = documentSnapshot.get('Places').toString();
             trip.time = documentSnapshot.get('Heure').toString();
             trip.date = documentSnapshot.get('Date').toString();
-            trip.tripUid = '${auth.currentUser?.uid}_$date-$heure}';
+            trip.tripUid = '${auth.currentUser?.uid}_$date-$heure';
+            List coordonatesString = documentSnapshot.get("polyline");
+            double lat;
+            double lng;
+            List<LatLng> coordonates = [];
+            coordonatesString.forEach((element) {
+              lat = double.parse(element.substring(0, element.indexOf(",")));
+              lng = double.parse(element.substring(element.indexOf(",") + 1));
+              print(lat);
+              print(lng);
+              print("----");
+              coordonates.add(LatLng(lat, lng));
+            });
+            trip.coordonates = coordonates;
             String uid = documentSnapshot.get('Conducteur').toString();
             trip.conducteur = uid;
-            trip.tripUid = uid + '_$date-$heure}';
+            trip.tripUid = uid + '_$date-$heure';
             try {
               DocumentSnapshot documentSnapshot = await FirebaseFirestore
                   .instance

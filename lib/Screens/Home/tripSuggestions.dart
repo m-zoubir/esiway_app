@@ -69,6 +69,7 @@ class _TripSuggestPageState extends State<TripSuggestPage> {
 //======================================================================================================//
 //=========================================| Variables |================================================//
 //======================================================================================================//
+  String uid = '';
 
   /// +Firebase (pour stocker dans firebase on choisit la collection Trips)
   final docTrips = FirebaseFirestore.instance.collection("Trips");
@@ -125,42 +126,42 @@ class _TripSuggestPageState extends State<TripSuggestPage> {
   }
 
   ///-----------------------------< get Direction (draw polyline between two point and put markers) >---------------------------///
-  getDirection(PointLatLng depart, PointLatLng arrival) async {
-    Variables.polylineCoordinates.clear();
-    PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
-      APIKEY,
-      depart,
-      arrival,
-    );
+  // getDirection(PointLatLng depart, PointLatLng arrival) async {
+  //   Variables.polylineCoordinates.clear();
+  //   PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
+  //     APIKEY,
+  //     depart,
+  //     arrival,
+  //   );
 
-    if (result.points.isNotEmpty) {
-      result.points.forEach((PointLatLng point) async {
-        Variables.polylineCoordinates
-            .add(LatLng(point.latitude, point.longitude));
-      });
-    } else {
-      print(result.errorMessage);
-    }
-    print("Varibales polyline ${Variables.polylineCoordinates}");
+  //   if (result.points.isNotEmpty) {
+  //     result.points.forEach((PointLatLng point) async {
+  //       Variables.polylineCoordinates
+  //           .add(LatLng(point.latitude, point.longitude));
+  //     });
+  //   } else {
+  //     print(result.errorMessage);
+  //   }
+  //   print("Varibales polyline ${Variables.polylineCoordinates}");
 
-    //polulineCoordinates is the List of longitute and latidtude.
-    double totalDistance = 0;
-    for (var i = 0; i < Variables.polylineCoordinates.length - 1; i++) {
-      totalDistance += calculateDistance(
-          Variables.polylineCoordinates[i].latitude,
-          Variables.polylineCoordinates[i].longitude,
-          Variables.polylineCoordinates[i + 1].latitude,
-          Variables.polylineCoordinates[i + 1].longitude);
-    }
+  //   //polulineCoordinates is the List of longitute and latidtude.
+  //   double totalDistance = 0;
+  //   for (var i = 0; i < Variables.polylineCoordinates.length - 1; i++) {
+  //     totalDistance += calculateDistance(
+  //         Variables.polylineCoordinates[i].latitude,
+  //         Variables.polylineCoordinates[i].longitude,
+  //         Variables.polylineCoordinates[i + 1].latitude,
+  //         Variables.polylineCoordinates[i + 1].longitude);
+  //   }
 
-    for (var i = 0; i < Variables.polylineCoordinates.length - 1; i++) {
-      print("points : ${i} = ${Variables.polylineCoordinates[i]}");
-    }
-    setState(() {
-      Variables.distance = totalDistance;
-    });
-    addPolyLine(Variables.polylineCoordinates);
-  }
+  //   for (var i = 0; i < Variables.polylineCoordinates.length - 1; i++) {
+  //     print("points : ${i} = ${Variables.polylineCoordinates[i]}");
+  //   }
+  //   setState(() {
+  //     Variables.distance = totalDistance;
+  //   });
+  //   addPolyLine(Variables.polylineCoordinates);
+  // }
 
   ///+++++++++++++++++++++++++++++< Add Polyline >++++++++++++++++++++++++++++++///
   addPolyLine(List<LatLng> polylineCoordinates) {
@@ -245,6 +246,7 @@ class _TripSuggestPageState extends State<TripSuggestPage> {
   Widget build(BuildContext context) {
     var largeur = MediaQuery.of(context).size.width;
     var hauteur = MediaQuery.of(context).size.height;
+
     /*   users.add(user1);
     users.add(user2); */
     return Scaffold(
@@ -260,7 +262,14 @@ class _TripSuggestPageState extends State<TripSuggestPage> {
             ),
 
             markers: widget.markers, //markers to show on map
-            polylines: Set<Polyline>.of(polylines.values), //polylines
+            polylines: {
+              Polyline(
+                polylineId: PolylineId("Route"),
+                color: bleu_bg.withOpacity(0.9),
+                points: ListeTrip.liste[0].coordonates,
+                width: 5,
+              ),
+            },
             mapType: MapType.normal, //map type
             onMapCreated: (controller) {
               //method called when map is created
@@ -279,7 +288,7 @@ class _TripSuggestPageState extends State<TripSuggestPage> {
                   ),
                   color: Color(0xFFF9F8FF)),
               width: largeur,
-              height: hauteur * 0.8,
+              height: hauteur * 0.6,
               child: SingleChildScrollView(
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -701,9 +710,13 @@ class _TripSuggestPageState extends State<TripSuggestPage> {
                                                     'Preferences: ${tripUser.preferences}');
                                                 print(
                                                     '----------------------------');
+                                                uid = tripUser.tripUid!;
+
+                                                print(uid);
                                               });
+                                              print(uid);
                                               joinChatRoomFirestore(
-                                                ListeTrip.liste[index].tripUid!,
+                                                uid,
                                                 AuthService()
                                                     .auth
                                                     .currentUser!
@@ -718,7 +731,7 @@ class _TripSuggestPageState extends State<TripSuggestPage> {
                                                                   .liste[index]
                                                                   .tripUid!,
                                                               ChatName:
-                                                                  '${ListeTrip.liste[index].depart}-${ListeTrip.liste[index]..arrivee}')));
+                                                                  '${ListeTrip.liste[index].depart}-${ListeTrip.liste[index].arrivee}')));
                                             },
                                             style: ElevatedButton.styleFrom(
                                               backgroundColor: orange,

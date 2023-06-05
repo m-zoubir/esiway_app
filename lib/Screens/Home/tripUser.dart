@@ -19,6 +19,7 @@ class TripUser {
   String? methode;
   String? tripUid;
   String? preferences;
+  List<LatLng> coordonates = [];
 
   // Constructor
   /* TripUser({

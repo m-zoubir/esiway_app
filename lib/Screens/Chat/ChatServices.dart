@@ -23,7 +23,7 @@ Future<void> createChatRoomFirestore(
   // Create a new chat room object
   Map<String, dynamic> chatRoom = {
     'NbUnseen': 1,
-    "LastSender": 'He9ne8pNjuX7ixQB80X6gZmkjjw1',
+    "LastSender": creatorId,
     "LastMessage": "hello, I'm your driver",
     "TimeOfLastMessage": DateTime.now(),
     'name': name,
@@ -47,6 +47,7 @@ Future<void> createChatRoomFirestore(
       .collection('messages')
       .add(message);
   joinChatRoomFirestore(chatId, FirebaseAuth.instance.currentUser!.uid);
+  print(chatId);
   Timer(Duration(seconds: 3), () {
     print("Chat Created ");
   });
